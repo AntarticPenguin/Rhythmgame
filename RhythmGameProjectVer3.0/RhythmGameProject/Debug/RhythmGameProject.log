@@ -1,0 +1,9 @@
+﻿  TrackManager.cpp
+d:\programmingfolder\rhythmgameprojectver3.0\rhythmgameproject\trackmanager.cpp(263): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver3.0\rhythmgameproject\trackmanager.cpp(271): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver3.0\rhythmgameproject\trackmanager.cpp(279): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver3.0\rhythmgameproject\trackmanager.cpp(287): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver3.0\rhythmgameproject\trackmanager.cpp(345): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver3.0\rhythmgameproject\trackmanager.cpp(353): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer3.0\Debug\RhythmGameProjectVer3.0.exe
+  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer3.0\Debug\RhythmGameProjectVer3.0.pdb (Partial PDB)

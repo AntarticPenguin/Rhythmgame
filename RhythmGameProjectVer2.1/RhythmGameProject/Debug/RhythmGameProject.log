@@ -1,0 +1,4 @@
+﻿  Note.cpp
+c:\users\atents\desktop\박평기\박평기_프로젝트 파일\rhythmgameprojectver2.1\rhythmgameproject\note.cpp(57): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  RhythmGameProject.vcxproj -> C:\Users\atents\Desktop\박평기\박평기_프로젝트 파일\RhythmGameProjectVer2.1\Debug\RhythmGameProjectVer2.1.exe
+  RhythmGameProject.vcxproj -> C:\Users\atents\Desktop\박평기\박평기_프로젝트 파일\RhythmGameProjectVer2.1\Debug\RhythmGameProjectVer2.1.pdb (Partial PDB)
