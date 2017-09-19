@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Array.h" />
+    <ClInclude Include="DataManager.h" />
     <ClInclude Include="DLinkedList.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="GameObject.h" />
@@ -172,6 +173,7 @@
     <ClInclude Include="TrackManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DataManager.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameScene.cpp" />

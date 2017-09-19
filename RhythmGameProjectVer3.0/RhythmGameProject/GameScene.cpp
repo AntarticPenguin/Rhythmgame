@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "SDL_mixer.h"
 #include "GameSystem.h"
+#include "DataManager.h"
 #include "SceneManager.h"
 #include "GameScene.h"
 #include "Track.h"
@@ -77,6 +78,9 @@ void GameScene::Init()
 	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
 	GameSystem::GetInstance()->SetTrackHeight(trackheight);
 
+
+	DataManager::GetInstance()->ResetScore();
+	DataManager::GetInstance()->ResetCombo();
 	_trackManager = new TrackManager();
 	_trackManager->Init();
 

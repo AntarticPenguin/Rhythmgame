@@ -25,6 +25,7 @@ private:
 	eJudge _judge;
 	eJudge _resultJudge;
 	bool _isPass;
+	bool _isHold;
 
 	//판정 범위
 	int _judgeDeltaLine;
@@ -52,6 +53,8 @@ public:
 	void ResetResultJudge();
 	bool IsPass();
 	void resetPass();
+	bool isHolding();
+
 	//Input
 public:
 	void KeyDown();

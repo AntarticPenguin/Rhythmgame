@@ -3,6 +3,7 @@
 
 
 #include "GameSystem.h"
+#include "DataManager.h"
 #include "TrackManager.h"
 #include "Track.h"
 #include "Sprite.h"
@@ -18,6 +19,7 @@ Track::Track()
 	_x = 0;
 	_y = 0;
 	_isPass = false;
+	_isHold = false;
 
 	_curJudgeNote = NULL;
 
@@ -109,8 +111,6 @@ void Track::Update(int deltaTime)
 			_judge = eJudge::MISS;
 			_isPass = true;
 
-			//delete itr.Item();
-			//_noteList.Remove(itr);
 			itr.Item()->SetLive(false);
 		}
 	}
@@ -174,6 +174,11 @@ void Track::resetPass()
 	_isPass = false;
 }
 
+bool Track::isHolding()
+{
+	return _isHold;
+}
+
 
 void Track::KeyDown()
 {
@@ -204,6 +209,7 @@ void Track::KeyDown()
 		{
 			if (0 < itr.Item()->GetDuration())
 			{
+				_isHold = true;
 				_curJudgeNote = itr.Item();
 				_curJudgeNote->EnableReduceDuration();
 				_judge = eJudge::JUDGE_START_PERFECT;
@@ -222,6 +228,7 @@ void Track::KeyDown()
 		{
 			if (0 < itr.Item()->GetDuration())
 			{
+				_isHold = true;
 				_curJudgeNote = itr.Item();
 				_curJudgeNote->EnableReduceDuration();
 				_judge = eJudge::JUDGE_START_GREAT;
@@ -239,16 +246,35 @@ void Track::KeyDown()
 	switch (_judge)
 	{
 	case eJudge::PERFECT:
+		_effectSprite->Play();
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScorePerfect();
+		delete itr.Item();
+		_noteList.Remove(itr);
+		break;
 	case eJudge::GREAT:
 		_effectSprite->Play();
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScoreGreat();
+		delete itr.Item();
+		_noteList.Remove(itr);
+		break;
 	case eJudge::MISS:
+		DataManager::GetInstance()->ResetCombo();
 		delete itr.Item();
 		_noteList.Remove(itr);
 		break;
 	case eJudge::JUDGE_START_PERFECT:
+		_effectSprite->SetLoop(true);
+		_effectSprite->Play();
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScorePerfect();
+		break;
 	case eJudge::JUDGE_START_GREAT:
 		_effectSprite->SetLoop(true);
 		_effectSprite->Play();
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScoreGreat();
 		break;
 	}
 }
@@ -295,4 +321,5 @@ void Track::KeyUp()
 	}
 	_judge = eJudge::NONE;
 	_isKeyDown = false;
+	_isHold = false;
 }

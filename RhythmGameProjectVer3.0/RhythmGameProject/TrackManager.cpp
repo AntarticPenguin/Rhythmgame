@@ -3,6 +3,7 @@
 
 #include "SDL.h"
 #include "GameSystem.h"
+#include "DataManager.h"
 #include "TrackManager.h"
 #include "Track.h"
 #include "Note.h"
@@ -171,12 +172,6 @@ void TrackManager::Deinit()
 		}
 		_effectList = NULL;
 	}
-
-	if (NULL != _curEffect)
-	{
-		delete _curEffect;
-		_curEffect = NULL;
-	}
 	
 	if (NULL != _combofont)
 	{
@@ -232,7 +227,7 @@ void TrackManager::checkPass(Track* track)
 		_combo = 0;
 
 		char text[50];
-		sprintf(text, "COMBO %d", _combo);
+		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
 		_combofont->SetText(text);
 	}
 }
@@ -244,22 +239,26 @@ void TrackManager::KeyDown(int keyCode)
 	case SDLK_d:
 		_trackList->Get(eTrackNum::TRACK01)->KeyDown();
 		_resultJudge = _trackList->Get(eTrackNum::TRACK01)->GetResultJudge();
-		_trackList->Get(eTrackNum::TRACK01)->ResetResultJudge();
+		if(false == _trackList->Get(eTrackNum::TRACK01)->isHolding())
+			_trackList->Get(eTrackNum::TRACK01)->ResetResultJudge();
 		break;
 	case SDLK_f:
 		_trackList->Get(eTrackNum::TRACK02)->KeyDown();
 		_resultJudge = _trackList->Get(eTrackNum::TRACK02)->GetResultJudge();
-		_trackList->Get(eTrackNum::TRACK02)->ResetResultJudge();
+		if (false == _trackList->Get(eTrackNum::TRACK02)->isHolding())
+			_trackList->Get(eTrackNum::TRACK02)->ResetResultJudge();
 		break;
 	case SDLK_j:
 		_trackList->Get(eTrackNum::TRACK03)->KeyDown();
 		_resultJudge = _trackList->Get(eTrackNum::TRACK03)->GetResultJudge();
-		_trackList->Get(eTrackNum::TRACK03)->ResetResultJudge();
+		if (false == _trackList->Get(eTrackNum::TRACK03)->isHolding())
+			_trackList->Get(eTrackNum::TRACK03)->ResetResultJudge();
 		break;
 	case SDLK_k:
 		_trackList->Get(eTrackNum::TRACK04)->KeyDown();
 		_resultJudge = _trackList->Get(eTrackNum::TRACK04)->GetResultJudge();
-		_trackList->Get(eTrackNum::TRACK04)->ResetResultJudge();
+		if (false == _trackList->Get(eTrackNum::TRACK04)->isHolding())
+			_trackList->Get(eTrackNum::TRACK04)->ResetResultJudge();
 		break;
 	}
 
@@ -269,52 +268,43 @@ void TrackManager::KeyDown(int keyCode)
 		if (_curEffect != _effectList->Get(eEffect::PERFECT))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::PERFECT)->Play();
-		_combo++;
-		_score += (100 * 1.0) + (_combo * 10);
 		_curEffect = _effectList->Get(eEffect::PERFECT);
 		break;
 	case eJudge::GREAT:
 		if (_curEffect != _effectList->Get(eEffect::GREAT))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::GREAT)->Play();
-		_combo++;
-		_score += (100 * 0.8) + (_combo * 10);
 		_curEffect = _effectList->Get(eEffect::GREAT);
 		break;
 	case eJudge::JUDGE_START_PERFECT:
 		if (_curEffect != _effectList->Get(eEffect::PERFECT))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::PERFECT)->Play();
-		_combo++;
-		_score += (100 * 1.0) + (_combo * 10);
 		_curEffect = _effectList->Get(eEffect::PERFECT);
 		break;
 	case eJudge::JUDGE_START_GREAT:
 		if (_curEffect != _effectList->Get(eEffect::GREAT))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::GREAT)->Play();
-		_combo++;
-		_score += (100 * 0.8) + (_combo * 10);
 		_curEffect = _effectList->Get(eEffect::GREAT);
 		break;
 	case eJudge::MISS:
 		if (_curEffect != _effectList->Get(eEffect::MISS))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::MISS)->Play();
-		_combo = 0;
 		_curEffect = _effectList->Get(eEffect::MISS);
 		break;
 	}
 
 	{
 		char text[50];
-		sprintf(text, "COMBO %d", _combo);
+		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
 		_combofont->SetText(text);
 	}
 
 	{
 		char text[50];
-		sprintf(text, "SCORE %08d", _score);
+		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
 		_scorefont->SetText(text);
 	}
 }
@@ -351,36 +341,31 @@ void TrackManager::KeyUp(int keyCode)
 		if (_curEffect != _effectList->Get(eEffect::PERFECT))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::PERFECT)->Play();
-		_combo++;
-		_score += (100 * 1.0) + (_combo * 10);
 		_curEffect = _effectList->Get(eEffect::PERFECT);
 		break;
 	case eJudge::JUDGE_START_GREAT:
 		if (_curEffect != _effectList->Get(eEffect::GREAT))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::GREAT)->Play();
-		_combo++;
-		_score += (100 * 0.8) + (_combo * 10);
 		_curEffect = _effectList->Get(eEffect::GREAT);
 		break;
 	case eJudge::MISS:
 		if (_curEffect != _effectList->Get(eEffect::MISS))
 			_curEffect->Stop();
 		_effectList->Get(eEffect::MISS)->Play();
-		_combo = 0;
 		_curEffect = _effectList->Get(eEffect::MISS);
 		break;
 	}
 
 	{
 		char text[50];
-		sprintf(text, "COMBO %d", _combo);
+		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
 		_combofont->SetText(text);
 	}
 
 	{
 		char text[50];
-		sprintf(text, "SCORE %08d", _score);
+		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
 		_scorefont->SetText(text);
 	}
 }

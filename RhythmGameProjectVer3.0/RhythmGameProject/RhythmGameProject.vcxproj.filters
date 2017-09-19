@@ -90,6 +90,9 @@
     <ClInclude Include="TitleScene.h">
       <Filter>소스 파일\Scene\TitleScene</Filter>
     </ClInclude>
+    <ClInclude Include="DataManager.h">
+      <Filter>소스 파일\GameSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="TitleScene.cpp">
       <Filter>소스 파일\Scene\TitleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>소스 파일\GameSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
