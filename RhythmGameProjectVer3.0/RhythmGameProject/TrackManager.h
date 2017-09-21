@@ -39,10 +39,7 @@ private:
 	Array<Sprite*>* _effectList;
 	Sprite* _curEffect;
 
-	int _combo;
 	eJudge _resultJudge;
-
-	int _score;
 
 	Font* _combofont;
 	Font* _scorefont;

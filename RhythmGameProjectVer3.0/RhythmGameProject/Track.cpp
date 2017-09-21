@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 #include "GameSystem.h"
@@ -41,13 +42,54 @@ Track::~Track()
 
 void Track::Init()
 {
-	Sprite* trackSprite = new Sprite("trackData.csv", true);
+	char filePath[256];
+	sprintf(filePath, "../../Resource/%s", "trackSetting4K.csv");
+	FILE* fp = fopen(filePath, "r");
+	if (NULL == fp)
+	{
+		printf("파일열기 실패: %s\n", filePath);
+	}
+
+	char trackbackgroundSprite[256];
+	char judgelineSprite[256];
+	char explosionSprite[256];
+
+	char buffer[256];
+	char* record = fgets(buffer, sizeof(buffer), fp);
+
+	while (true)
+	{
+		record = fgets(buffer, sizeof(buffer), fp);
+		if (NULL == record)
+			break;
+
+		{
+			char* token = strtok(record, ",\n");
+			if (!strcmp(token, "Background"))
+			{
+				token = strtok(NULL, ",\n");
+				strcpy(trackbackgroundSprite, token);
+			}
+			else if (!strcmp(token, "Judgeline"))
+			{
+				token = strtok(NULL, ",\n");
+				strcpy(judgelineSprite, token);
+			}
+			else if (!strcmp(token, "Explosion"))
+			{
+				token = strtok(NULL, ",\n");
+				strcpy(explosionSprite, token);
+			}
+		}
+	}
+
+	Sprite* trackSprite = new Sprite(trackbackgroundSprite, true);
 	_bgSpriteList.Append(trackSprite);
 
-	Sprite* judgeSprite = new Sprite("judgeData.csv", true);
+	Sprite* judgeSprite = new Sprite(judgelineSprite, true);
 	_bgSpriteList.Append(judgeSprite);
 
-	_effectSprite = new Sprite("judgeeffectData.csv", false);
+	_effectSprite = new Sprite(explosionSprite, false);
 }
 
 void Track::Deinit()
@@ -285,31 +327,26 @@ void Track::KeyUp()
 	switch (_judge)
 	{
 	case eJudge::JUDGE_START_PERFECT:
+	case eJudge::JUDGE_START_GREAT:
 		_effectSprite->Stop();
-		if ((_judgeStartTick <= _curJudgeNote->GetNoteTime() && _curJudgeNote->GetNoteTime() < _judgeGreat_s))
+
+		if (55 < _curJudgeNote->GetDuration())
 		{
+			DataManager::GetInstance()->ResetCombo();
 			_judge = eJudge::MISS;
 			_resultJudge = _judge;
 		}
-		else if (_judgePerfect_s <= _curJudgeNote->GetNoteTime() && _curJudgeNote->GetNoteTime() <= _judgePerfect_e)
+		else if (1 <=_curJudgeNote->GetDuration() && _curJudgeNote->GetDuration() <= 25)
 		{
+			DataManager::GetInstance()->IncreaseCombo();
+			DataManager::GetInstance()->ScorePerfect();
 			_judge = eJudge::JUDGE_START_PERFECT;
 			_resultJudge = _judge;
 		}
-
-		if (NULL != _curJudgeNote)
-			_curJudgeNote->SetLive(false);
-		_curJudgeNote = NULL;
-		break;
-	case eJudge::JUDGE_START_GREAT:
-		_effectSprite->Stop();
-		if ((_judgeStartTick <= _curJudgeNote->GetNoteTime() && _curJudgeNote->GetNoteTime() < _judgeGreat_s))
+		else if (25 <= _curJudgeNote->GetDuration() && _curJudgeNote->GetDuration() <= 54)
 		{
-			_judge = eJudge::MISS;
-			_resultJudge = _judge;
-		}
-		else if ((_judgeGreat_s <= _curJudgeNote->GetNoteTime() && _curJudgeNote->GetNoteTime() < _judgePerfect_s))
-		{
+			DataManager::GetInstance()->IncreaseCombo();
+			DataManager::GetInstance()->ScoreGreat();
 			_judge = eJudge::JUDGE_START_GREAT;
 			_resultJudge = _judge;
 		}

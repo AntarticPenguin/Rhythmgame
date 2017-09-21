@@ -16,10 +16,7 @@ TrackManager::TrackManager()
 	_effectList = NULL;
 	_curEffect = NULL;
 
-	_combo = 0;
 	_resultJudge = eJudge::NONE;
-
-	_score = 0;
 
 	_combofont = NULL;
 	_scorefont = NULL;
@@ -49,7 +46,7 @@ void TrackManager::Init()
 	_scorefont = new Font("arialbd.ttf", 32);
 	_scorefont->SetPosition(0, 0);
 	char text[50];
-	sprintf(text, "SCORE %08d", _score);
+	sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
 	_scorefont->SetText(text);
 
 	int judgeDeltaLine = 100;
@@ -189,16 +186,12 @@ void TrackManager::Deinit()
 void TrackManager::Update(int deltaTime)
 {
 
-	_trackList->Get(eTrackNum::TRACK01)->Update(deltaTime);
-	_trackList->Get(eTrackNum::TRACK02)->Update(deltaTime);
-	_trackList->Get(eTrackNum::TRACK03)->Update(deltaTime);
-	_trackList->Get(eTrackNum::TRACK04)->Update(deltaTime);
+	for (int i = 0; i < _trackList->GetSize(); i++)
+		_trackList->Get(i)->Update(deltaTime);
 
-	checkPass(_trackList->Get(eTrackNum::TRACK01));
-	checkPass(_trackList->Get(eTrackNum::TRACK02));
-	checkPass(_trackList->Get(eTrackNum::TRACK03));
-	checkPass(_trackList->Get(eTrackNum::TRACK04));
-
+	for (int i = 0; i < _trackList->GetSize(); i++)
+		checkPass(_trackList->Get(i));
+	
 	_effectList->Get(eEffect::MISS)->Update(deltaTime);
 	_effectList->Get(eEffect::GREAT)->Update(deltaTime);
 	_effectList->Get(eEffect::PERFECT)->Update(deltaTime);
@@ -206,10 +199,8 @@ void TrackManager::Update(int deltaTime)
 
 void TrackManager::Render()
 {
-	_trackList->Get(eTrackNum::TRACK01)->Render();
-	_trackList->Get(eTrackNum::TRACK02)->Render();
-	_trackList->Get(eTrackNum::TRACK03)->Render();
-	_trackList->Get(eTrackNum::TRACK04)->Render();
+	for (int i = 0; i < _trackList->GetSize(); i++)
+		_trackList->Get(i)->Render();
 
 	_effectList->Get(eEffect::MISS)->Render();
 	_effectList->Get(eEffect::GREAT)->Render();
@@ -224,7 +215,8 @@ void TrackManager::checkPass(Track* track)
 	{
 		_effectList->Get(eEffect::MISS)->Play();
 		track->resetPass();
-		_combo = 0;
+
+		DataManager::GetInstance()->ResetCombo();
 
 		char text[50];
 		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
