@@ -34,22 +34,15 @@ void TrackManager::Init()
 	sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
 	_scorefont->SetText(text);
 
-	int judgeDeltaLine = 100;
-
 	{
-		Track* track1 = new Track();
+		Track* track1 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) - 155, GameSystem::GetInstance()->GetWindowHeight());
 		track1->Init();
-		Track* track2 = new Track();
+		Track* track2 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) - 52, GameSystem::GetInstance()->GetWindowHeight());
 		track2->Init();
-		Track* track3 = new Track();
+		Track* track3 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + 52, GameSystem::GetInstance()->GetWindowHeight());
 		track3->Init();
-		Track* track4 = new Track();
+		Track* track4 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + 155, GameSystem::GetInstance()->GetWindowHeight());
 		track4->Init();
-
-		track1->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2) - 155, GameSystem::GetInstance()->GetWindowHeight());
-		track2->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2) - 52, GameSystem::GetInstance()->GetWindowHeight());
-		track3->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2) + 52, GameSystem::GetInstance()->GetWindowHeight());
-		track4->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2) + 155, GameSystem::GetInstance()->GetWindowHeight());
 
 		_trackList = new Array<Track*>(4);
 		_trackList->Set(eTrackNum::TRACK01, track1);
@@ -58,6 +51,8 @@ void TrackManager::Init()
 		_trackList->Set(eTrackNum::TRACK04, track4);
 	}
 
+	/*
+	int judgeDeltaLine = 100;
 	int playTime = GameSystem::GetInstance()->GetPlayTimeTick();
 	int deltaTick = 0;
 	int durationTick = 0;
@@ -67,16 +62,16 @@ void TrackManager::Init()
 		switch (randValue)
 		{
 		case 0:
-			deltaTick = 125;
+			deltaTick = 75;
 			break;
 		case 1:
-			deltaTick = 250;
+			deltaTick = 150;
 			break;
 		case 2:
-			deltaTick = 375;
+			deltaTick = 225;
 			break;
 		case 3:
-			deltaTick = 500;
+			deltaTick = 300;
 			break;
 		}
 
@@ -130,6 +125,7 @@ void TrackManager::Init()
 		}
 		noteTick += durationTick;
 	}
+	*/
 }
 
 void TrackManager::Deinit()
@@ -163,6 +159,12 @@ void TrackManager::Update(int deltaTime)
 		_trackList->Get(i)->Update(deltaTime);
 
 	EffectPlayer::GetInstance()->Update(deltaTime);
+
+	{
+		char text[50];
+		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
+		_combofont->SetText(text);
+	}
 }
 
 void TrackManager::Render()

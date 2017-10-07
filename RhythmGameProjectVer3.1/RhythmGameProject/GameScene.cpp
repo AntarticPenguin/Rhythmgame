@@ -85,7 +85,6 @@ void GameScene::Init()
 	_trackManager->Init();
 
 	_gameDuration = 0;
-	_musicVolume = SDL_MIX_MAXVOLUME;
 
 	int result = Mix_Init(MIX_INIT_MP3);
 	if (MIX_INIT_MP3 == result)
@@ -94,7 +93,7 @@ void GameScene::Init()
 		sprintf(musicPath, "../../Resource/music/%s", musicName);
 		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
 		Mix_Music* music = Mix_LoadMUS(musicPath);
-		Mix_VolumeMusic(MIX_MAX_VOLUME);
+		Mix_VolumeMusic(GameSystem::GetInstance()->GetMusicVolume());
 		if (NULL != music)
 		{
 			Mix_PlayMusic(music, 0);
@@ -168,15 +167,18 @@ void GameScene::ResumeGame()
 
 void GameScene::KeyDown(int keyCode)
 {
+	int musicVolume = GameSystem::GetInstance()->GetMusicVolume();
 	switch (keyCode)
 	{
 	case SDLK_F1:				//CONTROL MUSIC VOLUME
-		_musicVolume -= 20;
-		Mix_VolumeMusic(_musicVolume);
+		musicVolume -= 20;
+		Mix_VolumeMusic(musicVolume);
+		GameSystem::GetInstance()->SetMusicVolume(musicVolume);
 		break;
 	case SDLK_F2:
-		_musicVolume += 20;
-		Mix_VolumeMusic(_musicVolume);
+		musicVolume += 20;
+		Mix_VolumeMusic(musicVolume);
+		GameSystem::GetInstance()->SetMusicVolume(musicVolume);
 		break;
 	case SDLK_F4:
 		_isPause = true;

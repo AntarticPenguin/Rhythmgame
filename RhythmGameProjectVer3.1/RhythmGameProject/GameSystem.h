@@ -25,12 +25,15 @@ public:
 private:
 	int _trackHeight;
 	int _playTimeTick;
+	int _musicVolume;
 
 public:
 	void SetPlayTimeTick(float sec);
 	int GetPlayTimeTick();
 	void SetTrackHeight(int height);
 	int GetTrackHeight();
+	int GetMusicVolume();
+	void SetMusicVolume(int volume);
 
 	//Initializer
 private:

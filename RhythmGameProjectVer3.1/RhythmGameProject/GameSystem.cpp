@@ -6,7 +6,7 @@ GameSystem* GameSystem::_instance = NULL;
 
 GameSystem::GameSystem()
 {
-	
+	_musicVolume = SDL_MIX_MAXVOLUME;
 }
 
 GameSystem* GameSystem::GetInstance()
@@ -62,4 +62,14 @@ void GameSystem::SetTrackHeight(int height)
 int GameSystem::GetTrackHeight()
 {
 	return _trackHeight;	//트랙길이
+}
+
+int GameSystem::GetMusicVolume()
+{
+	return _musicVolume;
+}
+
+void GameSystem::SetMusicVolume(int volume)
+{
+	_musicVolume = volume;
 }

@@ -10,7 +10,6 @@ private:
 	Sprite* _backgroundSprite;
 	TrackManager* _trackManager;
 	int _gameDuration;
-	int _musicVolume;
 	bool _isPause;
 
 public:

@@ -44,8 +44,11 @@ private:
 	int _judgeGreat_s;
 	int _judgeGreat_e;
 
+	int _oldDuration;
+	int _holdDuration;
+
 public:
-	Track();
+	Track(int xPos, int yPos);
 	~Track();
 
 public:
@@ -54,12 +57,13 @@ public:
 	void Update(int deltaTime);
 	void Render();
 	DLinkedList<Note*>& GetNoteList();
-	void SetPosition(int x, int y);
+	void TrackPosition(int x, int y);
 	bool IsPass();
 	void resetPass();
 
 	//Input
 public:
 	void KeyDown();
+	void KeyHold();
 	void KeyUp();
 };

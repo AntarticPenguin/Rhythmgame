@@ -10,15 +10,15 @@
 #include "Sprite.h"
 #include "Note.h"
 
-Track::Track()
+Track::Track(int xPos, int yPos)
 {
 	_judgeEffectSprite = NULL;
 
 	_judge = eJudge::NONE;
 	_keyType = eKeyType::NEUTRAL;
 
-	_x = 0;
-	_y = 0;
+	_x = xPos;
+	_y = yPos;
 	_isPass = false;
 
 	_curJudgeNote = NULL;
@@ -32,6 +32,9 @@ Track::Track()
 	_judgePerfect_e = _judgeTick + 50;
 	_judgeGreat_s = _judgePerfect_s - 50;
 	_judgeGreat_e = _judgePerfect_e + 50;
+
+	_oldDuration = 0;
+	_holdDuration = 0;
 }
 
 Track::~Track()
@@ -82,6 +85,58 @@ void Track::Init()
 		}
 	}
 
+	int judgeDeltaLine = 100;
+	int playTime = GameSystem::GetInstance()->GetPlayTimeTick();
+	int deltaTick = 0;
+	int durationTick = 0;
+	for (int noteTick = 875; noteTick < playTime; )
+	{
+		int randValue = rand() % 4;
+		switch (randValue)
+		{
+		case 0:
+			deltaTick = 450;
+			break;
+		case 1:
+			deltaTick = 600;
+			break;
+		case 2:
+			deltaTick = 750;
+			break;
+		case 3:
+			deltaTick = 1000;
+			break;
+		}
+
+		noteTick += deltaTick;
+
+		randValue = rand() % 4;
+		switch (randValue)
+		{
+		case 0:
+		case 1:
+		case 2:
+			durationTick = 0;
+			break;		
+		case 3:
+			durationTick = 1000;
+			break;
+		default:
+			durationTick = 0;
+		}
+
+		float sec = (float)noteTick / 1000.0f;
+		float duration = (float)durationTick / 1000.0f;
+
+		{
+			Note* note = new Note(sec, duration, judgeDeltaLine);
+			note->SetXPosition(_x);
+			note->Init();
+			_noteList.Append(note);
+		}
+		noteTick += durationTick;
+	}
+
 	Sprite* trackSprite = new Sprite(trackbackgroundSprite, true);
 	_bgSpriteList.Append(trackSprite);
 
@@ -89,6 +144,8 @@ void Track::Init()
 	_bgSpriteList.Append(judgeSprite);
 
 	_judgeEffectSprite = new Sprite(explosionSprite, false);
+
+	TrackPosition(_x, _y);
 }
 
 void Track::Deinit()
@@ -185,7 +242,7 @@ DLinkedList<Note*>& Track::GetNoteList()
 	return _noteList;
 }
 
-void Track::SetPosition(int x, int y)
+void Track::TrackPosition(int x, int y)
 {
 	_x = x;
 	_y = y;
@@ -211,9 +268,6 @@ void Track::resetPass()
 
 void Track::KeyDown()
 {
-	/*if (_isKeyDown)
-		return;
-	_isKeyDown = true;*/
 	switch (_keyType)
 	{
 	case eKeyType::NEUTRAL:
@@ -229,7 +283,10 @@ void Track::KeyDown()
 
 	//노트 판정, 범위
 	if (_keyType == eKeyType::HOLDING)
+	{
+		KeyHold();
 		return;
+	}
 
 	DLinkedListIterator<Note*> itr = _noteList.GetIterator();
 	for (itr.Start(); itr.Valid(); itr.Forth())
@@ -321,6 +378,36 @@ void Track::KeyDown()
 	}
 }
 
+void Track::KeyHold()
+{
+	if (NULL != _curJudgeNote)
+	{
+		_holdDuration += _oldDuration - _curJudgeNote->GetDuration();
+		if (_holdDuration < 0)
+			_holdDuration = 0;
+
+		if (_curJudgeNote->GetDuration() <= 0)
+		{
+			if (NULL != _curJudgeNote)
+				_curJudgeNote->SetLive(false);
+			_curJudgeNote = NULL;
+
+			EffectPlayer::GetInstance()->Play(eEffect::eMISS);
+			DataManager::GetInstance()->ResetCombo();
+			_judge = eJudge::MISS;
+			return;
+		}
+		else if (100 <= _holdDuration)
+		{
+			EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
+			DataManager::GetInstance()->IncreaseCombo();
+			DataManager::GetInstance()->ScorePerfect();
+			_holdDuration = 0;
+		}
+		_oldDuration = _curJudgeNote->GetDuration();
+	}
+}
+
 void Track::KeyUp()
 {
 	_judgeEffectSprite->SetLoop(false);
@@ -336,14 +423,14 @@ void Track::KeyUp()
 			_judge = eJudge::MISS;
 			EffectPlayer::GetInstance()->Play(eEffect::eMISS);
 		}
-		else if (1 <=_curJudgeNote->GetDuration() && _curJudgeNote->GetDuration() <= 25)
+		else if (1 <=_curJudgeNote->GetDuration() && _curJudgeNote->GetDuration() <= 32)
 		{
 			DataManager::GetInstance()->IncreaseCombo();
 			DataManager::GetInstance()->ScorePerfect();
 			_judge = eJudge::JUDGE_START_PERFECT;
 			EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
 		}
-		else if (25 <= _curJudgeNote->GetDuration() && _curJudgeNote->GetDuration() <= 54)
+		else if (32 < _curJudgeNote->GetDuration() && _curJudgeNote->GetDuration() <= 54)
 		{
 			DataManager::GetInstance()->IncreaseCombo();
 			DataManager::GetInstance()->ScoreGreat();

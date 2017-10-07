@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctime>
 
 #include "SDL.h"
 #include "SDL_ttf.h"
@@ -9,6 +10,8 @@
 
 int main(int argc, char* argv[])
 {
+	srand((unsigned)time(NULL));
+
 	int windowWidth = GameSystem::GetInstance()->GetWindowWidth();
 	int windowHeight = GameSystem::GetInstance()->GetWindowHeight();
 
