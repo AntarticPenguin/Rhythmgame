@@ -78,7 +78,6 @@ void GameScene::Init()
 	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
 	GameSystem::GetInstance()->SetTrackHeight(trackheight);
 
-
 	DataManager::GetInstance()->ResetScore();
 	DataManager::GetInstance()->ResetCombo();
 	_trackManager = new TrackManager();

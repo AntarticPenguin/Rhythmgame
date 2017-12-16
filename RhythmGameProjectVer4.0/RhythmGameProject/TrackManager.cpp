@@ -121,15 +121,21 @@ void TrackManager::CreateGameNote(const char* fileName)
 
 	char buffer[256];
 	char* barInfo = new char[50];
-	char* noteInfo = new char[120];
+	char* noteInfo = new char[1024];
 	char* record = fgets(buffer, sizeof(buffer), fp);
 
 	int fieldFlag = 1;		//HEADER = 1, MAIN DATA = 2
-
+	
 	int judgeDeltaLine = 100;
 	int noteTick = 0;
-	int deltaTick = 300;
 	int durationTick = 0;
+
+	//BMSE Parsing Info
+	int BPM = 0;					// BMSE 스크립트를 통해 BPM을 구한다.
+	float SecondPerBeat = 0;		// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
+	float SecondPerBar = 0;			// BPM에 따른 1마디당 초를 구한다.	(1/32박자 기준)
+	float curBarTick = 0;
+	int curBarNum = 0;
 
 	while (true)
 	{
@@ -160,12 +166,22 @@ void TrackManager::CreateGameNote(const char* fileName)
 			else if (!strcmp(token, "BPM"))
 			{
 				token = strtok(NULL, "\n");
-				printf("BPM :%s\n", token);
+				BPM = atoi(token);
+				SecondPerBar = (60.0f * 32.0f) / (8.0f * BPM);	// BPM에 따른 1마디당 초를 구한다.(1/32박자 기준)
+				printf("BPM: %d\n", BPM);
 			}
 			else if (!strcmp(token, "PLAYLEVEL"))
 			{
 				token = strtok(NULL, "\n");
 				printf("PLAYLEVEL :%s\n", token);
+			}
+			else if (!strcmp(token, "LNOBJ"))
+			{
+				
+			}
+			else if (!strcmp(token, "LNTYPE"))
+			{
+
 			}
 			else if (!strcmp(token, "MAIN"))
 			{
@@ -184,21 +200,11 @@ void TrackManager::CreateGameNote(const char* fileName)
 		{
 			memset(barInfo, 0, sizeof(char) * 50);
 			memset(noteInfo, 0, sizeof(char) * 120);
+			durationTick = 0;
+
 			if (NULL == token)
 				break;
 			/*
-				BPM에 따른 노트 시간 계산
-
-				1. BPM = 1분 당 1/4박자의 개수
-				예) 60BPM = 1분에 1/4박자가 60개 / 1/8박자 120개  / 1/16박자 240개  / 1/32박자 480개
-
-				2. 초당 비트
-					1/4박자 1초에 1비트  / 1/8박자 0.5초에 1비트  / 1/16박자 0.25초에 1비트
-				
-				3. 비트 하나당 간격
-				130BPM =>  130bpm / 60s = 2.16666667(s)
-				1/16박자 => 0.25 / 2.16666667 = 0.1153846초마다 나옴
-
 				BMS 마디 형식
 				#XXXYY : XXX 마디 번호 / YY : Y(오토: 0, 직접플레이: 1, 그외: 일단 무시) Y(트랙번호)
 			*/
@@ -211,101 +217,73 @@ void TrackManager::CreateGameNote(const char* fileName)
 			strncpy(noteInfo, token, strlen(token));
 			token = strtok(NULL, "#:\n");
 
-			printf("bar info: %s\n", barInfo);
-			printf("note info: %s\n\n", noteInfo);
+			//마디 번호를 저장
+			sscanf(barInfo, "%3d", &curBarNum);
 
-			int trackNum = atoi(&barInfo[4]);
-			printf("trackNumber is %d\n", trackNum);
+			int playerPlay = barInfo[3] - '0';		//오토플레이정보
+			int trackNum = atoi(&barInfo[4]);		//노트가 들어갈 트랙 넘버
 
-			noteTick += deltaTick;
-
-			float sec = (float)noteTick / 1000.0f;
-			float duration = (float)durationTick / 1000.0f;
-			switch (trackNum)
+			if (1 == playerPlay)
 			{
-			case 1:
-				_trackList->Get(eTrackNum::TRACK01)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-				break;
-			case 2:
-				_trackList->Get(eTrackNum::TRACK02)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-				break;
-			case 3:
-				_trackList->Get(eTrackNum::TRACK03)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-				break;
-			case 4:
-				_trackList->Get(eTrackNum::TRACK04)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-				break;
-			case 5:
-				_trackList->Get(eTrackNum::TRACK05)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-				break;
+				noteTick = SecondPerBar * (curBarNum-1) * 1000;	//마디가 시작하는 시간(초)
+
+				int beat = strlen(noteInfo) / 2;	//박자
+				if (1 == beat)
+				{
+					durationTick = SecondPerBar * 1000;
+				}
+				else
+				{
+					SecondPerBeat = (60.0f / BPM) / (beat / 4);
+				}
+				
+				char* ptr = &noteInfo[0];
+				for (int i = 0; i < beat; i++)
+				{
+					char note[3] = { 0, };
+					strncpy(note, ptr, 2);
+					//printf("%s ", note);
+					note[2] = '\0';
+					(ptr++);
+					(ptr++);
+
+					//00은 노트를 삽입하지 않고 패스
+					if (!strcmp(note, "00"))
+					{
+						noteTick += SecondPerBeat * 1000;
+					}
+					else
+					{
+						//노트배치
+						float sec = (float)noteTick / 1000.0f;
+						float duration = (float)durationTick / 1000.0f;
+						switch (trackNum)
+						{
+						case 1:
+							_trackList->Get(eTrackNum::TRACK01)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+							break;
+						case 2:
+							_trackList->Get(eTrackNum::TRACK02)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+							break;
+						case 3:
+							_trackList->Get(eTrackNum::TRACK03)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+							break;
+						case 4:
+							_trackList->Get(eTrackNum::TRACK04)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+							break;
+						case 5:
+							_trackList->Get(eTrackNum::TRACK05)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+							break;
+						}
+						noteTick += SecondPerBeat * 1000;
+					}
+				}
 			}
 		}
 	}
 	fclose(fp);
-	//노트 생성
-	/*int judgeDeltaLine = 100;
-	int playTime = GameSystem::GetInstance()->GetPlayTimeTick();
-	int deltaTick = 0;
-	int durationTick = 0;
-	for (int noteTick = 875; noteTick < playTime; )
-	{
-		int randValue = rand() % 4;
-		switch (randValue)
-		{
-		case 0:
-			deltaTick = 450;
-			break;
-		case 1:
-			deltaTick = 600;
-			break;
-		case 2:
-			deltaTick = 750;
-			break;
-		case 3:
-			deltaTick = 1000;
-			break;
-		}
-
-		noteTick += deltaTick;
-
-		randValue = rand() % 5;
-		switch (randValue)
-		{
-		case 0:
-		case 1:
-		case 2:
-			durationTick = 0;
-			break;
-		case 3:
-			durationTick = 1000;
-			break;
-		default:
-			durationTick = 0;
-		}
-
-		float sec = (float)noteTick / 1000.0f;
-		float duration = (float)durationTick / 1000.0f;
-
-		switch(randValue)
-		{
-		case 0:
-			_trackList->Get(eTrackNum::TRACK01)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-			break;
-		case 1:
-			_trackList->Get(eTrackNum::TRACK02)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-			break;
-		case 2:
-			_trackList->Get(eTrackNum::TRACK03)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-			break;
-		case 3:
-			_trackList->Get(eTrackNum::TRACK04)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-			break;
-		case 4:
-			_trackList->Get(eTrackNum::TRACK05)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-			break;
-		}
-		noteTick += durationTick;
-	}*/
+	delete[] barInfo;
+	delete[] noteInfo;
 }
 
 void TrackManager::KeyDown(int keyCode)
