@@ -15,6 +15,7 @@
 TrackManager::TrackManager()
 {
 	_trackList = NULL;
+	_trackNoteList = NULL;
 	_combofont = NULL;
 	_scorefont = NULL;
 }
@@ -55,8 +56,12 @@ void TrackManager::Init()
 		_trackList->Set(eTrackNum::TRACK05, track5);
 	}
 
+	{
+		_trackNoteList = new DLinkedList<sNoteInfo*>[_trackList->GetSize()];
+	}
+
 	//BMS파싱 및 노트 생성
-	CreateGameNote("BMS_Sample.bme");
+	ParsingBMS("BMS_Sample.bme");
 }
 
 void TrackManager::Deinit()
@@ -109,7 +114,7 @@ void TrackManager::Render()
 	_scorefont->Render();
 }
 
-void TrackManager::CreateGameNote(const char* fileName)
+void TrackManager::ParsingBMS(const char* fileName)
 {
 	char filePath[256];
 	sprintf(filePath, "../../Resource/%s", fileName);
@@ -121,7 +126,7 @@ void TrackManager::CreateGameNote(const char* fileName)
 
 	char buffer[256];
 	char* barInfo = new char[50];
-	char* noteInfo = new char[1024];
+	char noteLine[1024];
 	char* record = fgets(buffer, sizeof(buffer), fp);
 
 	int fieldFlag = 1;		//HEADER = 1, MAIN DATA = 2
@@ -199,7 +204,7 @@ void TrackManager::CreateGameNote(const char* fileName)
 		while (fieldFlag == 2)
 		{
 			memset(barInfo, 0, sizeof(char) * 50);
-			memset(noteInfo, 0, sizeof(char) * 120);
+			memset(noteLine, 0, sizeof(noteLine));
 			durationTick = 0;
 
 			if (NULL == token)
@@ -214,7 +219,7 @@ void TrackManager::CreateGameNote(const char* fileName)
 			token = strtok(NULL, "#:\n");
 
 			//2. 노트정보를 읽는다.
-			strncpy(noteInfo, token, strlen(token));
+			strncpy(noteLine, token, strlen(token));
 			token = strtok(NULL, "#:\n");
 
 			//마디 번호를 저장
@@ -225,65 +230,115 @@ void TrackManager::CreateGameNote(const char* fileName)
 
 			if (1 == playerPlay)
 			{
-				noteTick = SecondPerBar * (curBarNum-1) * 1000;	//마디가 시작하는 시간(초)
+				sNoteInfo* noteInfo = new sNoteInfo;
+				strncpy(noteInfo->noteLine, noteLine, sizeof(noteLine));
+				noteInfo->BarNum = curBarNum;
 
-				int beat = strlen(noteInfo) / 2;	//박자
-				if (1 == beat)
+				switch (trackNum)
 				{
-					durationTick = SecondPerBar * 1000;
-				}
-				else
-				{
-					SecondPerBeat = (60.0f / BPM) / (beat / 4);
-				}
-				
-				char* ptr = &noteInfo[0];
-				for (int i = 0; i < beat; i++)
-				{
-					char note[3] = { 0, };
-					strncpy(note, ptr, 2);
-					//printf("%s ", note);
-					note[2] = '\0';
-					(ptr++);
-					(ptr++);
-
-					//00은 노트를 삽입하지 않고 패스
-					if (!strcmp(note, "00"))
-					{
-						noteTick += SecondPerBeat * 1000;
-					}
-					else
-					{
-						//노트배치
-						float sec = (float)noteTick / 1000.0f;
-						float duration = (float)durationTick / 1000.0f;
-						switch (trackNum)
-						{
-						case 1:
-							_trackList->Get(eTrackNum::TRACK01)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-							break;
-						case 2:
-							_trackList->Get(eTrackNum::TRACK02)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-							break;
-						case 3:
-							_trackList->Get(eTrackNum::TRACK03)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-							break;
-						case 4:
-							_trackList->Get(eTrackNum::TRACK04)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-							break;
-						case 5:
-							_trackList->Get(eTrackNum::TRACK05)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-							break;
-						}
-						noteTick += SecondPerBeat * 1000;
-					}
+				case 1:
+					_trackNoteList[0].Append(noteInfo);
+					break;
+				case 2:
+					_trackNoteList[1].Append(noteInfo);
+					break;
+				case 3:
+					_trackNoteList[2].Append(noteInfo);
+					break;
+				case 4:
+					_trackNoteList[3].Append(noteInfo);
+					break;
+				case 5:
+					_trackNoteList[4].Append(noteInfo);
+					break;
 				}
 			}
 		}
 	}
 	fclose(fp);
 	delete[] barInfo;
-	delete[] noteInfo;
+
+	CreateGameNote();
+}
+
+void TrackManager::CreateGameNote()
+{
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			printf("==============%d 트랙=================\n", i + 1);
+			DLinkedListIterator<sNoteInfo*> itr = _trackNoteList[i].GetIterator();
+			for (itr.Start(); itr.Valid(); itr.Forth())
+			{
+				sNoteInfo* noteinfo = itr.Item();
+				printf("마디번호: %d, 노트: %s\n", noteinfo->BarNum, noteinfo->noteLine);
+				delete noteinfo;
+			}
+			printf("\n");
+		}
+	}
+	/*
+	if (curBarNum > 0)
+	{
+		noteTick = SecondPerBar * (curBarNum - 1) * 1000;	//마디가 시작하는 시간(초)
+		int beat = strlen(noteLine) / 2;	//박자
+
+		if (1 == beat)
+		{
+			durationTick = SecondPerBar * 1000;
+		}
+		else
+		{
+			SecondPerBeat = (60.0f / BPM) / ((float)beat / 4);
+		}
+
+		char* ptr = &noteLine[0];
+		for (int i = 0; i < beat; i++)
+		{
+						
+			sNoteInfo noteInfo;
+			memset(noteInfo.note, 0, sizeof(noteInfo.note));
+			strncpy(noteInfo.note, ptr, 2);
+			noteInfo.note[2] = '\0';
+			(ptr++);
+			(ptr++);
+
+						
+			//00은 노트를 삽입하지 않고 패스
+			if (!strcmp(noteInfo.note, "00"))
+			{
+				noteTick += SecondPerBeat * 1000;
+			}
+			else
+			{
+				//노트배치
+				float sec = (float)noteTick / 1000.0f;
+				float duration = (float)durationTick / 1000.0f;
+							
+				switch (trackNum)
+				{
+				case 1:
+					_trackList->Get(eTrackNum::TRACK01)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+					break;
+				case 2:
+					_trackList->Get(eTrackNum::TRACK02)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+					break;
+				case 3:
+					_trackList->Get(eTrackNum::TRACK03)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+					break;
+				case 4:
+					_trackList->Get(eTrackNum::TRACK04)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+					break;
+				case 5:
+					_trackList->Get(eTrackNum::TRACK05)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+					break;
+				}
+				noteTick += SecondPerBeat * 1000;
+			}
+						
+		}
+	}
+	*/
 }
 
 void TrackManager::KeyDown(int keyCode)
