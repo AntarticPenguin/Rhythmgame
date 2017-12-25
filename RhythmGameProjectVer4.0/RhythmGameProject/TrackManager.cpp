@@ -57,10 +57,11 @@ void TrackManager::Init()
 	}
 
 	{
-		_trackNoteList = new DLinkedList<sNoteInfo*>[_trackList->GetSize()];
+		_trackNoteList = new DLinkedList<sNoteLine*>[_trackList->GetSize()];
 	}
 
 	//BMS파싱 및 노트 생성
+	memset(_longNoteKey, 0, sizeof(_longNoteKey));
 	ParsingBMS("BMS_Sample.bme");
 }
 
@@ -130,18 +131,11 @@ void TrackManager::ParsingBMS(const char* fileName)
 	char* record = fgets(buffer, sizeof(buffer), fp);
 
 	int fieldFlag = 1;		//HEADER = 1, MAIN DATA = 2
-	
-	int judgeDeltaLine = 100;
-	int noteTick = 0;
-	int durationTick = 0;
 
-	//BMSE Parsing Info
-	int BPM = 0;					// BMSE 스크립트를 통해 BPM을 구한다.
-	float SecondPerBeat = 0;		// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
-	float SecondPerBar = 0;			// BPM에 따른 1마디당 초를 구한다.	(1/32박자 기준)
-	float curBarTick = 0;
 	int curBarNum = 0;
-
+	_BPM = 0;
+	_SecondPerBar = 0;
+	
 	while (true)
 	{
 		record = fgets(buffer, sizeof(buffer), fp);
@@ -171,18 +165,20 @@ void TrackManager::ParsingBMS(const char* fileName)
 			else if (!strcmp(token, "BPM"))
 			{
 				token = strtok(NULL, "\n");
-				BPM = atoi(token);
-				SecondPerBar = (60.0f * 32.0f) / (8.0f * BPM);	// BPM에 따른 1마디당 초를 구한다.(1/32박자 기준)
-				printf("BPM: %d\n", BPM);
+				_BPM = atoi(token);
+				_SecondPerBar = (60.0f * 32.0f) / (8.0f * _BPM);	// BPM에 따른 1마디당 초를 구한다.(1/32박자 기준)
+				printf("BPM: %d\n", _BPM);
 			}
 			else if (!strcmp(token, "PLAYLEVEL"))
 			{
 				token = strtok(NULL, "\n");
-				printf("PLAYLEVEL :%s\n", token);
+				printf("PLAYLEVEL: %s\n", token);
 			}
 			else if (!strcmp(token, "LNOBJ"))
 			{
-				
+				token = strtok(NULL, "\n");
+				strncpy(_longNoteKey, token, strlen(token));
+				printf("LONGNOTE KEY: %s\n", _longNoteKey);
 			}
 			else if (!strcmp(token, "LNTYPE"))
 			{
@@ -205,7 +201,6 @@ void TrackManager::ParsingBMS(const char* fileName)
 		{
 			memset(barInfo, 0, sizeof(char) * 50);
 			memset(noteLine, 0, sizeof(noteLine));
-			durationTick = 0;
 
 			if (NULL == token)
 				break;
@@ -230,26 +225,26 @@ void TrackManager::ParsingBMS(const char* fileName)
 
 			if (1 == playerPlay)
 			{
-				sNoteInfo* noteInfo = new sNoteInfo;
-				strncpy(noteInfo->noteLine, noteLine, sizeof(noteLine));
-				noteInfo->BarNum = curBarNum;
+				sNoteLine* snoteLine = new sNoteLine;
+				strncpy(snoteLine->line, noteLine, sizeof(noteLine));
+				snoteLine->BarNum = curBarNum;
 
 				switch (trackNum)
 				{
 				case 1:
-					_trackNoteList[0].Append(noteInfo);
+					_trackNoteList[0].Append(snoteLine);
 					break;
 				case 2:
-					_trackNoteList[1].Append(noteInfo);
+					_trackNoteList[1].Append(snoteLine);
 					break;
 				case 3:
-					_trackNoteList[2].Append(noteInfo);
+					_trackNoteList[2].Append(snoteLine);
 					break;
 				case 4:
-					_trackNoteList[3].Append(noteInfo);
+					_trackNoteList[3].Append(snoteLine);
 					break;
 				case 5:
-					_trackNoteList[4].Append(noteInfo);
+					_trackNoteList[4].Append(snoteLine);
 					break;
 				}
 			}
@@ -263,82 +258,113 @@ void TrackManager::ParsingBMS(const char* fileName)
 
 void TrackManager::CreateGameNote()
 {
+	int judgeDeltaLine = 100;
+	int noteTick = 0;
+	int durationTick = 0;
+
+	//BMSE Parsing Info
+	float SecondPerBeat = 0;				// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
+
+	for (int trackNum = 0; trackNum < _trackList->GetSize(); trackNum++)
 	{
-		for (int i = 0; i < 5; i++)
+		DLinkedList<sNoteInfo> noteList;
+		printf("%d번 트랙\n", trackNum+1);
+		DLinkedListIterator<sNoteLine*> itr = _trackNoteList[trackNum].GetIterator();
+		//정방향으로 순회하면서 각 노트의 시작시간 배치
+		for (itr.Start(); itr.Valid(); itr.Forth())
 		{
-			printf("==============%d 트랙=================\n", i + 1);
-			DLinkedListIterator<sNoteInfo*> itr = _trackNoteList[i].GetIterator();
-			for (itr.Start(); itr.Valid(); itr.Forth())
+			sNoteLine* sNoteLine = itr.Item();
+			if (sNoteLine->BarNum > 0)
 			{
-				sNoteInfo* noteinfo = itr.Item();
-				printf("마디번호: %d, 노트: %s\n", noteinfo->BarNum, noteinfo->noteLine);
-				delete noteinfo;
+				//durationTick = 0;
+				sNoteInfo noteInfo;
+				noteInfo.startTick = 0;
+				noteInfo.durationTick = 0;
+
+				noteTick = _SecondPerBar * (sNoteLine->BarNum - 1) * 1000;	//마디가 시작하는 시간(초)
+				int beat = strlen(sNoteLine->line) / 2;	//박자
+
+				if (1 == beat)
+				{
+					//롱노트키를 포함한 일반 노트들도 마디에 한개만 있다면 그 마디는 롱노트
+					//예:#00115:0V, #00215:ZZ
+					//durationTick = _SecondPerBar * 1000;
+					noteInfo.durationTick = _SecondPerBar * 1000;
+				}
+				else
+				{
+					SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
+				}
+
+				char* ptr = &sNoteLine->line[0];
+				for (int i = 0; i < beat; i++)
+				{
+					//char note[3];
+					memset(noteInfo.note, 0, sizeof(noteInfo.note));
+					strncpy(noteInfo.note, ptr, 2);
+					noteInfo.note[2] = '\0';
+					(ptr++);
+					(ptr++);
+
+					//00은 노트를 삽입하지 않고 패스
+					if (!strcmp(noteInfo.note, "00"))
+					{
+						noteTick += SecondPerBeat * 1000;
+					}
+					else
+					{
+						/*
+						//노트배치
+						float sec = (float)noteTick / 1000.0f;
+						float duration = (float)(durationTick) / 1000.0f;
+
+						_trackList->Get(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+
+						noteTick += SecondPerBeat * 1000;
+						*/
+						noteInfo.startTick = noteTick;
+						noteTick += SecondPerBeat * 1000;
+						noteList.Append(noteInfo);
+					}
+				}
 			}
-			printf("\n");
 		}
-	}
-	/*
-	if (curBarNum > 0)
-	{
-		noteTick = SecondPerBar * (curBarNum - 1) * 1000;	//마디가 시작하는 시간(초)
-		int beat = strlen(noteLine) / 2;	//박자
-
-		if (1 == beat)
+		
+		DLinkedListIterator<sNoteInfo> it = noteList.GetIterator();
+		//역방향으로 순회하면서 롱노트 계산 및 노트를 트랙에 배치
+		for (it.End(); it.Valid(); it.Back())
 		{
-			durationTick = SecondPerBar * 1000;
-		}
-		else
-		{
-			SecondPerBeat = (60.0f / BPM) / ((float)beat / 4);
-		}
+			sNoteInfo curNote = it.Item();
+			printf("note: %s, start: %d\n", curNote.note, curNote.startTick);
 
-		char* ptr = &noteLine[0];
-		for (int i = 0; i < beat; i++)
-		{
-						
-			sNoteInfo noteInfo;
-			memset(noteInfo.note, 0, sizeof(noteInfo.note));
-			strncpy(noteInfo.note, ptr, 2);
-			noteInfo.note[2] = '\0';
-			(ptr++);
-			(ptr++);
+			float sec = 0;
+			float duration = 0;
 
-						
-			//00은 노트를 삽입하지 않고 패스
-			if (!strcmp(noteInfo.note, "00"))
+			//printf("%s ", curNote.note);
+			if (0 == curNote.durationTick)
 			{
-				noteTick += SecondPerBeat * 1000;
+				if (!strcmp(curNote.note, _longNoteKey))
+				{
+					it.Back();
+					sNoteInfo prevNote = it.Item();
+					sec = (float)(prevNote.startTick) / 1000.0f;
+					duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
+				}
+				else
+				{
+					sec = (float)(curNote.startTick) / 1000.0f;
+					duration = (float)(curNote.durationTick) / 1000.0f;
+				}
 			}
 			else
 			{
-				//노트배치
-				float sec = (float)noteTick / 1000.0f;
-				float duration = (float)durationTick / 1000.0f;
-							
-				switch (trackNum)
-				{
-				case 1:
-					_trackList->Get(eTrackNum::TRACK01)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-					break;
-				case 2:
-					_trackList->Get(eTrackNum::TRACK02)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-					break;
-				case 3:
-					_trackList->Get(eTrackNum::TRACK03)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-					break;
-				case 4:
-					_trackList->Get(eTrackNum::TRACK04)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-					break;
-				case 5:
-					_trackList->Get(eTrackNum::TRACK05)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-					break;
-				}
-				noteTick += SecondPerBeat * 1000;
+				sec = (float)(curNote.startTick) / 1000.0f;
+				duration = (float)(curNote.durationTick) / 1000.0f;
 			}
-						
+			_trackList->Get(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
 		}
+		printf("\n");
 	}
-	*/
 }
 
 void TrackManager::KeyDown(int keyCode)
