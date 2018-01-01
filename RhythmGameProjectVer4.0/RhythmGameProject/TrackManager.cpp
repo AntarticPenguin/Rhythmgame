@@ -38,15 +38,10 @@ void TrackManager::Init()
 
 	{
 		Track* track1 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) - 204, GameSystem::GetInstance()->GetWindowHeight());
-		track1->Init();
 		Track* track2 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) - 102, GameSystem::GetInstance()->GetWindowHeight());
-		track2->Init();
 		Track* track3 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2), GameSystem::GetInstance()->GetWindowHeight());
-		track3->Init();
 		Track* track4 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + 102, GameSystem::GetInstance()->GetWindowHeight());
-		track4->Init();
 		Track* track5 = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + 204, GameSystem::GetInstance()->GetWindowHeight());
-		track5->Init();
 
 		_trackList = new Array<Track*>(5);
 		_trackList->Set(eTrackNum::TRACK01, track1);
@@ -63,6 +58,11 @@ void TrackManager::Init()
 	//BMS파싱 및 노트 생성
 	memset(_longNoteKey, 0, sizeof(_longNoteKey));
 	ParsingBMS("BMS_Sample.bme");
+
+	for (int i = 0; i < _trackList->GetSize(); i++)
+		_trackList->Get(i)->Init();
+
+	CreateGameNote();
 }
 
 void TrackManager::Deinit()
@@ -160,25 +160,25 @@ void TrackManager::ParsingBMS(const char* fileName)
 			if (!strcmp(token, "PLAYER"))
 			{
 				token = strtok(NULL, "\n");
-				printf("PLAYER :%s\n", token);
+				//printf("PLAYER :%s\n", token);
 			}
 			else if (!strcmp(token, "BPM"))
 			{
 				token = strtok(NULL, "\n");
 				_BPM = atoi(token);
 				_SecondPerBar = (60.0f * 32.0f) / (8.0f * _BPM);	// BPM에 따른 1마디당 초를 구한다.(1/32박자 기준)
-				printf("BPM: %d\n", _BPM);
+				//printf("BPM: %d\n", _BPM);
 			}
 			else if (!strcmp(token, "PLAYLEVEL"))
 			{
 				token = strtok(NULL, "\n");
-				printf("PLAYLEVEL: %s\n", token);
+				//printf("PLAYLEVEL: %s\n", token);
 			}
 			else if (!strcmp(token, "LNOBJ"))
 			{
 				token = strtok(NULL, "\n");
 				strncpy(_longNoteKey, token, strlen(token));
-				printf("LONGNOTE KEY: %s\n", _longNoteKey);
+				//printf("LONGNOTE KEY: %s\n", _longNoteKey);
 			}
 			else if (!strcmp(token, "LNTYPE"))
 			{
@@ -187,7 +187,7 @@ void TrackManager::ParsingBMS(const char* fileName)
 			else if (!strcmp(token, "MAIN"))
 			{
 				fieldFlag = 2;
-				printf("MAIN DATA FIELD\n");
+				//printf("MAIN DATA FIELD\n");
 				record = fgets(buffer, sizeof(buffer), fp);
 				token = strtok(record, "#:\n");
 				break;
@@ -253,7 +253,14 @@ void TrackManager::ParsingBMS(const char* fileName)
 	fclose(fp);
 	delete[] barInfo;
 
-	CreateGameNote();
+	//노래 시간, 트랙 길이 세팅
+	int tempo = _BPM / 60;
+	float playTimeSec = _SecondPerBar * (curBarNum + 1);
+	int trackheight = GameSystem::GetInstance()->GetWindowHeight() * playTimeSec * tempo;
+	trackheight /= 2;
+	GameSystem::GetInstance()->SetTrackHeight(trackheight);
+	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
+
 }
 
 void TrackManager::CreateGameNote()
@@ -268,93 +275,60 @@ void TrackManager::CreateGameNote()
 	for (int trackNum = 0; trackNum < _trackList->GetSize(); trackNum++)
 	{
 		DLinkedList<sNoteInfo> noteList;
-		printf("%d번 트랙\n", trackNum+1);
-		DLinkedListIterator<sNoteLine*> itr = _trackNoteList[trackNum].GetIterator();
+
 		//정방향으로 순회하면서 각 노트의 시작시간 배치
+		DLinkedListIterator<sNoteLine*> itr = _trackNoteList[trackNum].GetIterator();
 		for (itr.Start(); itr.Valid(); itr.Forth())
 		{
 			sNoteLine* sNoteLine = itr.Item();
-			if (sNoteLine->BarNum > 0)
+
+			sNoteInfo noteInfo;
+			noteInfo.startTick = 0;
+			noteInfo.durationTick = 0;
+
+			noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
+
+			int beat = strlen(sNoteLine->line) / 2;	//박자
+			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
+
+			char* ptr = &sNoteLine->line[0];
+			for (int i = 0; i < beat; i++)
 			{
-				//durationTick = 0;
-				sNoteInfo noteInfo;
-				noteInfo.startTick = 0;
-				noteInfo.durationTick = 0;
+				memset(noteInfo.note, 0, sizeof(noteInfo.note));
+				strncpy(noteInfo.note, ptr, 2);
+				noteInfo.note[2] = '\0';
+				(ptr++);
+				(ptr++);
 
-				noteTick = _SecondPerBar * (sNoteLine->BarNum - 1) * 1000;	//마디가 시작하는 시간(초)
-				int beat = strlen(sNoteLine->line) / 2;	//박자
-
-				if (1 == beat)
+				//00은 노트를 삽입하지 않고 패스
+				if (!strcmp(noteInfo.note, "00"))
 				{
-					//롱노트키를 포함한 일반 노트들도 마디에 한개만 있다면 그 마디는 롱노트
-					//예:#00115:0V, #00215:ZZ
-					//durationTick = _SecondPerBar * 1000;
-					noteInfo.durationTick = _SecondPerBar * 1000;
+					noteTick += SecondPerBeat * 1000;
 				}
 				else
 				{
-					SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
-				}
-
-				char* ptr = &sNoteLine->line[0];
-				for (int i = 0; i < beat; i++)
-				{
-					//char note[3];
-					memset(noteInfo.note, 0, sizeof(noteInfo.note));
-					strncpy(noteInfo.note, ptr, 2);
-					noteInfo.note[2] = '\0';
-					(ptr++);
-					(ptr++);
-
-					//00은 노트를 삽입하지 않고 패스
-					if (!strcmp(noteInfo.note, "00"))
-					{
-						noteTick += SecondPerBeat * 1000;
-					}
-					else
-					{
-						/*
-						//노트배치
-						float sec = (float)noteTick / 1000.0f;
-						float duration = (float)(durationTick) / 1000.0f;
-
-						_trackList->Get(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-
-						noteTick += SecondPerBeat * 1000;
-						*/
-						noteInfo.startTick = noteTick;
-						noteTick += SecondPerBeat * 1000;
-						noteList.Append(noteInfo);
-					}
+					noteInfo.startTick = noteTick;
+					noteTick += SecondPerBeat * 1000;
+					noteList.Append(noteInfo);
 				}
 			}
 		}
 		
-		DLinkedListIterator<sNoteInfo> it = noteList.GetIterator();
 		//역방향으로 순회하면서 롱노트 계산 및 노트를 트랙에 배치
+		DLinkedListIterator<sNoteInfo> it = noteList.GetIterator();
 		for (it.End(); it.Valid(); it.Back())
 		{
 			sNoteInfo curNote = it.Item();
-			printf("note: %s, start: %d\n", curNote.note, curNote.startTick);
 
 			float sec = 0;
 			float duration = 0;
 
-			//printf("%s ", curNote.note);
-			if (0 == curNote.durationTick)
+			if (!strcmp(curNote.note, _longNoteKey))
 			{
-				if (!strcmp(curNote.note, _longNoteKey))
-				{
-					it.Back();
-					sNoteInfo prevNote = it.Item();
-					sec = (float)(prevNote.startTick) / 1000.0f;
-					duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
-				}
-				else
-				{
-					sec = (float)(curNote.startTick) / 1000.0f;
-					duration = (float)(curNote.durationTick) / 1000.0f;
-				}
+				it.Back();
+				sNoteInfo prevNote = it.Item();
+				sec = (float)(prevNote.startTick) / 1000.0f;
+				duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
 			}
 			else
 			{
@@ -363,7 +337,6 @@ void TrackManager::CreateGameNote()
 			}
 			_trackList->Get(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
 		}
-		printf("\n");
 	}
 }
 

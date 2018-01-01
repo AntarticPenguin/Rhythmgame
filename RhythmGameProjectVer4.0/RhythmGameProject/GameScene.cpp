@@ -57,26 +57,12 @@ void GameScene::Init()
 				token = strtok(NULL, ",\n");
 				strcpy(musicName, token);
 			}
-			else if (!strcmp(token, "PlayTime"))
-			{
-				token = strtok(NULL, ",\n");
-				playtimeMin = atof(token);
-			}
 		}
 	}
 	fclose(fp);
 
 	_backgroundSprite = new Sprite(backgroundSpriteName, true);
 	_backgroundSprite->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() / 2);
-
-	//노래 시간, 트랙 길이 세팅
-	int BPM = 120;
-	int tempo = BPM / 60;
-	float playTimeSec = playtimeMin * 60.0f;
-	int trackheight = GameSystem::GetInstance()->GetWindowHeight() * playTimeSec * tempo;
-	trackheight /= 2;
-	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
-	GameSystem::GetInstance()->SetTrackHeight(trackheight);
 
 	DataManager::GetInstance()->ResetScore();
 	DataManager::GetInstance()->ResetCombo();

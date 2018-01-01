@@ -23,16 +23,6 @@ Track::Track(int xPos, int yPos)
 
 	_curJudgeNote = NULL;
 
-	_judgeDeltaLine = 100;
-	_judgeTick = GameSystem::GetInstance()->GetPlayTimeTick();
-	_judgeStartTick = _judgeTick - 200;
-	_judgeEndTick = _judgeTick + 200;
-
-	_judgePerfect_s = _judgeTick - 50;
-	_judgePerfect_e = _judgeTick + 50;
-	_judgeGreat_s = _judgePerfect_s - 50;
-	_judgeGreat_e = _judgePerfect_e + 50;
-
 	_oldDuration = 0;
 	_holdDuration = 0;
 }
@@ -93,6 +83,17 @@ void Track::Init()
 	_bgSpriteList.Append(judgeSprite);
 
 	_judgeEffectSprite = new Sprite(explosionSprite, false);
+
+	//JudgeLine Init
+	_judgeDeltaLine = 100;
+	_judgeTick = GameSystem::GetInstance()->GetPlayTimeTick();
+	_judgeStartTick = _judgeTick - 200;
+	_judgeEndTick = _judgeTick + 200;
+
+	_judgePerfect_s = _judgeTick - 50;
+	_judgePerfect_e = _judgeTick + 50;
+	_judgeGreat_s = _judgePerfect_s - 50;
+	_judgeGreat_e = _judgePerfect_e + 50;
 
 	TrackPosition(_x, _y);
 }
@@ -215,7 +216,7 @@ void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine)
 	Note* note = new Note(sec, duration, judgeDeltaLine);
 	note->SetXPosition(_x);
 	note->Init();
-	_noteList.Append(note);
+	_noteList.Prepend(note);
 }
 
 void Track::KeyDown()
@@ -368,7 +369,7 @@ void Track::KeyUp()
 	case eJudge::JUDGE_START_PERFECT:
 	case eJudge::JUDGE_START_GREAT:
 		_judgeEffectSprite->Stop();
-
+		
 		if (55 < _curJudgeNote->GetDuration())
 		{
 			DataManager::GetInstance()->ResetCombo();
