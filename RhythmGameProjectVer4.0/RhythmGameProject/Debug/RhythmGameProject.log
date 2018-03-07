@@ -1,2 +1,13 @@
-﻿  Track.cpp
+﻿  TrackManager.cpp
+d:\programmingfolder\rhythmgameprojectver4.0\rhythmgameproject\trackmanager.cpp(261): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.0\rhythmgameproject\trackmanager.cpp(291): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.0\rhythmgameproject\trackmanager.cpp(308): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.0\rhythmgameproject\trackmanager.cpp(313): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  DataManager.cpp
+d:\programmingfolder\rhythmgameprojectver4.0\rhythmgameproject\datamanager.cpp(44): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.0\rhythmgameproject\datamanager.cpp(49): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  건너뛰고 있습니다... (관련된 변경 내용 없음)
+  Track.cpp
+  GameScene.cpp
   RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.0\Debug\RhythmGameProjectVer4.0.exe

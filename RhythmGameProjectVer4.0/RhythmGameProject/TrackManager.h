@@ -20,6 +20,7 @@ typedef struct sNoteLine
 {
 	char line[1024];
 	int BarNum;
+	int isLongNote;
 }sNoteLine;
 
 typedef struct sNoteInfo
@@ -27,6 +28,7 @@ typedef struct sNoteInfo
 	char note[3];
 	int startTick;
 	int durationTick;
+	int isLongNote;
 }sNoteInfo;
 
 class TrackManager : public GameObject
@@ -68,6 +70,7 @@ private:
 public:
 	void ParsingBMS(const char* fileName);
 	void CreateGameNote();
+	void CreateGameNote2();
 
 	//input
 public:

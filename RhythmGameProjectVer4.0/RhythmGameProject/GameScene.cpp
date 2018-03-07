@@ -34,7 +34,6 @@ void GameScene::Init()
 
 	char backgroundSpriteName[256];
 	char musicName[256];
-	float playtimeMin;
 
 	char buffer[256];
 	char* record = fgets(buffer, sizeof(buffer), fp);
