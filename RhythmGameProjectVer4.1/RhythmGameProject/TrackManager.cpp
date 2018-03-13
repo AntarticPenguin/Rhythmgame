@@ -50,7 +50,7 @@ void TrackManager::Init()
 	}
 
 	{
-		_trackNoteList = new DLinkedList<sNoteLine*>[_trackList->size()];
+		_trackNoteList = new std::list<sNoteLine*>[_trackList->size()];
 	}
 
 	//BMS파싱 및 노트 생성
@@ -62,8 +62,7 @@ void TrackManager::Init()
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Init();
 
-	//CreateGameNote();
-	CreateGameNote2();
+	CreateGameNote();
 }
 
 void TrackManager::Deinit()
@@ -107,7 +106,6 @@ void TrackManager::Render()
 {
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Render();
-
 
 	EffectPlayer::GetInstance()->Render();
 	_combofont->Render();
@@ -177,11 +175,13 @@ void TrackManager::ParsingBMS(const char* fileName)
 			{
 				token = strtok(NULL, "\n");
 				strncpy(_longNoteKey, token, strlen(token));
+				_eFileType = eFileType::BME;
 			}
 			else if (!strcmp(token, "LNTYPE"))
 			{
 				token = strtok(NULL, "\n");
 				strncpy(_longNoteKey, "LNTYPE", strlen(_longNoteKey));
+				_eFileType = eFileType::BMS;
 			}
 			else if (!strcmp(token, "MAIN"))
 			{
@@ -208,12 +208,12 @@ void TrackManager::ParsingBMS(const char* fileName)
 
 			//1. 마디정보를 읽는다
 			strncpy(barInfo, token, strlen(token));
-			printf("bar: %s, ", barInfo);
+			//printf("bar: %s, ", barInfo);
 			token = strtok(NULL, "#:\n");
 
 			//2. 노트정보를 읽는다.
 			strncpy(noteLine, token, strlen(token));
-			printf(" %s\n", noteLine);
+			//printf(" %s\n", noteLine);
 			token = strtok(NULL, "#:\n");
 
 			//마디 번호를 저장
@@ -229,24 +229,7 @@ void TrackManager::ParsingBMS(const char* fileName)
 				snoteLine->BarNum = curBarNum;
 				snoteLine->isLongNote = playerPlay;
 
-				switch (trackNum)
-				{
-				case 1:
-					_trackNoteList[0].Append(snoteLine);
-					break;
-				case 2:
-					_trackNoteList[1].Append(snoteLine);
-					break;
-				case 3:
-					_trackNoteList[2].Append(snoteLine);
-					break;
-				case 4:
-					_trackNoteList[3].Append(snoteLine);
-					break;
-				case 5:
-					_trackNoteList[4].Append(snoteLine);
-					break;
-				}
+				AddNoteLine(trackNum, snoteLine);
 			}
 		}
 	}
@@ -261,6 +244,30 @@ void TrackManager::ParsingBMS(const char* fileName)
 	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
 }
 
+void TrackManager::AddNoteLine(int trackNum, sNoteLine* noteLine)
+{
+	/*switch (trackNum)
+	{
+	case 1:
+		_trackNoteList[0].push_back(snoteLine);
+		break;
+	case 2:
+		_trackNoteList[1].push_back(snoteLine);
+		break;
+	case 3:
+		_trackNoteList[2].push_back(snoteLine);
+		break;
+	case 4:
+		_trackNoteList[3].push_back(snoteLine);
+		break;
+	case 5:
+		_trackNoteList[4].push_back(snoteLine);
+		break;
+	}*/
+	if((0 < trackNum) && (trackNum < 6))
+		_trackNoteList[trackNum-1].push_back(noteLine);
+}
+
 void TrackManager::CreateGameNote()
 {
 	int judgeDeltaLine = 100;
@@ -272,13 +279,13 @@ void TrackManager::CreateGameNote()
 
 	for (int trackNum = 0; trackNum < _trackList->size(); trackNum++)
 	{
-		DLinkedList<sNoteInfo> noteList;
+		std::list<sNoteInfo> noteList;
 
 		//정방향으로 순회하면서 각 노트의 시작시간 배치
-		DLinkedListIterator<sNoteLine*> itr = _trackNoteList[trackNum].GetIterator();
-		for (itr.Start(); itr.Valid(); itr.Forth())
+		std::list<sNoteLine*>::iterator itr;
+		for(itr = _trackNoteList[trackNum].begin(); itr != _trackNoteList[trackNum].end(); itr++)
 		{
-			sNoteLine* sNoteLine = itr.Item();
+			sNoteLine* sNoteLine = (*itr);
 
 			sNoteInfo noteInfo;
 			noteInfo.startTick = 0;
@@ -308,24 +315,25 @@ void TrackManager::CreateGameNote()
 				{
 					noteInfo.startTick = noteTick;
 					noteTick += SecondPerBeat * 1000;
-					noteList.Append(noteInfo);
+					noteList.push_back(noteInfo);
 				}
 			}
 		}
-		
+
 		//역방향으로 순회하면서 롱노트 계산 및 노트를 트랙에 배치
-		DLinkedListIterator<sNoteInfo> it = noteList.GetIterator();
-		for (it.End(); it.Valid(); it.Back())
+		std::list<sNoteInfo>::iterator reverseItr;
+		for(reverseItr = noteList.end(); reverseItr != noteList.begin();)
 		{
-			sNoteInfo curNote = it.Item();
+			reverseItr--;
+			sNoteInfo curNote = (*reverseItr);
 
 			float sec = 0;
 			float duration = 0;
 
-			if (!strcmp(curNote.note, _longNoteKey))
+			if(true == IsLongNote(_eFileType, curNote))
 			{
-				it.Back();
-				sNoteInfo prevNote = it.Item();
+				reverseItr--;
+				sNoteInfo prevNote = (*reverseItr);
 				sec = (float)(prevNote.startTick) / 1000.0f;
 				duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
 			}
@@ -339,82 +347,17 @@ void TrackManager::CreateGameNote()
 	}
 }
 
-void TrackManager::CreateGameNote2()
+bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 {
-	int judgeDeltaLine = 100;
-	int noteTick = 0;
-	int durationTick = 0;
-
-	//BMSE Parsing Info
-	float SecondPerBeat = 0;				// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
-
-	for (int trackNum = 0; trackNum < _trackList->size(); trackNum++)
+	switch (_eFileType)
 	{
-		DLinkedList<sNoteInfo> noteList;
-
-		//정방향으로 순회하면서 각 노트의 시작시간 배치
-		DLinkedListIterator<sNoteLine*> itr = _trackNoteList[trackNum].GetIterator();
-		for (itr.Start(); itr.Valid(); itr.Forth())
-		{
-			sNoteLine* sNoteLine = itr.Item();
-
-			sNoteInfo noteInfo;
-			noteInfo.startTick = 0;
-			noteInfo.durationTick = 0;
-			noteInfo.isLongNote = sNoteLine->isLongNote;
-
-			noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
-
-			int beat = strlen(sNoteLine->line) / 2;	//박자
-			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
-
-			char* ptr = &sNoteLine->line[0];
-			for (int i = 0; i < beat; i++)
-			{
-				memset(noteInfo.note, 0, sizeof(noteInfo.note));
-				strncpy(noteInfo.note, ptr, 2);
-				noteInfo.note[2] = '\0';
-				(ptr++);
-				(ptr++);
-
-				//00은 노트를 삽입하지 않고 패스
-				if (!strcmp(noteInfo.note, "00"))
-				{
-					noteTick += SecondPerBeat * 1000;
-				}
-				else
-				{
-					noteInfo.startTick = noteTick;
-					noteTick += SecondPerBeat * 1000;
-					noteList.Append(noteInfo);
-				}
-			}
-		}
-
-		//역방향으로 순회하면서 롱노트 계산 및 노트를 트랙에 배치
-		DLinkedListIterator<sNoteInfo> it = noteList.GetIterator();
-		for (it.End(); it.Valid(); it.Back())
-		{
-			sNoteInfo curNote = it.Item();
-
-			float sec = 0;
-			float duration = 0;
-
-			if (5 == curNote.isLongNote)
-			{
-				it.Back();
-				sNoteInfo prevNote = it.Item();
-				sec = (float)(prevNote.startTick) / 1000.0f;
-				duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
-			}
-			else
-			{
-				sec = (float)(curNote.startTick) / 1000.0f;
-				duration = (float)(curNote.durationTick) / 1000.0f;
-			}
-			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
-		}
+	case eFileType::BME:
+		return (!strcmp(curNote.note, _longNoteKey));
+	case eFileType::BMS:
+		return (5 == curNote.isLongNote);
 	}
+	
+	return false;
 }
 
 void TrackManager::KeyDown(int keyCode)
@@ -427,6 +370,7 @@ void TrackManager::KeyDown(int keyCode)
 	case SDLK_f:
 		_trackList->at(eTrackNum::TRACK02)->KeyDown();
 		break;
+	case SDLK_SPACE:
 		_trackList->at(eTrackNum::TRACK03)->KeyDown();
 		break;
 	case SDLK_j:

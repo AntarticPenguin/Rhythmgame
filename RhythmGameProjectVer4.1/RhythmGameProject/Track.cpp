@@ -77,10 +77,10 @@ void Track::Init()
 	fclose(fp);
 
 	Sprite* trackSprite = new Sprite(trackbackgroundSprite, true);
-	_bgSpriteList.Append(trackSprite);
+	_bgSpriteList.push_back(trackSprite);
 
 	Sprite* judgeSprite = new Sprite(judgelineSprite, true);
-	_bgSpriteList.Append(judgeSprite);
+	_bgSpriteList.push_back(judgeSprite);
 
 	_judgeEffectSprite = new Sprite(explosionSprite, false);
 
@@ -100,23 +100,18 @@ void Track::Init()
 
 void Track::Deinit()
 {
-
-	DLinkedListIterator<Note*> itr = _noteList.GetIterator();
-	for (itr.Start(); itr.Valid(); itr.Forth())
+	std::list<Note*>::iterator itr;
+	for(itr = _noteList.begin(); itr != _noteList.end();)
 	{
-		itr.Item()->Deinit();
-		delete itr.Item();
-		_noteList.Remove(itr);
+		(*itr)->Deinit();
+		_noteList.erase(itr++);
 	}
 
-	DLinkedListIterator<Sprite*> bgitr = _bgSpriteList.GetIterator();
-	for (bgitr.Start(); bgitr.Valid(); bgitr.Forth())
+	std::list<Sprite*>::iterator bgitr;
+	for(bgitr = _bgSpriteList.begin(); bgitr != _bgSpriteList.end(); bgitr++)
 	{
-		if (NULL != bgitr.Item())
-		{
-			delete bgitr.Item();
-		}
-		_bgSpriteList.Remove(bgitr);
+		if (NULL != (*bgitr))
+			bgitr = _bgSpriteList.erase(bgitr);
 	}
 
 	if (NULL != _judgeEffectSprite)
@@ -128,34 +123,33 @@ void Track::Deinit()
 
 void Track::Update(int deltaTime)
 {
-	DLinkedListIterator<Sprite*> bgitr = _bgSpriteList.GetIterator();
-	for (bgitr.Start(); bgitr.Valid(); bgitr.Forth())
+	std::list<Sprite*>::iterator bgitr;
+	for (bgitr = _bgSpriteList.begin(); bgitr != _bgSpriteList.end(); bgitr++)
 	{
-		bgitr.Item()->Update(deltaTime);
+		(*bgitr)->Update(deltaTime);
 	}
 
-	DLinkedListIterator<Note*> itr = _noteList.GetIterator();
-	for (itr.Start(); itr.Valid(); itr.Forth())
+	std::list<Note*>::iterator itr;
+	for (itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		if (itr.Item()->IsLive())
+		if((*itr)->IsLive())
 		{
-			itr.Item()->Update(deltaTime);
+			(*itr)->Update(deltaTime);
 		}
 		else
 		{
-			if (_curJudgeNote == itr.Item())
+			if (_curJudgeNote == (*itr))
 				_curJudgeNote = NULL;
 
-			delete itr.Item();
-			_noteList.Remove(itr);
+			itr = _noteList.erase(itr);
 			break;
 		}
 
 		//노트 판정, 범위
 		//판정선을 지났지만 아직 fail 체크 안된 노트
-		if (_judgeEndTick < itr.Item()->GetNoteTime() && false == itr.Item()->IsPass())
+		if (_judgeEndTick < (*itr)->GetNoteTime() && false == (*itr)->IsPass())
 		{
-			itr.Item()->Pass();
+			(*itr)->Pass();
 
 			EffectPlayer::GetInstance()->Play(eEffect::eMISS);
 			DataManager::GetInstance()->ResetCombo();
@@ -163,7 +157,7 @@ void Track::Update(int deltaTime)
 			_judge = eJudge::MISS;
 			_isPass = true;
 
-			itr.Item()->SetLive(false);
+			(*itr)->SetLive(false);
 		}
 	}
 
@@ -172,22 +166,22 @@ void Track::Update(int deltaTime)
 
 void Track::Render()
 {
-	DLinkedListIterator<Sprite*> bgitr = _bgSpriteList.GetIterator();
-	for (bgitr.Start(); bgitr.Valid(); bgitr.Forth())
+	std::list<Sprite*>::iterator bgitr;
+	for(bgitr = _bgSpriteList.begin(); bgitr != _bgSpriteList.end(); bgitr++)
 	{
-		bgitr.Item()->Render();
+		(*bgitr)->Render();
 	}
 
-	DLinkedListIterator<Note*> itr = _noteList.GetIterator();
-	for (itr.Start(); itr.Valid(); itr.Forth())
+	std::list<Note*>::iterator itr;
+	for(itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		itr.Item()->Render();
+		(*itr)->Render();
 	}
 
 	_judgeEffectSprite->Render();
 }
 
-DLinkedList<Note*>& Track::GetNoteList()
+std::list<Note*>& Track::GetNoteList()
 {
 	return _noteList;
 }
@@ -197,11 +191,10 @@ void Track::TrackPosition(int x, int y)
 	_x = x;
 	_y = y;
 
-	DLinkedListIterator<Sprite*> bgitr = _bgSpriteList.GetIterator();
-	bgitr.Start();
-	bgitr.Item()->SetPosition(_x, _y / 2);					//트랙배경
-	bgitr.Forth();
-	bgitr.Item()->SetPosition(_x, _y - _judgeDeltaLine);	//판정선
+	std::list<Sprite*>::iterator bgitr = _bgSpriteList.begin();
+	(*bgitr)->SetPosition(_x, _y / 2);					//트랙배경
+	bgitr++;
+	(*bgitr)->SetPosition(_x, _y - _judgeDeltaLine);	//판정선
 
 	_judgeEffectSprite->SetPosition(_x, _y - _judgeDeltaLine);
 }
@@ -216,7 +209,7 @@ void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine)
 	Note* note = new Note(sec, duration, judgeDeltaLine);
 	note->SetXPosition(_x);
 	note->Init();
-	_noteList.Prepend(note);
+	_noteList.push_front(note);
 }
 
 void Track::KeyDown()
@@ -241,28 +234,28 @@ void Track::KeyDown()
 		return;
 	}
 
-	DLinkedListIterator<Note*> itr = _noteList.GetIterator();
-	for (itr.Start(); itr.Valid(); itr.Forth())
+	std::list<Note*>::iterator itr;
+	for(itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
 		//노트가 판정 시작선 위에 있는가?
-		if (itr.Item()->GetNoteTime() < _judgeStartTick)
+		if ((*itr)->GetNoteTime() < _judgeStartTick)
 		{
 			break;
 		}
 
 		//노트가 판정범위로 들어왔는가?
-		if ( (_judgeStartTick <= itr.Item()->GetNoteTime() && itr.Item()->GetNoteTime() < _judgeGreat_s) ||
-			(_judgeGreat_e < itr.Item()->GetNoteTime() && itr.Item()->GetNoteTime() <= _judgeEndTick) )
+		if ((_judgeStartTick <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() < _judgeGreat_s) ||
+			(_judgeGreat_e < (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgeEndTick))
 		{
 			_judge = eJudge::MISS;
 			break;
 		}
 
-		if (_judgePerfect_s <= itr.Item()->GetNoteTime() && itr.Item()->GetNoteTime() <= _judgePerfect_e)
+		if (_judgePerfect_s <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgePerfect_e)
 		{
-			if (0 < itr.Item()->GetDuration())
+			if (0 < (*itr)->GetDuration())
 			{
-				_curJudgeNote = itr.Item();
+				_curJudgeNote = (*itr);
 				_curJudgeNote->EnableReduceDuration();
 				_judge = eJudge::JUDGE_START_PERFECT;
 			}
@@ -273,12 +266,12 @@ void Track::KeyDown()
 			}
 		}
 
-		if ((_judgeGreat_s <= itr.Item()->GetNoteTime() && itr.Item()->GetNoteTime() < _judgePerfect_s) ||
-			(_judgePerfect_e < itr.Item()->GetNoteTime() && itr.Item()->GetNoteTime() <= _judgeGreat_e) )
+		if ((_judgeGreat_s <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() < _judgePerfect_s) ||
+			(_judgePerfect_e < (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgeGreat_e))
 		{
-			if (0 < itr.Item()->GetDuration())
+			if (0 < (*itr)->GetDuration())
 			{
-				_curJudgeNote = itr.Item();
+				_curJudgeNote = (*itr);
 				_curJudgeNote->EnableReduceDuration();
 				_judge = eJudge::JUDGE_START_GREAT;
 			}
@@ -297,22 +290,21 @@ void Track::KeyDown()
 		EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
 		DataManager::GetInstance()->IncreaseCombo();
 		DataManager::GetInstance()->ScorePerfect();
-		delete itr.Item();
-		_noteList.Remove(itr);
+		/*delete itr.Item();
+		_noteList.Remove(itr);*/
+		itr = _noteList.erase(itr);
 		break;
 	case eJudge::GREAT:
 		_judgeEffectSprite->Play();
 		EffectPlayer::GetInstance()->Play(eEffect::eGREAT);
 		DataManager::GetInstance()->IncreaseCombo();
 		DataManager::GetInstance()->ScoreGreat();
-		delete itr.Item();
-		_noteList.Remove(itr);
+		itr = _noteList.erase(itr);
 		break;
 	case eJudge::MISS:
 		EffectPlayer::GetInstance()->Play(eEffect::eMISS);
 		DataManager::GetInstance()->ResetCombo();
-		delete itr.Item();
-		_noteList.Remove(itr);
+		itr = _noteList.erase(itr);
 		break;
 	case eJudge::JUDGE_START_PERFECT:
 		_judgeEffectSprite->SetLoop(true);

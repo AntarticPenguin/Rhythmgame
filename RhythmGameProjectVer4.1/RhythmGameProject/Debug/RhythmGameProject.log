@@ -1,23 +1,5 @@
-﻿  TrackManager.cpp
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(62): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(73): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(95): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(108): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(258): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(273): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(288): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(305): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(310): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(351): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(366): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(383): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\trackmanager.cpp(388): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Track.cpp
-  DataManager.cpp
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\datamanager.cpp(44): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\datamanager.cpp(49): warning C4244: '+=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
-  컴파일하고 있습니다...
-  GameScene.cpp
-  코드를 생성하고 있습니다...
+﻿  Note.cpp
+d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\note.cpp(35): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\note.cpp(93): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\note.cpp(103): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.1\Debug\RhythmGameProjectVer4.1.exe

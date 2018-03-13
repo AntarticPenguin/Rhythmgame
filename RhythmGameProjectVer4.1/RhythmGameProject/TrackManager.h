@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
+#include <list>
 
 #include "GameObject.h"
-#include "DLinkedList.h"
 
 class Track;
 class Font;
@@ -15,6 +15,12 @@ enum eJudge
 	MISS,
 	JUDGE_START_PERFECT,
 	JUDGE_START_GREAT,
+};
+
+enum eFileType
+{
+	BME,
+	BMS
 };
 
 typedef struct sNoteLine
@@ -62,16 +68,18 @@ public:
 
 	//BMS Parsing & Create Note
 private:
-	DLinkedList<sNoteLine*>* _trackNoteList;
+	std::list<sNoteLine*>* _trackNoteList;
 
 	int _BPM;				// BMSE 스크립트를 통해 BPM을 구한다.
 	float _SecondPerBar;	// BPM에 따른 1마디당 초를 구한다.	(1/32박자 기준)
-	char _longNoteKey[3];
+	char _longNoteKey[3];	// BME에서 사용하는 longNote 키값
+	eFileType _eFileType;		// BME, BMS 파일 형식 구분
 
 public:
 	void ParsingBMS(const char* fileName);
+	void AddNoteLine(int trackNum, sNoteLine* noteLine);
 	void CreateGameNote();
-	void CreateGameNote2();
+	bool IsLongNote(eFileType _eFileType, sNoteInfo curNote);
 
 	//input
 public:

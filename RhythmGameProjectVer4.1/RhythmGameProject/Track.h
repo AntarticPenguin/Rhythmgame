@@ -1,5 +1,6 @@
 #pragma once
-#include "DLinkedList.h"
+#include <list>
+
 #include "GameObject.h"
 
 class Note;
@@ -18,8 +19,8 @@ class Track : public GameObject
 {
 
 private:
-	DLinkedList<Note*> _noteList;
-	DLinkedList<Sprite*> _bgSpriteList;
+	std::list<Note*> _noteList;
+	std::list<Sprite*> _bgSpriteList;
 
 	Sprite* _judgeEffectSprite;
 	Note* _curJudgeNote;
@@ -56,7 +57,8 @@ public:
 	void Deinit();
 	void Update(int deltaTime);
 	void Render();
-	DLinkedList<Note*>& GetNoteList();
+	//DLinkedList<Note*>& GetNoteList();
+	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
 	bool IsPass();
 	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine);
