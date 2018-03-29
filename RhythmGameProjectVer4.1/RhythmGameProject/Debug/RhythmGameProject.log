@@ -1,2 +1,8 @@
-﻿  main.cpp
-  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
+﻿  TitleScene.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  SceneManager.cpp
+d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\titlescene.h(10): error C2143: 구문 오류: ';'이(가) '*' 앞에 없습니다.
+d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\titlescene.h(10): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\titlescene.h(10): error C2238: ';' 앞에 예기치 않은 토큰이 있습니다.
+  코드를 생성하고 있습니다...

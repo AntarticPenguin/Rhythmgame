@@ -19,8 +19,6 @@ public:
 	void Render();
 
 public:
-	void TrackDefaultKeyInit();
-	void ChangeKey();
 	void KeyDown(int keyCode);
 	void KeyUp(int keyCode);
 };

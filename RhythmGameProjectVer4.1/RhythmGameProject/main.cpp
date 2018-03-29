@@ -58,10 +58,10 @@ int main(int argc, char* argv[])
 		{
 			oldFrame = frame;
 
-			if(0 != GameSystem::GetInstance()->GetPauseTime())
+			if (0 != pauseTimeTick)
 			{
-				oldTick = GameSystem::GetInstance()->GetPauseTime();
-				GameSystem::GetInstance()->SetPauseTime(0);
+				oldTick = pauseTimeTick;
+				pauseTimeTick = 0;
 			}
 
 			int deltaTime = curTick - oldTick;			//deltaTime 계산
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 
 				if (SDL_KEYUP == sdlEvent.type)
 				{
-					SceneManager::GetInstance()->KeyUp(sdlEvent.key.keysym.sym);
+ 					SceneManager::GetInstance()->KeyUp(sdlEvent.key.keysym.sym);
 				}
 
 				if (SDL_KEYDOWN == sdlEvent.type)
@@ -84,9 +84,10 @@ int main(int argc, char* argv[])
 
 					//Pause됬을 때, 정지된 시간을 저장
 					if (SDLK_F4 == sdlEvent.key.keysym.sym)
-						GameSystem::GetInstance()->SetPauseTime(SDL_GetTicks());
+						pauseTimeTick = SDL_GetTicks();
 				}
 			}
+
 			SceneManager::GetInstance()->Update(deltaTime);
 
 			//렌더링

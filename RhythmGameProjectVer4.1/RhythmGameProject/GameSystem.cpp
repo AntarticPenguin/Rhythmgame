@@ -7,7 +7,6 @@ GameSystem* GameSystem::_instance = NULL;
 GameSystem::GameSystem()
 {
 	_musicVolume = 80;
-	_pauseTime = 0;
 }
 
 GameSystem* GameSystem::GetInstance()
@@ -73,14 +72,4 @@ int GameSystem::GetMusicVolume()
 void GameSystem::SetMusicVolume(int volume)
 {
 	_musicVolume = volume;
-}
-
-int GameSystem::GetPauseTime()
-{
-	return _pauseTime;
-}
-
-void GameSystem::SetPauseTime(int pauseTime)
-{
-	_pauseTime = pauseTime;
 }

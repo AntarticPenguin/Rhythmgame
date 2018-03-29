@@ -343,26 +343,7 @@ bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 
 void TrackManager::KeyDown(int keyCode)
 {
-	switch (_trackButton[keyCode])
-	{
-	case eButton::TRACK1:
-		_trackList->at(eTrackNum::TRACK01)->KeyDown();
-		break;
-	case eButton::TRACK2:
-		_trackList->at(eTrackNum::TRACK02)->KeyDown();
-		break;
-	case eButton::TRACK3:
-		_trackList->at(eTrackNum::TRACK03)->KeyDown();
-		break;
-	case eButton::TRACK4:
-		_trackList->at(eTrackNum::TRACK04)->KeyDown();
-		break;
-	case eButton::TRACK5:
-		_trackList->at(eTrackNum::TRACK05)->KeyDown();
-		break;
-	}
-
-	/*switch (keyCode)
+	switch (keyCode)
 	{
 	case SDLK_d:
 		_trackList->at(eTrackNum::TRACK01)->KeyDown();
@@ -379,7 +360,7 @@ void TrackManager::KeyDown(int keyCode)
 	case SDLK_k:
 		_trackList->at(eTrackNum::TRACK05)->KeyDown();
 		break;
-	}*/
+	}
 
 	{
 		char text[50];
