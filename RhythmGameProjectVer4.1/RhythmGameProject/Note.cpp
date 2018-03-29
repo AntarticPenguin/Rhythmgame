@@ -57,6 +57,9 @@ void Note::Deinit()
 
 void Note::Update(int deltaTime)
 {
+	if (false == _isLive)
+		return;
+
 	//시간 기반
 	_longSprite->Update(deltaTime);
 	_sprite->Update(deltaTime);
@@ -65,6 +68,9 @@ void Note::Update(int deltaTime)
 
 void Note::Render()
 {
+	if (false == _isLive)
+		return;
+
 	if (0 < _longDurTick)
 		_longSprite->Render();
 	_sprite->Render();

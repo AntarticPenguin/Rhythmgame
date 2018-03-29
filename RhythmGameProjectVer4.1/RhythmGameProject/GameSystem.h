@@ -26,6 +26,7 @@ private:
 	int _trackHeight;
 	int _playTimeTick;
 	int _musicVolume;
+	int _pauseTime;
 
 public:
 	void SetPlayTimeTick(float sec);
@@ -34,6 +35,8 @@ public:
 	int GetTrackHeight();
 	int GetMusicVolume();
 	void SetMusicVolume(int volume);
+	int GetPauseTime();
+	void SetPauseTime(int pauseTime);
 
 	//Initializer
 private:

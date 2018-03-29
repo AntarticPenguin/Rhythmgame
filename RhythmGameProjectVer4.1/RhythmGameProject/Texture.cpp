@@ -43,7 +43,6 @@ void Texture::SetPosition(int x, int y)
 	_destRect.y = y;
 }
 
-
 void Texture::Render()
 {
 	SDL_RenderCopy(GameSystem::GetInstance()->GetRenderer(), _texture, &_srcRect, &_destRect);

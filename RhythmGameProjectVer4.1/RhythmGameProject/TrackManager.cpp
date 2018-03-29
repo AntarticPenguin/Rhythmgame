@@ -208,12 +208,10 @@ void TrackManager::ParsingBMS(const char* fileName)
 
 			//1. 마디정보를 읽는다
 			strncpy(barInfo, token, strlen(token));
-			//printf("bar: %s, ", barInfo);
 			token = strtok(NULL, "#:\n");
 
 			//2. 노트정보를 읽는다.
 			strncpy(noteLine, token, strlen(token));
-			//printf(" %s\n", noteLine);
 			token = strtok(NULL, "#:\n");
 
 			//마디 번호를 저장
@@ -246,24 +244,7 @@ void TrackManager::ParsingBMS(const char* fileName)
 
 void TrackManager::AddNoteLine(int trackNum, sNoteLine* noteLine)
 {
-	/*switch (trackNum)
-	{
-	case 1:
-		_trackNoteList[0].push_back(snoteLine);
-		break;
-	case 2:
-		_trackNoteList[1].push_back(snoteLine);
-		break;
-	case 3:
-		_trackNoteList[2].push_back(snoteLine);
-		break;
-	case 4:
-		_trackNoteList[3].push_back(snoteLine);
-		break;
-	case 5:
-		_trackNoteList[4].push_back(snoteLine);
-		break;
-	}*/
+	//6이상의 trackNum은 무시
 	if((0 < trackNum) && (trackNum < 6))
 		_trackNoteList[trackNum-1].push_back(noteLine);
 }
@@ -362,7 +343,26 @@ bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 
 void TrackManager::KeyDown(int keyCode)
 {
-	switch (keyCode)
+	switch (_trackButton[keyCode])
+	{
+	case eButton::TRACK1:
+		_trackList->at(eTrackNum::TRACK01)->KeyDown();
+		break;
+	case eButton::TRACK2:
+		_trackList->at(eTrackNum::TRACK02)->KeyDown();
+		break;
+	case eButton::TRACK3:
+		_trackList->at(eTrackNum::TRACK03)->KeyDown();
+		break;
+	case eButton::TRACK4:
+		_trackList->at(eTrackNum::TRACK04)->KeyDown();
+		break;
+	case eButton::TRACK5:
+		_trackList->at(eTrackNum::TRACK05)->KeyDown();
+		break;
+	}
+
+	/*switch (keyCode)
 	{
 	case SDLK_d:
 		_trackList->at(eTrackNum::TRACK01)->KeyDown();
@@ -379,7 +379,7 @@ void TrackManager::KeyDown(int keyCode)
 	case SDLK_k:
 		_trackList->at(eTrackNum::TRACK05)->KeyDown();
 		break;
-	}
+	}*/
 
 	{
 		char text[50];

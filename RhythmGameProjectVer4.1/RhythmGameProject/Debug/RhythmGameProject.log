@@ -1,5 +1,2 @@
-﻿  Note.cpp
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\note.cpp(35): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\note.cpp(93): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.1\rhythmgameproject\note.cpp(103): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.1\Debug\RhythmGameProjectVer4.1.exe
+﻿  main.cpp
+  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe

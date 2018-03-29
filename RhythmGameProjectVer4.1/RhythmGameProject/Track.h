@@ -57,7 +57,6 @@ public:
 	void Deinit();
 	void Update(int deltaTime);
 	void Render();
-	//DLinkedList<Note*>& GetNoteList();
 	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
 	bool IsPass();
@@ -65,6 +64,7 @@ public:
 
 	//Input
 public:
+	void JudgeProcess(Note* note, eJudge judge);
 	void KeyDown();
 	void KeyHold();
 	void KeyUp();

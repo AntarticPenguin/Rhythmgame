@@ -132,18 +132,7 @@ void Track::Update(int deltaTime)
 	std::list<Note*>::iterator itr;
 	for (itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		if((*itr)->IsLive())
-		{
-			(*itr)->Update(deltaTime);
-		}
-		else
-		{
-			if (_curJudgeNote == (*itr))
-				_curJudgeNote = NULL;
-
-			itr = _noteList.erase(itr);
-			break;
-		}
+		(*itr)->Update(deltaTime);
 
 		//노트 판정, 범위
 		//판정선을 지났지만 아직 fail 체크 안된 노트
@@ -212,6 +201,46 @@ void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine)
 	_noteList.push_front(note);
 }
 
+void Track::JudgeProcess(Note* note, eJudge judge)
+{
+	switch (_judge)
+	{
+	case eJudge::PERFECT:
+		_judgeEffectSprite->Play();
+		EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScorePerfect();
+		note->SetLive(false);
+		break;
+	case eJudge::GREAT:
+		_judgeEffectSprite->Play();
+		EffectPlayer::GetInstance()->Play(eEffect::eGREAT);
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScoreGreat();
+		note->SetLive(false);
+		break;
+	case eJudge::MISS:
+		EffectPlayer::GetInstance()->Play(eEffect::eMISS);
+		DataManager::GetInstance()->ResetCombo();
+		note->SetLive(false);
+		break;
+	case eJudge::JUDGE_START_PERFECT:
+		_judgeEffectSprite->SetLoop(true);
+		_judgeEffectSprite->Play();
+		EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScorePerfect();
+		break;
+	case eJudge::JUDGE_START_GREAT:
+		_judgeEffectSprite->SetLoop(true);
+		_judgeEffectSprite->Play();
+		EffectPlayer::GetInstance()->Play(eEffect::eGREAT);
+		DataManager::GetInstance()->IncreaseCombo();
+		DataManager::GetInstance()->ScoreGreat();
+		break;
+	}
+}
+
 void Track::KeyDown()
 {
 	switch (_keyType)
@@ -237,90 +266,56 @@ void Track::KeyDown()
 	std::list<Note*>::iterator itr;
 	for(itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		//노트가 판정 시작선 위에 있는가?
-		if ((*itr)->GetNoteTime() < _judgeStartTick)
+		if ((*itr)->IsLive())
 		{
-			break;
-		}
-
-		//노트가 판정범위로 들어왔는가?
-		if ((_judgeStartTick <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() < _judgeGreat_s) ||
-			(_judgeGreat_e < (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgeEndTick))
-		{
-			_judge = eJudge::MISS;
-			break;
-		}
-
-		if (_judgePerfect_s <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgePerfect_e)
-		{
-			if (0 < (*itr)->GetDuration())
+			//노트가 판정 시작선 위에 있는가?
+			if ((*itr)->GetNoteTime() < _judgeStartTick)
 			{
-				_curJudgeNote = (*itr);
-				_curJudgeNote->EnableReduceDuration();
-				_judge = eJudge::JUDGE_START_PERFECT;
-			}
-			else
-			{
-				_judge = eJudge::PERFECT;
 				break;
 			}
-		}
 
-		if ((_judgeGreat_s <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() < _judgePerfect_s) ||
-			(_judgePerfect_e < (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgeGreat_e))
-		{
-			if (0 < (*itr)->GetDuration())
+			//노트가 판정범위로 들어왔는가?
+			if ((_judgeStartTick <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() < _judgeGreat_s) ||
+				(_judgeGreat_e < (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgeEndTick))
 			{
-				_curJudgeNote = (*itr);
-				_curJudgeNote->EnableReduceDuration();
-				_judge = eJudge::JUDGE_START_GREAT;
-			}
-			else
-			{
-				_judge = eJudge::GREAT;
+				_judge = eJudge::MISS;
 				break;
+			}
+
+			if (_judgePerfect_s <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgePerfect_e)
+			{
+				if (0 < (*itr)->GetDuration())
+				{
+					_curJudgeNote = (*itr);
+					_curJudgeNote->EnableReduceDuration();
+					_judge = eJudge::JUDGE_START_PERFECT;
+				}
+				else
+				{
+					_judge = eJudge::PERFECT;
+					break;
+				}
+			}
+
+			if ((_judgeGreat_s <= (*itr)->GetNoteTime() && (*itr)->GetNoteTime() < _judgePerfect_s) ||
+				(_judgePerfect_e < (*itr)->GetNoteTime() && (*itr)->GetNoteTime() <= _judgeGreat_e))
+			{
+				if (0 < (*itr)->GetDuration())
+				{
+					_curJudgeNote = (*itr);
+					_curJudgeNote->EnableReduceDuration();
+					_judge = eJudge::JUDGE_START_GREAT;
+				}
+				else
+				{
+					_judge = eJudge::GREAT;
+					break;
+				}
 			}
 		}
 	}
 
-	switch (_judge)
-	{
-	case eJudge::PERFECT:
-		_judgeEffectSprite->Play();
-		EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
-		DataManager::GetInstance()->IncreaseCombo();
-		DataManager::GetInstance()->ScorePerfect();
-		/*delete itr.Item();
-		_noteList.Remove(itr);*/
-		itr = _noteList.erase(itr);
-		break;
-	case eJudge::GREAT:
-		_judgeEffectSprite->Play();
-		EffectPlayer::GetInstance()->Play(eEffect::eGREAT);
-		DataManager::GetInstance()->IncreaseCombo();
-		DataManager::GetInstance()->ScoreGreat();
-		itr = _noteList.erase(itr);
-		break;
-	case eJudge::MISS:
-		EffectPlayer::GetInstance()->Play(eEffect::eMISS);
-		DataManager::GetInstance()->ResetCombo();
-		itr = _noteList.erase(itr);
-		break;
-	case eJudge::JUDGE_START_PERFECT:
-		_judgeEffectSprite->SetLoop(true);
-		_judgeEffectSprite->Play();
-		EffectPlayer::GetInstance()->Play(eEffect::ePERFECT);
-		DataManager::GetInstance()->IncreaseCombo();
-		DataManager::GetInstance()->ScorePerfect();
-		break;
-	case eJudge::JUDGE_START_GREAT:
-		_judgeEffectSprite->SetLoop(true);
-		_judgeEffectSprite->Play();
-		EffectPlayer::GetInstance()->Play(eEffect::eGREAT);
-		DataManager::GetInstance()->IncreaseCombo();
-		DataManager::GetInstance()->ScoreGreat();
-		break;
-	}
+	JudgeProcess((*itr), _judge);
 }
 
 void Track::KeyHold()
