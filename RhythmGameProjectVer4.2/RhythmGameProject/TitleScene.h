@@ -2,11 +2,14 @@
 #include "Scene.h"
 
 class Sprite;
+class Font;
 
 class TitleScene : public Scene
 {
 private:
 	Sprite* _backgroundSprite;
+	Font* _trackKeyFont;
+	char _inputkeyTest[50];
 
 public:
 	TitleScene();

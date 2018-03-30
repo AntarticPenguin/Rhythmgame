@@ -67,6 +67,7 @@ void GameScene::Init()
 	DataManager::GetInstance()->ResetCombo();
 	_trackManager = new TrackManager();
 	_trackManager->Init();
+	_trackManager->SetTrackButton(_trackButton);
 
 	_gameDuration = 0;
 

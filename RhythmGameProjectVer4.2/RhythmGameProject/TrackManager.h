@@ -1,11 +1,13 @@
 #pragma once
 #include <vector>
 #include <list>
+#include <map>
 
 #include "GameObject.h"
 
 class Track;
 class Font;
+enum eTrackButton;
 
 enum eJudge
 {
@@ -82,7 +84,11 @@ public:
 	bool IsLongNote(eFileType _eFileType, sNoteInfo curNote);
 
 	//input
+private:
+	std::map<int, eTrackButton> _trackButton;
+
 public:
+	void SetTrackButton(std::map<int, eTrackButton> trackButton);
 	void KeyDown(int keyCode);
 	void KeyUp(int keyCode);
 };

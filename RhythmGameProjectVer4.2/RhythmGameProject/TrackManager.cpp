@@ -12,6 +12,8 @@
 #include "Sprite.h"
 #include "Font.h"
 
+#include "Scene.h"
+
 TrackManager::TrackManager()
 {
 	_trackList = NULL;
@@ -55,9 +57,9 @@ void TrackManager::Init()
 
 	//BMS파싱 및 노트 생성
 	memset(_longNoteKey, 0, sizeof(_longNoteKey));
-	//ParsingBMS("BMS_Sample.bme");
+	ParsingBMS("BMS_Sample.bme");
 	//ParsingBMS("BMS_Sample2.bms");
-	ParsingBMS("Only you_HDMix.bms");
+	//ParsingBMS("Only you_HDMix.bms");
 
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Init();
@@ -341,45 +343,31 @@ bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 	return false;
 }
 
+void TrackManager::SetTrackButton(std::map<int, eTrackButton> trackButton)
+{
+	_trackButton = trackButton;
+}
+
 void TrackManager::KeyDown(int keyCode)
 {
 	switch (_trackButton[keyCode])
 	{
-	case eButton::TRACK1:
+	case eTrackButton::TRACK1:
 		_trackList->at(eTrackNum::TRACK01)->KeyDown();
 		break;
-	case eButton::TRACK2:
+	case eTrackButton::TRACK2:
 		_trackList->at(eTrackNum::TRACK02)->KeyDown();
 		break;
-	case eButton::TRACK3:
+	case eTrackButton::TRACK3:
 		_trackList->at(eTrackNum::TRACK03)->KeyDown();
 		break;
-	case eButton::TRACK4:
+	case eTrackButton::TRACK4:
 		_trackList->at(eTrackNum::TRACK04)->KeyDown();
 		break;
-	case eButton::TRACK5:
+	case eTrackButton::TRACK5:
 		_trackList->at(eTrackNum::TRACK05)->KeyDown();
 		break;
 	}
-
-	/*switch (keyCode)
-	{
-	case SDLK_d:
-		_trackList->at(eTrackNum::TRACK01)->KeyDown();
-		break;
-	case SDLK_f:
-		_trackList->at(eTrackNum::TRACK02)->KeyDown();
-		break;
-	case SDLK_SPACE:
-		_trackList->at(eTrackNum::TRACK03)->KeyDown();
-		break;
-	case SDLK_j:
-		_trackList->at(eTrackNum::TRACK04)->KeyDown();
-		break;
-	case SDLK_k:
-		_trackList->at(eTrackNum::TRACK05)->KeyDown();
-		break;
-	}*/
 
 	{
 		char text[50];
