@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include "GameSystem.h"
 #include "SceneManager.h"
+#include "InputKeyManager.h"
 #include "TitleScene.h"
 #include "Sprite.h"
 #include "Texture.h"
@@ -11,7 +12,6 @@
 TitleScene::TitleScene()
 {
 	_backgroundSprite = NULL;
-	_trackKeyFont = NULL;
 }
 
 TitleScene::~TitleScene()
@@ -24,8 +24,8 @@ void TitleScene::Init()
 	_backgroundSprite = new Sprite("titleTest.csv", true);
 	_backgroundSprite->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() / 2);
 
-	_trackKeyFont = new Font("arialbd.ttf", 32);
-	_trackKeyFont->SetPosition(0, 0);
+	_font = new Font("arialbd.ttf", 32);
+	_font->SetPosition(0, 0);
 
 	TrackDefaultKeyInit();
 }
@@ -47,79 +47,41 @@ void TitleScene::Update(int deltaTime)
 void TitleScene::Render()
 {
 	_backgroundSprite->Render();
-	_trackKeyFont->Render();
+	_font->Render();
 }
 
 void TitleScene::TrackDefaultKeyInit()
 {
-	_trackButton[SDLK_d] = eTrackButton::TRACK1;
-	_trackButton[SDLK_f] = eTrackButton::TRACK2;
-	_trackButton[SDLK_SPACE] = eTrackButton::TRACK3;
-	_trackButton[SDLK_j] = eTrackButton::TRACK4;
-	_trackButton[SDLK_k] = eTrackButton::TRACK5;
-
-	std::map<int, eTrackButton>::iterator itr;
-	for (itr = _trackButton.begin(); itr != _trackButton.end(); itr++)
-	{
-		printf("key[%d]: %d\n", itr->first, itr->second);
-	}
-
-	_inputkeyTest[0] = SDLK_d;
-	_inputkeyTest[1] = SDLK_f;
-	_inputkeyTest[2] = SDLK_SPACE;
-	_inputkeyTest[3] = SDLK_j;
-	_inputkeyTest[4] = SDLK_k;
-
-	char text[100];
-	sprintf(text, "Track1: %c\n Track2: %c\n Track3: %c\n Track4: %c\n Track5: %c\n",
-		_inputkeyTest[0], _inputkeyTest[1], _inputkeyTest[2], _inputkeyTest[3], _inputkeyTest[4]);
-		
-	_trackKeyFont->SetText(text);
+	InputKeyManager::GetInstance()->Init();
+	testPrintKey();
 }
 
-void TitleScene::ChangeKey()
+void TitleScene::testPrintKey()
 {
-	SDL_Event sdlEvent;
-	int trackNumber = eTrackButton::TRACK1;
+	std::map<int, eTrackButton> map = InputKeyManager::GetInstance()->GetTrackButton();
 	std::map<int, eTrackButton>::iterator itr;
+
+	int trackNumber = 0;
 
 	while (true)
 	{
-		if (SDL_PollEvent(&sdlEvent))
+		for (itr = map.begin(); itr != map.end(); itr++)
 		{
-			if (SDL_KEYDOWN == sdlEvent.type)
+			if (itr->second == (eTrackButton)trackNumber)
 			{
-				int keycode = sdlEvent.key.keysym.sym;
-				for (itr = _trackButton.begin(); itr != _trackButton.end();)
-				{
-					if (itr->second == (eTrackButton)trackNumber)
-					{
-						_trackButton.erase(itr++);
-						_trackButton[keycode] = (eTrackButton)trackNumber;
-						_inputkeyTest[trackNumber] = keycode;
-						trackNumber++;
-						break;
-					}
-					else
-						itr++;
-				}
+				_inputkey[trackNumber] = (char)(itr->first);
+				trackNumber++;
+				break;
 			}
 		}
 
 		if (5 == trackNumber)
 		{
 			char text[100];
-			sprintf(text, "Track1: %c\n Track2: %c\n Track3: %c\n Track4: %c\n Track5: %c\n",
-				_inputkeyTest[0], _inputkeyTest[1], _inputkeyTest[2], _inputkeyTest[3], _inputkeyTest[4]);
+			sprintf(text, "Track1: %c	Track2: %c	Track3: %c	Track4: %c	Track5: %c",
+				_inputkey[0], _inputkey[1], _inputkey[2], _inputkey[3], _inputkey[4]);
 
-			_trackKeyFont->SetText(text);
-			printf("\n");
-
-			std::map<int, eTrackButton>::iterator itr;
-			for (itr = _trackButton.begin(); itr != _trackButton.end(); itr++)
-			{
-				printf("key[%d]: %d\n", itr->first, itr->second);
-			}
+			_font->SetText(text);
 			break;
 		}
 	}
@@ -136,7 +98,8 @@ void TitleScene::KeyDown(int keyCode)
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_LOGO);
 		break;
 	case SDLK_F1:
-		ChangeKey();
+		InputKeyManager::GetInstance()->ChangeKey();
+		testPrintKey();
 		break;
 	default:
 		break;

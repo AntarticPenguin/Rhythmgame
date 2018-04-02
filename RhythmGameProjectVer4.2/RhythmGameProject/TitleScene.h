@@ -8,8 +8,8 @@ class TitleScene : public Scene
 {
 private:
 	Sprite* _backgroundSprite;
-	Font* _trackKeyFont;
-	char _inputkeyTest[50];
+	Font* _font;
+	char _inputkey[10];
 
 public:
 	TitleScene();
@@ -23,7 +23,7 @@ public:
 
 public:
 	void TrackDefaultKeyInit();
-	void ChangeKey();
+	void testPrintKey();
 	void KeyDown(int keyCode);
 	void KeyUp(int keyCode);
 };

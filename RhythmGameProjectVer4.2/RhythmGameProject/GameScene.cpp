@@ -67,7 +67,6 @@ void GameScene::Init()
 	DataManager::GetInstance()->ResetCombo();
 	_trackManager = new TrackManager();
 	_trackManager->Init();
-	_trackManager->SetTrackButton(_trackButton);
 
 	_gameDuration = 0;
 
@@ -174,13 +173,8 @@ void GameScene::KeyDown(int keyCode)
 		Mix_HaltMusic();
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_TITLE);
 		break;
-	case SDLK_d:
-	case SDLK_f:
-	case SDLK_SPACE:
-	case SDLK_j:
-	case SDLK_k:
-		_trackManager->KeyDown(keyCode);
 	default:
+		_trackManager->KeyDown(keyCode);
 		break;
 	}
 }

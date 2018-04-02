@@ -88,7 +88,6 @@ private:
 	std::map<int, eTrackButton> _trackButton;
 
 public:
-	void SetTrackButton(std::map<int, eTrackButton>& trackButton);
 	void KeyDown(int keyCode);
 	void KeyUp(int keyCode);
 };

@@ -96,6 +96,9 @@
     <ClInclude Include="EffectPlayer.h">
       <Filter>소스 파일\Scene\GameScene</Filter>
     </ClInclude>
+    <ClInclude Include="InputKeyManager.h">
+      <Filter>소스 파일\GameSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -148,6 +151,9 @@
     </ClCompile>
     <ClCompile Include="EffectPlayer.cpp">
       <Filter>소스 파일\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="InputKeyManager.cpp">
+      <Filter>소스 파일\GameSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

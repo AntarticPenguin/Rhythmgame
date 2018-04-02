@@ -1,4 +1,14 @@
-﻿  TitleScene.cpp
+﻿  TrackManager.cpp
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(67): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(77): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(99): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(112): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(244): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(266): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(281): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(298): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(303): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GameScene.cpp
   코드를 생성하고 있습니다...
   건너뛰고 있습니다... (관련된 변경 내용 없음)
   Texture.cpp
@@ -8,4 +18,5 @@
   GameObject.cpp
   Font.cpp
   EffectPlayer.cpp
-  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
+  DataManager.cpp
+  RhythmGameProject.vcxproj -> C:\Users\Atents\Desktop\박평기\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
