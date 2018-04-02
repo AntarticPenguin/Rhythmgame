@@ -343,9 +343,15 @@ bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 	return false;
 }
 
-void TrackManager::SetTrackButton(std::map<int, eTrackButton> trackButton)
+void TrackManager::SetTrackButton(std::map<int, eTrackButton>& trackButton)
 {
 	_trackButton = trackButton;
+
+	std::map<int, eTrackButton>::iterator itr;
+	for (itr = trackButton.begin(); itr != trackButton.end(); itr++)
+	{
+		printf("key: %d\n", (*itr));
+	}
 }
 
 void TrackManager::KeyDown(int keyCode)
@@ -354,18 +360,23 @@ void TrackManager::KeyDown(int keyCode)
 	{
 	case eTrackButton::TRACK1:
 		_trackList->at(eTrackNum::TRACK01)->KeyDown();
+		printf("track1\n");
 		break;
 	case eTrackButton::TRACK2:
 		_trackList->at(eTrackNum::TRACK02)->KeyDown();
+		printf("track2\n");
 		break;
 	case eTrackButton::TRACK3:
 		_trackList->at(eTrackNum::TRACK03)->KeyDown();
+		printf("track3\n");
 		break;
 	case eTrackButton::TRACK4:
 		_trackList->at(eTrackNum::TRACK04)->KeyDown();
+		printf("track4\n");
 		break;
 	case eTrackButton::TRACK5:
 		_trackList->at(eTrackNum::TRACK05)->KeyDown();
+		printf("track5\n");
 		break;
 	}
 

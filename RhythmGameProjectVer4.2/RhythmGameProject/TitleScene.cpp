@@ -58,6 +58,12 @@ void TitleScene::TrackDefaultKeyInit()
 	_trackButton[SDLK_j] = eTrackButton::TRACK4;
 	_trackButton[SDLK_k] = eTrackButton::TRACK5;
 
+	std::map<int, eTrackButton>::iterator itr;
+	for (itr = _trackButton.begin(); itr != _trackButton.end(); itr++)
+	{
+		printf("key[%d]: %d\n", itr->first, itr->second);
+	}
+
 	_inputkeyTest[0] = SDLK_d;
 	_inputkeyTest[1] = SDLK_f;
 	_inputkeyTest[2] = SDLK_SPACE;
@@ -75,6 +81,8 @@ void TitleScene::ChangeKey()
 {
 	SDL_Event sdlEvent;
 	int trackNumber = eTrackButton::TRACK1;
+	std::map<int, eTrackButton>::iterator itr;
+
 	while (true)
 	{
 		if (SDL_PollEvent(&sdlEvent))
@@ -82,10 +90,19 @@ void TitleScene::ChangeKey()
 			if (SDL_KEYDOWN == sdlEvent.type)
 			{
 				int keycode = sdlEvent.key.keysym.sym;
-
-				_trackButton[keycode] = (eTrackButton)trackNumber;
-				_inputkeyTest[trackNumber] = keycode;
-				trackNumber++;
+				for (itr = _trackButton.begin(); itr != _trackButton.end();)
+				{
+					if (itr->second == (eTrackButton)trackNumber)
+					{
+						_trackButton.erase(itr++);
+						_trackButton[keycode] = (eTrackButton)trackNumber;
+						_inputkeyTest[trackNumber] = keycode;
+						trackNumber++;
+						break;
+					}
+					else
+						itr++;
+				}
 			}
 		}
 
@@ -96,6 +113,13 @@ void TitleScene::ChangeKey()
 				_inputkeyTest[0], _inputkeyTest[1], _inputkeyTest[2], _inputkeyTest[3], _inputkeyTest[4]);
 
 			_trackKeyFont->SetText(text);
+			printf("\n");
+
+			std::map<int, eTrackButton>::iterator itr;
+			for (itr = _trackButton.begin(); itr != _trackButton.end(); itr++)
+			{
+				printf("key[%d]: %d\n", itr->first, itr->second);
+			}
 			break;
 		}
 	}
