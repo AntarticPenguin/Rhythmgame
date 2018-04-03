@@ -6,7 +6,7 @@ class Sprite;
 class Note : public GameObject
 {
 public:
-	Note(float startTime, float duration, int judgeDeltaLine);
+	Note(float startTime, float duration, int judgeDeltaLine, int barNum);
 	~Note();
 
 private:
@@ -17,6 +17,7 @@ private:
 	int _y;
 	int _startTick;
 	int _longDurTick;
+	int _barNum;
 
 	//JUDGE
 	bool _isLive;
@@ -42,4 +43,6 @@ public:
 	void SetLive(bool isLive);
 
 	void SetXPosition(int x);
+
+	int GetBarNum();
 };

@@ -25,6 +25,7 @@ private:
 	Sprite* _judgeEffectSprite;
 	Note* _curJudgeNote;
 
+	int _curBarNum;
 	int _x;
 	int _y;
 
@@ -57,10 +58,12 @@ public:
 	void Deinit();
 	void Update(int deltaTime);
 	void Render();
+
 	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
 	bool IsPass();
-	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine);
+	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum);
+	void SetCurrentBar(int barNum);
 
 	//Input
 public:

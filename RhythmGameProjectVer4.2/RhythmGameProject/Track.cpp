@@ -132,10 +132,14 @@ void Track::Update(int deltaTime)
 	std::list<Note*>::iterator itr;
 	for (itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
+		if (_curBarNum != (*itr)->GetBarNum())
+			return;
+
 		(*itr)->Update(deltaTime);
 
 		//노트 판정, 범위
 		//판정선을 지났지만 아직 fail 체크 안된 노트
+		
 		if (_judgeEndTick < (*itr)->GetNoteTime() && false == (*itr)->IsPass())
 		{
 			(*itr)->Pass();
@@ -193,12 +197,17 @@ bool Track::IsPass()
 	return _isPass;
 }
 
-void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine)
+void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum)
 {
-	Note* note = new Note(sec, duration, judgeDeltaLine);
+	Note* note = new Note(sec, duration, judgeDeltaLine, barNum);
 	note->SetXPosition(_x);
 	note->Init();
 	_noteList.push_front(note);
+}
+
+void Track::SetCurrentBar(int barNum)
+{
+	_curBarNum = barNum;
 }
 
 void Track::JudgeProcess(Note* note, eJudge judge)

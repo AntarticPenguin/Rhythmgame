@@ -65,6 +65,9 @@ void TrackManager::Init()
 		_trackList->at(i)->Init();
 
 	CreateGameNote();
+
+	_playTimeTick = 0;
+	_curBarNum = 0;
 }
 
 void TrackManager::Deinit()
@@ -93,6 +96,20 @@ void TrackManager::Deinit()
 
 void TrackManager::Update(int deltaTime)
 {
+	_playTimeTick += deltaTime;
+
+	for (int i = 0; i < _trackList->size(); i++)
+	{
+		if ((_SecondPerBar * (_curBarNum + 1) * 1000) <= _playTimeTick)
+		{
+			_curBarNum++;
+			printf("현재 마디: %d\n", _curBarNum);
+		}
+
+		_trackList->at(i)->SetCurrentBar(_curBarNum);
+	}
+		
+
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Update(deltaTime);
 
@@ -275,6 +292,11 @@ void TrackManager::CreateGameNote()
 			noteInfo.durationTick = 0;
 			noteInfo.isLongNote = sNoteLine->isLongNote;
 
+			{
+				noteInfo.barNum = sNoteLine->BarNum;
+			}
+			
+
 			noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
 
 			int beat = strlen(sNoteLine->line) / 2;	//박자
@@ -312,6 +334,7 @@ void TrackManager::CreateGameNote()
 
 			float sec = 0;
 			float duration = 0;
+			int barNum = 0;
 
 			if(true == IsLongNote(_eFileType, curNote))
 			{
@@ -319,13 +342,16 @@ void TrackManager::CreateGameNote()
 				sNoteInfo prevNote = (*reverseItr);
 				sec = (float)(prevNote.startTick) / 1000.0f;
 				duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
+				barNum = prevNote.barNum;
 			}
 			else
 			{
 				sec = (float)(curNote.startTick) / 1000.0f;
 				duration = (float)(curNote.durationTick) / 1000.0f;
+				barNum = curNote.barNum;
 			}
-			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+			//_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
+			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum);
 		}
 	}
 }

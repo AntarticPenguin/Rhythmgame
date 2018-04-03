@@ -25,7 +25,7 @@ void TitleScene::Init()
 	_backgroundSprite->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() / 2);
 
 	_font = new Font("arialbd.ttf", 32);
-	_font->SetPosition(0, 0);
+	_font->SetPosition(100, 100);
 
 	TrackDefaultKeyInit();
 }

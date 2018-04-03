@@ -38,6 +38,7 @@ typedef struct sNoteInfo
 	int startTick;
 	int durationTick;
 	int isLongNote;
+	int barNum;
 }sNoteInfo;
 
 class TrackManager : public GameObject
@@ -57,6 +58,9 @@ private:
 
 	Font* _combofont;
 	Font* _scorefont;
+
+	int _playTimeTick;
+	int _curBarNum;
 
 public:
 	TrackManager();

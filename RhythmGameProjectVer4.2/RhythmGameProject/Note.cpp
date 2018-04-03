@@ -2,12 +2,13 @@
 #include "Note.h"
 #include "Sprite.h"
 
-Note::Note(float startTime, float duration, int judgeDeltaLine)
+Note::Note(float startTime, float duration, int judgeDeltaLine, int barNum)
 {
 	_sprite = NULL;
 	_longSprite = NULL;
 	_startTick = GameSystem::GetInstance()->GetPlayTimeTick() - (int)(startTime * 1000.0f);
 	_longDurTick = (int)(duration * 1000.0f);
+	_barNum = barNum;
 
 	_isLive = true;
 	_judgeDeltaLine = judgeDeltaLine;
@@ -100,7 +101,7 @@ void Note::UpdatePosition(int deltaTime)
 
 	if (_updateDuration <= GameSystem::GetInstance()->GetPlayTimeTick() + 200)
 	{
-		float positionRate = (float)_updateDuration / (float)GameSystem::GetInstance()->GetPlayTimeTick();;	//위치 비율
+		float positionRate = (float)_updateDuration / (float)GameSystem::GetInstance()->GetPlayTimeTick();	//위치 비율
 		float positionInSec = GameSystem::GetInstance()->GetTrackHeight() * positionRate;					//트랙길이에 비율을 곱한 위치
 		_y = positionInSec - (GameSystem::GetInstance()->GetTrackHeight() - GameSystem::GetInstance()->GetWindowHeight() + _judgeDeltaLine);
 
@@ -151,4 +152,9 @@ void Note::SetLive(bool isLive)
 void Note::SetXPosition(int x)
 {
 	_x = x;
+}
+
+int Note::GetBarNum()
+{
+	return _barNum;
 }
