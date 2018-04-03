@@ -13,8 +13,6 @@
 #include "Sprite.h"
 #include "Font.h"
 
-#include "Scene.h"
-
 TrackManager::TrackManager()
 {
 	_trackList = NULL;
@@ -61,7 +59,6 @@ void TrackManager::Init()
 	//BMS파싱 및 노트 생성
 	memset(_longNoteKey, 0, sizeof(_longNoteKey));
 	ParsingBMS("BMS_Sample.bme");
-	//ParsingBMS("BMS_Sample2.bms");
 	//ParsingBMS("Only you_HDMix.bms");
 
 	for (int i = 0; i < _trackList->size(); i++)
