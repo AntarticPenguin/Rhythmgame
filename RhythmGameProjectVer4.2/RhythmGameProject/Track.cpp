@@ -25,6 +25,9 @@ Track::Track(int xPos, int yPos)
 
 	_oldDuration = 0;
 	_holdDuration = 0;
+
+	_curBarNum = 0;
+	_playTimeTick = 0;
 }
 
 Track::~Track()
@@ -90,10 +93,10 @@ void Track::Init()
 	_judgeStartTick = _judgeTick - 200;
 	_judgeEndTick = _judgeTick + 200;
 
-	_judgePerfect_s = _judgeTick - 50;
-	_judgePerfect_e = _judgeTick + 50;
-	_judgeGreat_s = _judgePerfect_s - 50;
-	_judgeGreat_e = _judgePerfect_e + 50;
+	_judgePerfect_s = _judgeTick - 60;
+	_judgePerfect_e = _judgeTick + 60;
+	_judgeGreat_s = _judgePerfect_s - 60;
+	_judgeGreat_e = _judgePerfect_e + 60;
 
 	TrackPosition(_x, _y);
 }
@@ -132,10 +135,10 @@ void Track::Update(int deltaTime)
 	std::list<Note*>::iterator itr;
 	for (itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		// 4개마디씩 업데이트
-		if (_curBarNum <= (*itr)->GetBarNum() && (*itr)->GetBarNum() <= _curBarNum + 3)
+		// 3개 마디씩 업데이트
+		if (_curBarNum <= (*itr)->GetBarNum() && (*itr)->GetBarNum() <= _curBarNum + 2)
 		{
-			(*itr)->Start();
+			(*itr)->Start(_playTimeTick);
 		}
 
 		(*itr)->Update(deltaTime);
@@ -206,9 +209,10 @@ void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int ba
 	_noteList.push_front(note);
 }
 
-void Track::SetCurrentBar(int barNum)
+void Track::SetPlayBarInfo(int barNum, int playTimeTick)
 {
 	_curBarNum = barNum;
+	_playTimeTick = playTimeTick;
 }
 
 void Track::JudgeProcess(Note* note, eJudge judge)
@@ -266,7 +270,6 @@ void Track::KeyDown()
 		break;
 	}
 
-	//노트 판정, 범위
 	if (_keyType == eKeyType::HOLDING)
 	{
 		KeyHold();
@@ -324,7 +327,7 @@ void Track::KeyDown()
 			}
 		}
 	}
-
+	
 	JudgeProcess((*itr), _judge);
 }
 

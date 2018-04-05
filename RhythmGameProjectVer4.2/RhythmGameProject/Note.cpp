@@ -60,7 +60,7 @@ void Note::Deinit()
 
 void Note::Update(int deltaTime)
 {
-	if (false == _isLive)
+	if (false == _isLive || false == _isStart)
 		return;
 
 	_longSprite->Update(deltaTime);
@@ -160,7 +160,11 @@ int Note::GetBarNum()
 	return _barNum;
 }
 
-void Note::Start()
+void Note::Start(int playTimeTick)
 {
-	_isStart = true;
+	if (false == _isStart)
+	{
+		_updateDuration += playTimeTick;
+		_isStart = true;
+	}
 }

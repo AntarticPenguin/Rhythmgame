@@ -65,6 +65,16 @@ int GameSystem::GetTrackHeight()
 	return _trackHeight;	//트랙길이
 }
 
+void GameSystem::DecreaseTrackHeight()
+{
+	_trackHeight -= _trackHeight / 10;
+}
+
+void GameSystem::IncreaseTrackHeight()
+{
+	_trackHeight += _trackHeight / 10;
+}
+
 int GameSystem::GetMusicVolume()
 {
 	return _musicVolume;

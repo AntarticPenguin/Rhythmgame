@@ -47,5 +47,5 @@ public:
 	void SetXPosition(int x);
 
 	int GetBarNum();
-	void Start();
+	void Start(int playTimeTick);
 };

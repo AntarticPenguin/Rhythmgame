@@ -7,7 +7,7 @@
 #include "DataManager.h"
 #include "EffectPlayer.h"
 #include "TrackManager.h"
-#include "InputKeyManager.h"
+#include "InputSystem.h"
 #include "Track.h"
 #include "Note.h"
 #include "Sprite.h"
@@ -28,7 +28,7 @@ TrackManager::~TrackManager()
 
 void TrackManager::Init()
 {
-	_trackButton = InputKeyManager::GetInstance()->GetTrackButton();
+	_trackButton = InputSystem::GetInstance()->GetTrackButton();
 
 	_combofont = new Font("arialbd.ttf", 40);
 	_combofont->SetPosition(GameSystem::GetInstance()->GetWindowWidth() - 250, 150);
@@ -100,12 +100,12 @@ void TrackManager::Update(int deltaTime)
 
 	for (int i = 0; i < _trackList->size(); i++)
 	{
-		if ((_SecondPerBar * (_curBarNum + 1) * 1000) <= _playTimeTick)
+		if ((_SecondPerBar * (_curBarNum) * 1000) + 8500 <= _playTimeTick)
 		{
-			_curBarNum++;
 			printf("현재 마디: %d\n", _curBarNum);
+			_curBarNum++;
 		}
-		_trackList->at(i)->SetCurrentBar(_curBarNum);
+		_trackList->at(i)->SetPlayBarInfo(_curBarNum, _playTimeTick);
 	}
 
 	for (int i = 0; i < _trackList->size(); i++)
@@ -296,7 +296,9 @@ void TrackManager::CreateGameNote()
 			
 
 			//noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
-			noteTick = (_SecondPerBar * sNoteLine->BarNum * 1000) + 8500;	//마디가 시작하는 시간(초)
+
+			//test
+			noteTick = (_SecondPerBar * sNoteLine->BarNum * 1000) + 8500;	
 
 			int beat = strlen(sNoteLine->line) / 2;	//박자
 			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);

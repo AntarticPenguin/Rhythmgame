@@ -7,6 +7,7 @@
 #include "SDL_mixer.h"
 #include "GameSystem.h"
 #include "SceneManager.h"
+#include "InputSystem.h"
 
 int main(int argc, char* argv[])
 {
@@ -67,6 +68,7 @@ int main(int argc, char* argv[])
 			int deltaTime = curTick - oldTick;			//deltaTime 계산
 			oldTick = curTick;
 		
+			/*
 			//이벤트 처리
 			if (SDL_PollEvent(&sdlEvent))				//이벤트를 꺼내온다
 			{
@@ -87,7 +89,9 @@ int main(int argc, char* argv[])
 						GameSystem::GetInstance()->SetPauseTime(SDL_GetTicks());
 				}
 			}
+			*/
 			SceneManager::GetInstance()->Update(deltaTime);
+			InputSystem::GetInstance()->Update(deltaTime);
 
 			//렌더링
 			SDL_RenderClear(sdlRenderer);

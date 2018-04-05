@@ -173,6 +173,12 @@ void GameScene::KeyDown(int keyCode)
 		Mix_HaltMusic();
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_TITLE);
 		break;
+	case SDLK_COMMA:
+		GameSystem::GetInstance()->DecreaseTrackHeight();
+		break;
+	case SDLK_PERIOD:
+		GameSystem::GetInstance()->IncreaseTrackHeight();
+		break;
 	default:
 		_trackManager->KeyDown(keyCode);
 		break;

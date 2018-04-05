@@ -3,7 +3,7 @@
 #include "SDL.h"
 #include "GameSystem.h"
 #include "SceneManager.h"
-#include "InputKeyManager.h"
+#include "InputSystem.h"
 #include "TitleScene.h"
 #include "Sprite.h"
 #include "Texture.h"
@@ -52,13 +52,13 @@ void TitleScene::Render()
 
 void TitleScene::TrackDefaultKeyInit()
 {
-	InputKeyManager::GetInstance()->Init();
+	InputSystem::GetInstance()->Init();
 	testPrintKey();
 }
 
 void TitleScene::testPrintKey()
 {
-	std::map<int, eTrackButton> map = InputKeyManager::GetInstance()->GetTrackButton();
+	std::map<int, eTrackButton> map = InputSystem::GetInstance()->GetTrackButton();
 	std::map<int, eTrackButton>::iterator itr;
 
 	int trackNumber = 0;
@@ -98,7 +98,7 @@ void TitleScene::KeyDown(int keyCode)
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_LOGO);
 		break;
 	case SDLK_F1:
-		InputKeyManager::GetInstance()->ChangeKey();
+		InputSystem::GetInstance()->ChangeKey();
 		testPrintKey();
 		break;
 	default:

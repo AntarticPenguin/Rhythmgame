@@ -8,7 +8,7 @@ class Sprite;
 
 enum eJudge;
 
-enum eKeyType
+enum struct eKeyType
 {
 	NEUTRAL,
 	PRESS,
@@ -26,6 +26,7 @@ private:
 	Note* _curJudgeNote;
 
 	int _curBarNum;
+	int _playTimeTick;
 	int _x;
 	int _y;
 
@@ -63,7 +64,7 @@ public:
 	void TrackPosition(int x, int y);
 	bool IsPass();
 	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum);
-	void SetCurrentBar(int barNum);
+	void SetPlayBarInfo(int barNum, int playTimeTick);
 
 	//Input
 public:

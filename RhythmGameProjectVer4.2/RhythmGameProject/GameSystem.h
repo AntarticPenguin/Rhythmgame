@@ -31,10 +31,15 @@ private:
 public:
 	void SetPlayTimeTick(float sec);
 	int GetPlayTimeTick();
+
 	void SetTrackHeight(int height);
 	int GetTrackHeight();
+	void DecreaseTrackHeight();
+	void IncreaseTrackHeight();
+
 	int GetMusicVolume();
 	void SetMusicVolume(int volume);
+
 	int GetPauseTime();
 	void SetPauseTime(int pauseTime);
 
