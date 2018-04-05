@@ -19,6 +19,8 @@ private:
 	int _longDurTick;
 	int _barNum;
 
+	bool _isStart;
+
 	//JUDGE
 	bool _isLive;
 	int _judgeDeltaLine;
@@ -45,4 +47,5 @@ public:
 	void SetXPosition(int x);
 
 	int GetBarNum();
+	void Start();
 };

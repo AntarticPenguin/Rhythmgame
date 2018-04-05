@@ -132,14 +132,15 @@ void Track::Update(int deltaTime)
 	std::list<Note*>::iterator itr;
 	for (itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		if (_curBarNum != (*itr)->GetBarNum())
-			return;
+		// 4개마디씩 업데이트
+		if (_curBarNum <= (*itr)->GetBarNum() && (*itr)->GetBarNum() <= _curBarNum + 3)
+		{
+			(*itr)->Start();
+		}
 
 		(*itr)->Update(deltaTime);
 
-		//노트 판정, 범위
-		//판정선을 지났지만 아직 fail 체크 안된 노트
-		
+		//노트 판정: 판정선을 지났지만 아직 fail 체크 안된 노트
 		if (_judgeEndTick < (*itr)->GetNoteTime() && false == (*itr)->IsPass())
 		{
 			(*itr)->Pass();

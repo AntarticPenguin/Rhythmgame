@@ -14,6 +14,8 @@ Note::Note(float startTime, float duration, int judgeDeltaLine, int barNum)
 	_judgeDeltaLine = judgeDeltaLine;
 	_isPass = false;
 	_isReduceDuration = false;
+
+	_isStart = false;
 }
 
 Note::~Note()
@@ -61,7 +63,6 @@ void Note::Update(int deltaTime)
 	if (false == _isLive)
 		return;
 
-	//시간 기반
 	_longSprite->Update(deltaTime);
 	_sprite->Update(deltaTime);
 	UpdatePosition(deltaTime);
@@ -69,7 +70,7 @@ void Note::Update(int deltaTime)
 
 void Note::Render()
 {
-	if (false == _isLive)
+	if (false == _isLive || false == _isStart)
 		return;
 
 	if (0 < _longDurTick)
@@ -79,7 +80,7 @@ void Note::Render()
 
 void Note::UpdatePosition(int deltaTime)
 {
-	_updateDuration += deltaTime;					//노트 업데이트 시간
+	_updateDuration += deltaTime;			//노트 업데이트 시간
 
 	if (true == _isReduceDuration)
 	{
@@ -157,4 +158,9 @@ void Note::SetXPosition(int x)
 int Note::GetBarNum()
 {
 	return _barNum;
+}
+
+void Note::Start()
+{
+	_isStart = true;
 }
