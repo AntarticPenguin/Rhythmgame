@@ -54,7 +54,7 @@ int main(int argc, char* argv[])
 		curTick = SDL_GetTicks();
 		frame = (SDL_GetTicks() % 1000) * 60;		//60프레임
 		frame /= 1000;
-
+		
 		if (oldFrame != frame)
 		{
 			oldFrame = frame;
@@ -91,7 +91,6 @@ int main(int argc, char* argv[])
 			}
 			*/
 			SceneManager::GetInstance()->Update(deltaTime);
-			InputSystem::GetInstance()->Update(deltaTime);
 
 			//렌더링
 			SDL_RenderClear(sdlRenderer);
@@ -100,6 +99,8 @@ int main(int argc, char* argv[])
 			}
 			SDL_RenderPresent(sdlRenderer);
 		}
+
+		InputSystem::GetInstance()->UpdateInput();
 	}
 
 	return 0;

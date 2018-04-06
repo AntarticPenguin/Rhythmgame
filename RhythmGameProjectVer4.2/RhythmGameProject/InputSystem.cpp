@@ -23,6 +23,9 @@ InputSystem::~InputSystem()
 
 void InputSystem::Init()
 {
+	for (int i = 0; i < 100; i++)
+		_eKeyState[i] = eKeyState::KEY_UP;
+
 	_trackButton[SDLK_d] = eTrackButton::TRACK1;
 	_trackButton[SDLK_f] = eTrackButton::TRACK2;
 	_trackButton[SDLK_SPACE] = eTrackButton::TRACK3;
@@ -30,34 +33,49 @@ void InputSystem::Init()
 	_trackButton[SDLK_k] = eTrackButton::TRACK5;
 }
 
-void InputSystem::Update(int deltaTime)
+void InputSystem::UpdateInput()
 {
-	const Uint8* keyStates = SDL_GetKeyboardState(NULL);
-	if (keyStates[SDL_SCANCODE_0])
+	const Uint8* keyStates = const_cast<Uint8*>(SDL_GetKeyboardState(NULL));
+
+	SDL_Event sdlEvent;
+	//이벤트 처리
+	if (SDL_PollEvent(&sdlEvent))				//이벤트를 꺼내온다
 	{
-		printf("pressed 0\n");
+		if (SDL_KEYUP == sdlEvent.type)
+		{
+			//SceneManager::GetInstance()->KeyUp(sdlEvent.key.keysym.sym);
+			IsKeyUp((int)SDL_GetScancodeFromKey(sdlEvent.key.keysym.sym));
+			
+		}
+
+		if (SDL_KEYDOWN == sdlEvent.type)
+		{
+			//SceneManager::GetInstance()->KeyDown(sdlEvent.key.keysym.sym);
+			IsKeyDown((int)SDL_GetScancodeFromKey(sdlEvent.key.keysym.sym));	//가상키값을 실제 물리키값으로 변환
+
+			//Pause됬을 때, 정지된 시간을 저장
+			if (SDLK_F4 == sdlEvent.key.keysym.sym)
+				GameSystem::GetInstance()->SetPauseTime(SDL_GetTicks());
+		}
 	}
+}
 
-	//SDL_Event sdlEvent;
+bool InputSystem::IsKeyDown(int keycode)
+{
+	_eKeyState[keycode] = eKeyState::KEY_DOWN;
 
-	////이벤트 처리
-	//if (SDL_PollEvent(&sdlEvent))				//이벤트를 꺼내온다
-	//{
-	//	if (SDL_KEYUP == sdlEvent.type)
-	//	{
-	//		SceneManager::GetInstance()->KeyUp(sdlEvent.key.keysym.sym);
-	//		
-	//	}
+	if (eKeyState::KEY_DOWN == _eKeyState[keycode])
+		printf("keycode: %s state: DOWN\n", SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)keycode)));
+	return (eKeyState::KEY_DOWN == _eKeyState[keycode]);
+}
 
-	//	if (SDL_KEYDOWN == sdlEvent.type)
-	//	{
-	//		SceneManager::GetInstance()->KeyDown(sdlEvent.key.keysym.sym);
+bool InputSystem::IsKeyUp(int keycode)
+{
+	_eKeyState[keycode] = eKeyState::KEY_UP;
 
-	//		//Pause됬을 때, 정지된 시간을 저장
-	//		if (SDLK_F4 == sdlEvent.key.keysym.sym)
-	//			GameSystem::GetInstance()->SetPauseTime(SDL_GetTicks());
-	//	}
-	//}
+	if (eKeyState::KEY_UP == _eKeyState[keycode])
+		printf("keycode: %s state: UP\n", SDL_GetKeyName(SDL_GetKeyFromScancode((SDL_Scancode)keycode)));
+	return (eKeyState::KEY_UP == _eKeyState[keycode]);
 }
 
 void InputSystem::ChangeKey()

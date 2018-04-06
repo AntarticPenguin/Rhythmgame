@@ -10,18 +10,27 @@ enum eTrackButton
 	TRACK5,
 };
 
+enum eKeyState
+{
+	KEY_DOWN,
+	KEY_UP,
+};
+
 class InputSystem
 {
 private:
 	static InputSystem* _instance;
+	eKeyState _eKeyState[100];
 	std::map<int, eTrackButton> _trackButton;
 
 public:
 	static InputSystem* GetInstance();
 	void Init();
-	void Update(int deltaTime);
+	void UpdateInput();
 
 public:
+	bool IsKeyDown(int keycode);
+	bool IsKeyUp(int keycode);
 	void ChangeKey();
 	std::map<int, eTrackButton>& GetTrackButton();
 	~InputSystem();
