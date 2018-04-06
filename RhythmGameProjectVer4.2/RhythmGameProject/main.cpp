@@ -67,8 +67,7 @@ int main(int argc, char* argv[])
 
 			int deltaTime = curTick - oldTick;			//deltaTime 계산
 			oldTick = curTick;
-		
-			/*
+			
 			//이벤트 처리
 			if (SDL_PollEvent(&sdlEvent))				//이벤트를 꺼내온다
 			{
@@ -89,7 +88,6 @@ int main(int argc, char* argv[])
 						GameSystem::GetInstance()->SetPauseTime(SDL_GetTicks());
 				}
 			}
-			*/
 			SceneManager::GetInstance()->Update(deltaTime);
 
 			//렌더링
@@ -99,8 +97,6 @@ int main(int argc, char* argv[])
 			}
 			SDL_RenderPresent(sdlRenderer);
 		}
-
-		InputSystem::GetInstance()->UpdateInput();
 	}
 
 	return 0;

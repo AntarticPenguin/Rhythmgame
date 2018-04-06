@@ -26,11 +26,8 @@ private:
 public:
 	static InputSystem* GetInstance();
 	void Init();
-	void UpdateInput();
 
 public:
-	bool IsKeyDown(int keycode);
-	bool IsKeyUp(int keycode);
 	void ChangeKey();
 	std::map<int, eTrackButton>& GetTrackButton();
 	~InputSystem();

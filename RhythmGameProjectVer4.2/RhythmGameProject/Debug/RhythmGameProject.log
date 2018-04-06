@@ -1,14 +1,37 @@
 ﻿  main.cpp
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\main.cpp(44): warning C4101: 'sdlEvent' :참조되지 않은 지역 변수입니다.
+  Track.cpp
+  InputSystem.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  TrackManager.cpp
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(64): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(77): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(101): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(111): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(124): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(256): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(278): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(301): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(318): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(323): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  TitleScene.cpp
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  ResourceManager.cpp
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\resourcemanager.cpp(17): warning C4150: 불완전한 형식 'SDL_Texture'에 대한 포인터를 삭제했습니다. 소멸자가 호출되지 않습니다.
+  c:\users\atents\desktop\박평기\리듬게임\lib\sdl\include\sdl_render.h(128): note: 'SDL_Texture' 선언을 참조하십시오.
   코드를 생성하고 있습니다...
   건너뛰고 있습니다... (관련된 변경 내용 없음)
-  Texture.cpp
+  Scene.cpp
+  GameObject.cpp
   Sprite.cpp
   SceneManager.cpp
-  Scene.cpp
+  Note.cpp
   LogoScene.cpp
-  GameObject.cpp
+  GameSystem.cpp
+  GameScene.cpp
   Font.cpp
   EffectPlayer.cpp
   DataManager.cpp
-  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
+  Texture.cpp
+  RhythmGameProject.vcxproj -> C:\Users\Atents\Desktop\박평기\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
