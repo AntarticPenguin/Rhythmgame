@@ -48,30 +48,11 @@ void EffectPlayer::Render()
 	_effectList->at(eEffect::ePERFECT)->Render();
 }
 
-void EffectPlayer::Play(int code)
+void EffectPlayer::Play(eEffect effect)
 {
-	switch (code)
-	{
-	case eEffect::ePERFECT:
-		_curEffect = _effectList->at(eEffect::ePERFECT);
-		if (_curEffect != _oldEffect)
-			_oldEffect->Stop();
-		_curEffect->Play();
-		_oldEffect = _curEffect;
-		break;
-	case eEffect::eGREAT:
-		_curEffect = _effectList->at(eEffect::eGREAT);
-		if (_curEffect != _oldEffect)
-			_oldEffect->Stop();
-		_curEffect->Play();
-		_oldEffect = _curEffect;
-		break;
-	case eEffect::eMISS:
-		_curEffect = _effectList->at(eEffect::eMISS);
-		if (_curEffect != _oldEffect)
-			_oldEffect->Stop();
-		_curEffect->Play();
-		_oldEffect = _curEffect;
-		break;
-	}
+	_curEffect = _effectList->at(effect);
+	if (_curEffect != _oldEffect)
+		_oldEffect->Stop();
+	_curEffect->Play();
+	_oldEffect = _curEffect;
 }

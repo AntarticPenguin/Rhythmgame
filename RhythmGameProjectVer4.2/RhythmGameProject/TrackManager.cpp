@@ -50,9 +50,7 @@ void TrackManager::Init()
 
 			trackInterval += 102;
 		}
-	}
 
-	{
 		_trackNoteList = new std::list<sNoteLine*>[_trackList->size()];
 	}
 
@@ -100,7 +98,7 @@ void TrackManager::Update(int deltaTime)
 
 	for (int i = 0; i < _trackList->size(); i++)
 	{
-		if ((_SecondPerBar * (_curBarNum) * 1000) + 8500 <= _playTimeTick)
+		if ((_SecondPerBar * (_curBarNum) * 1000) <= _playTimeTick)
 		{
 			printf("현재 마디: %d\n", _curBarNum);
 			_curBarNum++;
@@ -116,6 +114,11 @@ void TrackManager::Update(int deltaTime)
 		char text[50];
 		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
 		_combofont->SetText(text);
+	}
+	{
+		char text[50];
+		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
+		_scorefont->SetText(text);
 	}
 }
 
@@ -295,10 +298,7 @@ void TrackManager::CreateGameNote()
 			}
 			
 
-			//noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
-
-			//test
-			noteTick = (_SecondPerBar * sNoteLine->BarNum * 1000) + 8500;	
+			noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
 
 			int beat = strlen(sNoteLine->line) / 2;	//박자
 			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
@@ -351,7 +351,6 @@ void TrackManager::CreateGameNote()
 				duration = (float)(curNote.durationTick) / 1000.0f;
 				barNum = curNote.barNum;
 			}
-			//_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine);
 			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum);
 		}
 	}
@@ -372,68 +371,10 @@ bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 
 void TrackManager::KeyDown(int keyCode)
 {
-	switch (_trackButton[keyCode])
-	{
-	case eTrackButton::TRACK1:
-		_trackList->at(eTrackNum::TRACK01)->KeyDown();
-		break;
-	case eTrackButton::TRACK2:
-		_trackList->at(eTrackNum::TRACK02)->KeyDown();
-		break;
-	case eTrackButton::TRACK3:
-		_trackList->at(eTrackNum::TRACK03)->KeyDown();
-		break;
-	case eTrackButton::TRACK4:
-		_trackList->at(eTrackNum::TRACK04)->KeyDown();
-		break;
-	case eTrackButton::TRACK5:
-		_trackList->at(eTrackNum::TRACK05)->KeyDown();
-		break;
-	}
-
-	{
-		char text[50];
-		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
-		_combofont->SetText(text);
-	}
-
-	{
-		char text[50];
-		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
-		_scorefont->SetText(text);
-	}
+	_trackList->at(_trackButton[keyCode])->KeyDown();
 }
 
 void TrackManager::KeyUp(int keyCode)
 {
-	switch (_trackButton[keyCode])
-	{
-	case eTrackButton::TRACK1:
-		_trackList->at(eTrackNum::TRACK01)->KeyUp();
-		break;
-	case eTrackButton::TRACK2:
-		_trackList->at(eTrackNum::TRACK02)->KeyUp();
-		break;
-	case eTrackButton::TRACK3:
-		_trackList->at(eTrackNum::TRACK03)->KeyUp();
-		break;
-	case eTrackButton::TRACK4:
-		_trackList->at(eTrackNum::TRACK04)->KeyUp();
-		break;
-	case eTrackButton::TRACK5:
-		_trackList->at(eTrackNum::TRACK05)->KeyUp();
-		break;
-	}
-
-	{
-		char text[50];
-		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
-		_combofont->SetText(text);
-	}
-
-	{
-		char text[50];
-		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
-		_scorefont->SetText(text);
-	}
+	_trackList->at(_trackButton[keyCode])->KeyUp();
 }

@@ -43,16 +43,6 @@ typedef struct sNoteInfo
 
 class TrackManager : public GameObject
 {
-public:
-	enum eTrackNum
-	{
-		TRACK01,
-		TRACK02,
-		TRACK03,
-		TRACK04,
-		TRACK05,
-	};
-
 private:
 	std::vector<Track*>* _trackList;
 

@@ -23,7 +23,7 @@ public:
 	static EffectPlayer* GetInstance();
 	void Update(int deltaTime);
 	void Render();
-	void Play(int code);
+	void Play(eEffect effect);
 
 private:
 	EffectPlayer();
