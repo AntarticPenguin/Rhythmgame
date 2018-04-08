@@ -22,8 +22,7 @@ public:
 
 	int GetScore();
 	void SetScore(int score);
-	void ScoreGreat();
-	void ScorePerfect();
+	void IncreaseScore(eJudge judge);
 
 	void ResetCombo();
 	void ResetScore();

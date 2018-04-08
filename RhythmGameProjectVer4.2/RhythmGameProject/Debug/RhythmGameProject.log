@@ -1,21 +1,4 @@
-﻿  TrackManager.cpp
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(64): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(77): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(101): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(111): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(129): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(261): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(283): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(303): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(320): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(325): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
-  건너뛰고 있습니다... (관련된 변경 내용 없음)
-  Sprite.cpp
-  SceneManager.cpp
-  Scene.cpp
-  LogoScene.cpp
-  GameObject.cpp
-  Font.cpp
-  DataManager.cpp
+﻿  ResourceManager.cpp
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\resourcemanager.cpp(17): warning C4150: 불완전한 형식 'SDL_Texture'에 대한 포인터를 삭제했습니다. 소멸자가 호출되지 않습니다.
+  d:\programmingfolder\lib\sdl\include\sdl_render.h(128): note: 'SDL_Texture' 선언을 참조하십시오.
   RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe

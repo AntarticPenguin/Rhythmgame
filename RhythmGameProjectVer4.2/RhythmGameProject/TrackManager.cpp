@@ -7,7 +7,6 @@
 #include "DataManager.h"
 #include "EffectPlayer.h"
 #include "TrackManager.h"
-#include "InputSystem.h"
 #include "Track.h"
 #include "Note.h"
 #include "Sprite.h"
@@ -28,8 +27,6 @@ TrackManager::~TrackManager()
 
 void TrackManager::Init()
 {
-	_trackButton = InputSystem::GetInstance()->GetTrackButton();
-
 	_combofont = new Font("arialbd.ttf", 40);
 	_combofont->SetPosition(GameSystem::GetInstance()->GetWindowWidth() - 250, 150);
 
@@ -60,9 +57,17 @@ void TrackManager::Init()
 	//ParsingBMS("Only you_HDMix.bms");
 
 	for (int i = 0; i < _trackList->size(); i++)
+	{
 		_trackList->at(i)->Init();
+		_trackList->at(i)->SetTrackNumber(i);
+	}
 
 	CreateGameNote();
+	
+	for (int i = 0; i < _trackList->size(); i++)
+	{
+		_trackList->at(i)->LastInit();
+	}
 
 	_playTimeTick = 0;
 	_curBarNum = 0;
@@ -78,6 +83,13 @@ void TrackManager::Deinit()
 		}
 		_trackList = NULL;
 	}
+
+	std::list<sNoteLine*>::iterator itr;
+	for (itr = _trackNoteList->begin(); itr != _trackNoteList->end(); itr++)
+	{
+		delete (*itr);
+	}
+	_trackNoteList->clear();
 	
 	if (NULL != _combofont)
 	{
@@ -98,13 +110,11 @@ void TrackManager::Update(int deltaTime)
 
 	for (int i = 0; i < _trackList->size(); i++)
 	{
-		if ((_SecondPerBar * (_curBarNum) * 1000) <= _playTimeTick)
-		{
-			printf("현재 마디: %d\n", _curBarNum);
-			_curBarNum++;
-		}
 		_trackList->at(i)->SetPlayBarInfo(_curBarNum, _playTimeTick);
 	}
+
+	if ((_SecondPerBar * (_curBarNum) * 1000) <= _playTimeTick)
+		_curBarNum++;
 
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Update(deltaTime);
@@ -367,14 +377,4 @@ bool TrackManager::IsLongNote(eFileType _eFileType, sNoteInfo curNote)
 	}
 	
 	return false;
-}
-
-void TrackManager::KeyDown(int keyCode)
-{
-	_trackList->at(_trackButton[keyCode])->KeyDown();
-}
-
-void TrackManager::KeyUp(int keyCode)
-{
-	_trackList->at(_trackButton[keyCode])->KeyUp();
 }

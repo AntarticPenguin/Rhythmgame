@@ -23,6 +23,9 @@ InputSystem::~InputSystem()
 
 void InputSystem::Init()
 {
+	for (int i = 0; i < 5; i++)
+		_eKeyState[i] = eKeyState::KEY_NEUTRAL;
+
 	_trackButton[SDLK_d] = eTrackButton::TRACK1;
 	_trackButton[SDLK_f] = eTrackButton::TRACK2;
 	_trackButton[SDLK_SPACE] = eTrackButton::TRACK3;
@@ -66,4 +69,51 @@ void InputSystem::ChangeKey()
 std::map<int, eTrackButton>& InputSystem::GetTrackButton()
 {
 	return _trackButton;
+}
+
+void InputSystem::KeyDown(int keyCode)
+{
+	int trackNum = (int)_trackButton[keyCode];
+	if (eKeyState::KEY_NEUTRAL == _eKeyState[trackNum])
+	{
+		_eKeyState[trackNum] = eKeyState::KEY_DOWN;
+		//printf("DOWN: %s\n", SDL_GetKeyName(keyCode));
+	}
+}
+
+void InputSystem::KeyUp(int keyCode)
+{
+	int trackNum = (int)_trackButton[keyCode];
+	if (eKeyState::KEY_HOLD == _eKeyState[trackNum])
+	{
+		_eKeyState[trackNum] = eKeyState::KEY_UP;
+		//printf("UP: %s\n", SDL_GetKeyName(keyCode));
+	}
+}
+
+bool InputSystem::IsKeyDown(int trackNum)
+{
+	if (eKeyState::KEY_DOWN == _eKeyState[trackNum])
+	{
+		_eKeyState[trackNum] = eKeyState::KEY_HOLD;
+		return true;
+	}
+	return false;
+}
+
+bool InputSystem::IsKeyHold(int trackNum)
+{
+	if (eKeyState::KEY_HOLD == _eKeyState[trackNum])
+		return true;
+	return false;
+}
+
+bool InputSystem::IsKeyUp(int trackNum)
+{
+	if (eKeyState::KEY_UP == _eKeyState[trackNum])
+	{
+		_eKeyState[trackNum] = eKeyState::KEY_NEUTRAL;
+		return true;
+	}
+	return false;
 }

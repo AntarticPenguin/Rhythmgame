@@ -10,6 +10,7 @@
 #include "Track.h"
 #include "Sprite.h"
 #include "TrackManager.h"
+#include "InputSystem.h"
 
 GameScene::GameScene()
 {
@@ -65,6 +66,7 @@ void GameScene::Init()
 
 	DataManager::GetInstance()->ResetScore();
 	DataManager::GetInstance()->ResetCombo();
+	InputSystem::GetInstance()->Init();
 	_trackManager = new TrackManager();
 	_trackManager->Init();
 
@@ -180,12 +182,12 @@ void GameScene::KeyDown(int keyCode)
 		GameSystem::GetInstance()->IncreaseTrackHeight();
 		break;
 	default:
-		_trackManager->KeyDown(keyCode);
+		InputSystem::GetInstance()->KeyDown(keyCode);
 		break;
 	}
 }
 
 void GameScene::KeyUp(int keyCode)
 {
-	_trackManager->KeyUp(keyCode);
+	InputSystem::GetInstance()->KeyUp(keyCode);
 }

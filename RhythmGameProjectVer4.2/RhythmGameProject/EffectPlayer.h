@@ -3,11 +3,19 @@
 
 class Sprite;
 
-enum eEffect
+//enum eEffect
+//{
+//	eMISS,
+//	eGREAT,
+//	ePERFECT,
+//};
+
+enum eJudge
 {
-	eMISS,
-	eGREAT,
-	ePERFECT,
+	MISS,
+	GREAT,
+	PERFECT,
+	NONE,	
 };
 
 class EffectPlayer
@@ -23,7 +31,8 @@ public:
 	static EffectPlayer* GetInstance();
 	void Update(int deltaTime);
 	void Render();
-	void Play(eEffect effect);
+	void Play(eJudge judge);
+	void Stop();
 
 private:
 	EffectPlayer();

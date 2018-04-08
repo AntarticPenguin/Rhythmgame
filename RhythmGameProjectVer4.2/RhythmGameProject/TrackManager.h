@@ -6,18 +6,9 @@
 #include "GameObject.h"
 
 class Track;
+class Sprite;
 class Font;
 enum eTrackButton;
-
-enum eJudge
-{
-	NONE,
-	PERFECT,
-	GREAT,
-	MISS,
-	JUDGE_START_PERFECT,
-	JUDGE_START_GREAT,
-};
 
 enum eFileType
 {
@@ -76,12 +67,4 @@ public:
 	void AddNoteLine(int trackNum, sNoteLine* noteLine);
 	void CreateGameNote();
 	bool IsLongNote(eFileType _eFileType, sNoteInfo curNote);
-
-	//input
-private:
-	std::map<int, eTrackButton> _trackButton;
-
-public:
-	void KeyDown(int keyCode);
-	void KeyUp(int keyCode);
 };

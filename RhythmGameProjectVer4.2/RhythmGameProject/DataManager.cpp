@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include "DataManager.h"
-#include "TrackManager.h"
+#include "EffectPlayer.h"
 
 DataManager* DataManager::_instance = NULL;
 
@@ -39,14 +39,17 @@ void DataManager::SetScore(int score)
 	_score = score;
 }
 
-void DataManager::ScoreGreat()
+void DataManager::IncreaseScore(eJudge judge)
 {
-	_score += (100 * 0.8) + (_combo * 10);
-}
-
-void DataManager::ScorePerfect()
-{
-	_score += (100 * 1.0) + (_combo * 10);
+	switch (judge)
+	{
+	case eJudge::PERFECT:
+		_score += (int)(100 * 1.0) + (_combo * 10);
+		break;
+	case eJudge::GREAT:
+		_score += (int)(100 * 0.8) + (_combo * 10);
+		break;
+	}
 }
 
 void DataManager::ResetCombo()

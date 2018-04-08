@@ -6,15 +6,6 @@
 class Note;
 class Sprite;
 
-enum eJudge;
-
-enum struct eKeyType
-{
-	NEUTRAL,
-	PRESS,
-	HOLDING,
-};
-
 class Track : public GameObject
 {
 
@@ -23,8 +14,8 @@ private:
 	std::list<Sprite*> _bgSpriteList;
 
 	Sprite* _judgeEffectSprite;
-	Note* _curJudgeNote;
 
+	int _trackNumber;
 	int _curBarNum;
 	int _playTimeTick;
 	int _x;
@@ -32,9 +23,10 @@ private:
 
 	//판정 관련
 private:
+	std::list<Note*>::iterator _curNote;
+	bool _isJudging;
+
 	eJudge _judge;
-	eKeyType _keyType;
-	bool _isPass;
 
 	//판정 범위
 	int _judgeDeltaLine;
@@ -47,9 +39,6 @@ private:
 	int _judgeGreat_s;
 	int _judgeGreat_e;
 
-	int _oldDuration;
-	int _holdDuration;
-
 public:
 	Track(int xPos, int yPos);
 	~Track();
@@ -60,16 +49,18 @@ public:
 	void Update(int deltaTime);
 	void Render();
 
+	void LastInit();
+	void UpdateNoteList(int deltaTime);
+
 	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
-	bool IsPass();
+	void SetTrackNumber(int trackNumber);
 	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum);
 	void SetPlayBarInfo(int barNum, int playTimeTick);
 
-	//Input
+	//Judge 관련
 public:
-	void JudgeProcess(Note* note, eJudge judge);
-	void KeyDown();
-	void KeyHold();
-	void KeyUp();
+	void UpdateInput();
+	eJudge CheckJudge(int noteTime);
+	void Judge(eJudge judge);
 };

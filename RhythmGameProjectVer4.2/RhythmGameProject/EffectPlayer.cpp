@@ -17,13 +17,13 @@ EffectPlayer::EffectPlayer()
 	_effectList->push_back(perfectSprite);
 
 	_curEffect = NULL;
-	_oldEffect = _effectList->at(eEffect::ePERFECT);
+	_oldEffect = _effectList->at(eJudge::PERFECT);
 
 	int judgeDeltaLine = 100;
 
-	_effectList->at(eEffect::eMISS)->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() - judgeDeltaLine - 100);
-	_effectList->at(eEffect::eGREAT)->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() - judgeDeltaLine - 100);
-	_effectList->at(eEffect::ePERFECT)->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() - judgeDeltaLine - 100);
+	_effectList->at(eJudge::MISS)->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() - judgeDeltaLine - 100);
+	_effectList->at(eJudge::GREAT)->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() - judgeDeltaLine - 100);
+	_effectList->at(eJudge::PERFECT)->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() - judgeDeltaLine - 100);
 
 }
 
@@ -36,23 +36,28 @@ EffectPlayer* EffectPlayer::GetInstance()
 
 void EffectPlayer::Update(int deltaTime)
 {
-	_effectList->at(eEffect::eMISS)->Update(deltaTime);
-	_effectList->at(eEffect::eGREAT)->Update(deltaTime);
-	_effectList->at(eEffect::ePERFECT)->Update(deltaTime);
+	_effectList->at(eJudge::MISS)->Update(deltaTime);
+	_effectList->at(eJudge::GREAT)->Update(deltaTime);
+	_effectList->at(eJudge::PERFECT)->Update(deltaTime);
 }
 
 void EffectPlayer::Render()
 {
-	_effectList->at(eEffect::eMISS)->Render();
-	_effectList->at(eEffect::eGREAT)->Render();
-	_effectList->at(eEffect::ePERFECT)->Render();
+	_effectList->at(eJudge::MISS)->Render();
+	_effectList->at(eJudge::GREAT)->Render();
+	_effectList->at(eJudge::PERFECT)->Render();
 }
 
-void EffectPlayer::Play(eEffect effect)
+void EffectPlayer::Play(eJudge effect)
 {
 	_curEffect = _effectList->at(effect);
 	if (_curEffect != _oldEffect)
 		_oldEffect->Stop();
 	_curEffect->Play();
 	_oldEffect = _curEffect;
+}
+
+void EffectPlayer::Stop()
+{
+	_curEffect->Stop();
 }
