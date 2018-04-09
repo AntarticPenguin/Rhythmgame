@@ -40,6 +40,9 @@
     <Filter Include="소스 파일\Scene\ResultScene">
       <UniqueIdentifier>{f0b15393-8ca6-40b1-86a6-31ee696c75bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\Scene\SelectScene">
+      <UniqueIdentifier>{d56b7703-3942-467f-97e9-394583ca644a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Array.h">
@@ -99,6 +102,9 @@
     <ClInclude Include="InputSystem.h">
       <Filter>소스 파일\GameSystem</Filter>
     </ClInclude>
+    <ClInclude Include="SelectScene.h">
+      <Filter>소스 파일\Scene\SelectScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -154,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="InputSystem.cpp">
       <Filter>소스 파일\GameSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectScene.cpp">
+      <Filter>소스 파일\Scene\SelectScene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -92,10 +92,12 @@ void TitleScene::KeyDown(int keyCode)
 	switch (keyCode)
 	{
 	case SDLK_SPACE:
-		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_GAME);
+		//SceneManager::GetInstance()->ChangeScene(eScene::SCENE_GAME);
+		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_SELECT);
 		break;
 	case SDLK_ESCAPE:
-		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_LOGO);
+		//SceneManager::GetInstance()->ChangeScene(eScene::SCENE_LOGO);
+		GameSystem::GetInstance()->Quit();
 		break;
 	case SDLK_F1:
 		InputSystem::GetInstance()->ChangeKey();

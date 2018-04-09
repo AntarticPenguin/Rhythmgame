@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 	SDL_Renderer* sdlRenderer = SDL_CreateRenderer(sdlWindow, 0, 0);
 	GameSystem::GetInstance()->SetRenderer(sdlRenderer);
 
-	SceneManager::GetInstance()->ChangeScene(eScene::SCENE_LOGO);
+	SceneManager::GetInstance()->ChangeScene(eScene::SCENE_TITLE);
 
 	SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
 

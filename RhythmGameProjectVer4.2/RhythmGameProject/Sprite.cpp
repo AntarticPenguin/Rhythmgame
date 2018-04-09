@@ -138,6 +138,12 @@ void Sprite::SetPivotY(float pivot)
 	_pivotY = pivot;
 }
 
+void Sprite::SetAlpha(int value)
+{
+	for (int i = 0; i < _textureFrame->size(); i++)
+		_textureFrame->at(i)->SetAlpha(value);
+}
+
 void Sprite::Play()
 {
 	_frame = 0;				//이펙트가 또 터지면 다시 처음부터 재생

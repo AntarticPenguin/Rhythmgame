@@ -159,9 +159,7 @@ void Track::TrackPosition(int x, int y)
 	_y = y;
 
 	_bgSprite->SetPosition(_x, _y / 2);	//트랙배경
-	//(*bgitr)->SetPosition(_x, _y - _judgeDeltaLine);	//판정선
-
-	_judgeEffectSprite->SetPosition(_x, _y - _judgeDeltaLine);
+	_judgeEffectSprite->SetPosition(_x, _y - _judgeDeltaLine);	//판정이펙트
 }
 
 void Track::SetTrackNumber(int trackNumber)
@@ -222,7 +220,6 @@ void Track::UpdateInput()
 
 				(*_curNote)->SetLive(false);
 				_curNote++;
-
 				return;
 			}
 			else

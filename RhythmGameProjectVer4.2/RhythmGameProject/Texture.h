@@ -17,6 +17,7 @@ public:
 	void SetScale(float wScale, float hScale);
 	void SetLength(int length);
 	void SetPosition(int x, int y);
+	void SetAlpha(int value);
 	void Render();
 	int GetRenderWidth();
 	int GetRenderHeight();

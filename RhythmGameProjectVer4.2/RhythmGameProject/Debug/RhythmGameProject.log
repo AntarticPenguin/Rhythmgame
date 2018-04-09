@@ -1,13 +1,4 @@
-﻿  TrackManager.cpp
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(64): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(72): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(85): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(122): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(130): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(150): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(283): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(305): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(325): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(342): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(347): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
+﻿  Texture.cpp
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\texture.cpp(31): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\texture.cpp(32): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  RhythmGameProject.vcxproj -> C:\Users\Atents\Desktop\박평기\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe

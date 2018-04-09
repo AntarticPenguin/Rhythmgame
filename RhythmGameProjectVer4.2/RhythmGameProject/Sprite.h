@@ -31,6 +31,7 @@ public:
 	void SetPosition(int x, int y);
 	void SetLength(int length);
 	void SetPivotY(float pivot);
+	void SetAlpha(int value);
 	void Play();
 	void Stop();
 	void SetLoop(bool isLoop);

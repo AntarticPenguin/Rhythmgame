@@ -1,9 +1,10 @@
 #include <stdio.h>
 
 #include "SceneManager.h"
-#include "LogoScene.h"
+//#include "LogoScene.h"
 #include "GameScene.h"
 #include "TitleScene.h"
+#include "SelectScene.h"
 
 SceneManager* SceneManager::_instance = NULL;
 
@@ -38,8 +39,11 @@ void SceneManager::ChangeScene(eScene sceneName)
 
 	switch (sceneName)
 	{
-	case eScene::SCENE_LOGO:
-		_scene = new LogoScene();
+	//case eScene::SCENE_LOGO:
+	//	_scene = new LogoScene();
+	//	break;
+	case eScene::SCENE_SELECT:
+		_scene = new SelectScene();
 		break;
 	case eScene::SCENE_TITLE:
 		_scene = new TitleScene();
