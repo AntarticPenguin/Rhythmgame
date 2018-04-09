@@ -13,6 +13,7 @@
 
 Track::Track(int xPos, int yPos) : _x(xPos), _y(yPos)
 {
+	_bgSprite = NULL;
 	_judgeEffectSprite = NULL;
 
 	_judge = eJudge::NONE;
@@ -39,7 +40,6 @@ void Track::Init()
 	}
 
 	char trackbackgroundSprite[256];
-	char judgelineSprite[256];
 	char explosionSprite[256];
 
 	char buffer[256];
@@ -58,11 +58,6 @@ void Track::Init()
 				token = strtok(NULL, ",\n");
 				strcpy(trackbackgroundSprite, token);
 			}
-			else if (!strcmp(token, "Judgeline"))
-			{
-				token = strtok(NULL, ",\n");
-				strcpy(judgelineSprite, token);
-			}
 			else if (!strcmp(token, "Explosion"))
 			{
 				token = strtok(NULL, ",\n");
@@ -72,12 +67,7 @@ void Track::Init()
 	}
 	fclose(fp);
 
-	Sprite* trackSprite = new Sprite(trackbackgroundSprite, true);
-	_bgSpriteList.push_back(trackSprite);
-
-	Sprite* judgeSprite = new Sprite(judgelineSprite, true);
-	_bgSpriteList.push_back(judgeSprite);
-
+	_bgSprite = new Sprite(trackbackgroundSprite, true);
 	_judgeEffectSprite = new Sprite(explosionSprite, false);
 
 	//JudgeLine Init
@@ -103,11 +93,10 @@ void Track::Deinit()
 		_noteList.erase(itr++);
 	}
 
-	std::list<Sprite*>::iterator bgitr;
-	for(bgitr = _bgSpriteList.begin(); bgitr != _bgSpriteList.end(); bgitr++)
+	if (NULL != _bgSprite)
 	{
-		if (NULL != (*bgitr))
-			bgitr = _bgSpriteList.erase(bgitr);
+		delete _bgSprite;
+		_bgSprite = NULL;
 	}
 
 	if (NULL != _judgeEffectSprite)
@@ -119,11 +108,7 @@ void Track::Deinit()
 
 void Track::Update(int deltaTime)
 {
-	std::list<Sprite*>::iterator bgitr;
-	for (bgitr = _bgSpriteList.begin(); bgitr != _bgSpriteList.end(); bgitr++)
-	{
-		(*bgitr)->Update(deltaTime);
-	}
+	_bgSprite->Update(deltaTime);
 	UpdateNoteList(deltaTime);
 	_judgeEffectSprite->Update(deltaTime);
 
@@ -132,11 +117,7 @@ void Track::Update(int deltaTime)
 
 void Track::Render()
 {
-	std::list<Sprite*>::iterator bgitr;
-	for(bgitr = _bgSpriteList.begin(); bgitr != _bgSpriteList.end(); bgitr++)
-	{
-		(*bgitr)->Render();
-	}
+	_bgSprite->Render();
 
 	std::list<Note*>::iterator itr;
 	for(itr = _noteList.begin(); itr != _noteList.end(); itr++)
@@ -177,10 +158,8 @@ void Track::TrackPosition(int x, int y)
 	_x = x;
 	_y = y;
 
-	std::list<Sprite*>::iterator bgitr = _bgSpriteList.begin();
-	(*bgitr)->SetPosition(_x, _y / 2);					//트랙배경
-	bgitr++;
-	(*bgitr)->SetPosition(_x, _y - _judgeDeltaLine);	//판정선
+	_bgSprite->SetPosition(_x, _y / 2);	//트랙배경
+	//(*bgitr)->SetPosition(_x, _y - _judgeDeltaLine);	//판정선
 
 	_judgeEffectSprite->SetPosition(_x, _y - _judgeDeltaLine);
 }

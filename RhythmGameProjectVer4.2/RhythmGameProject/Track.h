@@ -11,8 +11,8 @@ class Track : public GameObject
 
 private:
 	std::list<Note*> _noteList;
-	std::list<Sprite*> _bgSpriteList;
-
+	//std::list<Sprite*> _bgSpriteList;
+	Sprite* _bgSprite;
 	Sprite* _judgeEffectSprite;
 
 	int _trackNumber;

@@ -16,6 +16,7 @@ TrackManager::TrackManager()
 {
 	_trackList = NULL;
 	_trackNoteList = NULL;
+	_judgeLineSprite = NULL;
 	_combofont = NULL;
 	_scorefont = NULL;
 }
@@ -27,6 +28,10 @@ TrackManager::~TrackManager()
 
 void TrackManager::Init()
 {
+	_judgeLineSprite = new Sprite("judgeData.csv", true);
+	_judgeLineSprite->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2),
+		GameSystem::GetInstance()->GetWindowHeight() - 100);
+
 	_combofont = new Font("arialbd.ttf", 40);
 	_combofont->SetPosition(GameSystem::GetInstance()->GetWindowWidth() - 250, 150);
 
@@ -91,6 +96,12 @@ void TrackManager::Deinit()
 	}
 	_trackNoteList->clear();
 	
+	if (NULL != _judgeLineSprite)
+	{
+		delete _judgeLineSprite;
+		_judgeLineSprite = NULL;
+	}
+
 	if (NULL != _combofont)
 	{
 		delete _combofont;
@@ -120,6 +131,8 @@ void TrackManager::Update(int deltaTime)
 		_trackList->at(i)->Update(deltaTime);
 
 	EffectPlayer::GetInstance()->Update(deltaTime);
+
+	_judgeLineSprite->Update(deltaTime);
 	{
 		char text[50];
 		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
@@ -138,6 +151,7 @@ void TrackManager::Render()
 		_trackList->at(i)->Render();
 
 	EffectPlayer::GetInstance()->Render();
+	_judgeLineSprite->Render();
 	_combofont->Render();
 	_scorefont->Render();
 }
