@@ -36,6 +36,7 @@ class TrackManager : public GameObject
 private:
 	std::vector<Track*>* _trackList;
 
+	Sprite* _bgSprite;
 	Sprite* _judgeLineSprite;
 	Font* _combofont;
 	Font* _scorefont;

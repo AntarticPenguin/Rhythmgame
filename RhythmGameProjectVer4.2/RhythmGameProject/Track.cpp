@@ -13,7 +13,7 @@
 
 Track::Track(int xPos, int yPos) : _x(xPos), _y(yPos)
 {
-	_bgSprite = NULL;
+	_trackEffectSprite = NULL;
 	_judgeEffectSprite = NULL;
 
 	_judge = eJudge::NONE;
@@ -39,7 +39,7 @@ void Track::Init()
 		printf("파일열기 실패: %s\n", filePath);
 	}
 
-	char trackbackgroundSprite[256];
+	char trackEffectSprite[256];
 	char explosionSprite[256];
 
 	char buffer[256];
@@ -53,10 +53,10 @@ void Track::Init()
 
 		{
 			char* token = strtok(record, ",\n");
-			if (!strcmp(token, "Background"))
+			if (!strcmp(token, "TrackEffect"))
 			{
 				token = strtok(NULL, ",\n");
-				strcpy(trackbackgroundSprite, token);
+				strcpy(trackEffectSprite, token);
 			}
 			else if (!strcmp(token, "Explosion"))
 			{
@@ -67,7 +67,7 @@ void Track::Init()
 	}
 	fclose(fp);
 
-	_bgSprite = new Sprite(trackbackgroundSprite, true);
+	_trackEffectSprite = new Sprite(trackEffectSprite, true);
 	_judgeEffectSprite = new Sprite(explosionSprite, false);
 
 	//JudgeLine Init
@@ -93,10 +93,10 @@ void Track::Deinit()
 		_noteList.erase(itr++);
 	}
 
-	if (NULL != _bgSprite)
+	if (NULL != _trackEffectSprite)
 	{
-		delete _bgSprite;
-		_bgSprite = NULL;
+		delete _trackEffectSprite;
+		_trackEffectSprite = NULL;
 	}
 
 	if (NULL != _judgeEffectSprite)
@@ -108,7 +108,7 @@ void Track::Deinit()
 
 void Track::Update(int deltaTime)
 {
-	_bgSprite->Update(deltaTime);
+	_trackEffectSprite->Update(deltaTime);
 	UpdateNoteList(deltaTime);
 	_judgeEffectSprite->Update(deltaTime);
 
@@ -117,7 +117,7 @@ void Track::Update(int deltaTime)
 
 void Track::Render()
 {
-	_bgSprite->Render();
+	_trackEffectSprite->Render();
 
 	std::list<Note*>::iterator itr;
 	for(itr = _noteList.begin(); itr != _noteList.end(); itr++)
@@ -158,7 +158,7 @@ void Track::TrackPosition(int x, int y)
 	_x = x;
 	_y = y;
 
-	_bgSprite->SetPosition(_x, _y / 2);	//트랙배경
+	_trackEffectSprite->SetPosition(_x, _y - 465);	//트랙배경
 	_judgeEffectSprite->SetPosition(_x, _y - _judgeDeltaLine);	//판정이펙트
 }
 

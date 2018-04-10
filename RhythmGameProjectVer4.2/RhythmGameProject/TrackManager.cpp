@@ -28,6 +28,10 @@ TrackManager::~TrackManager()
 
 void TrackManager::Init()
 {
+	_bgSprite = new Sprite("trackBackground.csv", true);
+	_bgSprite->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2,
+		GameSystem::GetInstance()->GetWindowHeight() / 2);
+
 	_judgeLineSprite = new Sprite("judgeData.csv", true);
 	_judgeLineSprite->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2),
 		GameSystem::GetInstance()->GetWindowHeight() - 100);
@@ -44,13 +48,16 @@ void TrackManager::Init()
 	{
 		_trackList = new std::vector<Track*>();
 
-		int trackInterval = -204;
+		//int trackInterval = -204;
+		int trackInterval = -158;
 		for (int i = 0; i < 5; i++)
 		{
-			Track* track = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + trackInterval, GameSystem::GetInstance()->GetWindowHeight());
+			Track* track = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + trackInterval,
+				GameSystem::GetInstance()->GetWindowHeight());
 			_trackList->push_back(track);
 
-			trackInterval += 102;
+			//trackInterval += 102;
+			trackInterval += 79;
 		}
 
 		_trackNoteList = new std::list<sNoteLine*>[_trackList->size()];
@@ -95,6 +102,12 @@ void TrackManager::Deinit()
 		delete (*itr);
 	}
 	_trackNoteList->clear();
+
+	if (NULL != _bgSprite)
+	{
+		delete _bgSprite;
+		_bgSprite = NULL;
+	}
 	
 	if (NULL != _judgeLineSprite)
 	{
@@ -117,6 +130,10 @@ void TrackManager::Deinit()
 
 void TrackManager::Update(int deltaTime)
 {
+	_bgSprite->Update(deltaTime);
+	_judgeLineSprite->Update(deltaTime);
+	EffectPlayer::GetInstance()->Update(deltaTime);
+
 	_playTimeTick += deltaTime;
 
 	for (int i = 0; i < _trackList->size(); i++)
@@ -129,10 +146,6 @@ void TrackManager::Update(int deltaTime)
 
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Update(deltaTime);
-
-	EffectPlayer::GetInstance()->Update(deltaTime);
-
-	_judgeLineSprite->Update(deltaTime);
 	{
 		char text[50];
 		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
@@ -147,11 +160,13 @@ void TrackManager::Update(int deltaTime)
 
 void TrackManager::Render()
 {
+	_bgSprite->Render();
+	_judgeLineSprite->Render();
+	EffectPlayer::GetInstance()->Render();
+
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Render();
 
-	EffectPlayer::GetInstance()->Render();
-	_judgeLineSprite->Render();
 	_combofont->Render();
 	_scorefont->Render();
 }

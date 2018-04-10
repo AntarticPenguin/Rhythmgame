@@ -22,14 +22,14 @@ void SelectScene::Init()
 		GameSystem::GetInstance()->GetWindowHeight() / 2);
 	_backgroundSprite->SetAlpha(100);
 
-	//뮤직 리스트 등록
-	std::vector<MusicContainer*> _musicList;
-	_musicList = GameSystem::GetInstance()->GetMusicList();
+	////뮤직 리스트 등록
+	//std::vector<MusicContainer*> _musicList;
+	//_musicList = GameSystem::GetInstance()->GetMusicList();
 
-	for (int i = 0; i < _musicList.size(); i++)
-	{
-		_musicList.SetPosition();
-	}
+	//for (int i = 0; i < _musicList.size(); i++)
+	//{
+	//	_musicList.SetPosition();
+	//}
 }
 
 void SelectScene::Deinit()

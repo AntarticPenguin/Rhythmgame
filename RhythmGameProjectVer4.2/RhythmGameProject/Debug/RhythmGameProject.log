@@ -1,4 +1,21 @@
-﻿  Texture.cpp
-c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\texture.cpp(31): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\atents\desktop\박평기\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\texture.cpp(32): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  RhythmGameProject.vcxproj -> C:\Users\Atents\Desktop\박평기\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
+﻿  TrackManager.cpp
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(71): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(79): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(92): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(139): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(147): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(167): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(298): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(320): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(340): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(357): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+d:\programmingfolder\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(362): warning C4244: '+=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  건너뛰고 있습니다... (관련된 변경 내용 없음)
+  Scene.cpp
+  ResourceManager.cpp
+  GameSystem.cpp
+  GameObject.cpp
+  Font.cpp
+  EffectPlayer.cpp
+  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
