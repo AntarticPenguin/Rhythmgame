@@ -67,7 +67,7 @@ void Track::Init()
 	}
 	fclose(fp);
 
-	_trackEffectSprite = new Sprite(trackEffectSprite, true);
+	_trackEffectSprite = new Sprite(trackEffectSprite, false);
 	_judgeEffectSprite = new Sprite(explosionSprite, false);
 
 	//JudgeLine Init
@@ -185,6 +185,7 @@ void Track::UpdateInput()
 {
 	if (InputSystem::GetInstance()->IsKeyDown(_trackNumber))
 	{
+		_trackEffectSprite->Play();
 		if ((*_curNote)->IsLive())
 		{
 			//노트가 판정 시작선 위에 있는가?
@@ -210,6 +211,7 @@ void Track::UpdateInput()
 	}
 	else if (InputSystem::GetInstance()->IsKeyHold(_trackNumber))
 	{
+		_trackEffectSprite->Play();
 		if (_isJudging)
 		{
 			if ((*_curNote)->GetDuration() <= 0)
@@ -230,6 +232,7 @@ void Track::UpdateInput()
 	}
 	else if (InputSystem::GetInstance()->IsKeyUp(_trackNumber))
 	{
+		_trackEffectSprite->Stop();
 		if (_isJudging)
 		{
 			if (100 < (*_curNote)->GetDuration())

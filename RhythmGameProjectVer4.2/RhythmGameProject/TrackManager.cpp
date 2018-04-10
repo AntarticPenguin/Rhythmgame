@@ -174,7 +174,7 @@ void TrackManager::Render()
 void TrackManager::ParsingBMS(const char* fileName)
 {
 	char filePath[256];
-	sprintf(filePath, "../../Resource/%s", fileName);
+	sprintf(filePath, "../../Resource/music/%s", fileName);
 	FILE* fp = fopen(filePath, "r");
 	if (NULL == fp)
 	{

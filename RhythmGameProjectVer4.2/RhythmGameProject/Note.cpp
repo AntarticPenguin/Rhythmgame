@@ -25,8 +25,8 @@ Note::~Note()
 
 void Note::Init()
 {
-	_sprite = new Sprite("spriteData.csv", true);
-	_longSprite = new Sprite("longspriteData.csv", true);
+	_sprite = new Sprite("noteSprite.csv", true);
+	_longSprite = new Sprite("longNoteSprite.csv", true);
 	
 	_updateDuration = _startTick;
 
