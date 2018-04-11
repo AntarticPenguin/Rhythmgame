@@ -138,8 +138,8 @@ void Track::UpdateNoteList(int deltaTime)
 	std::list<Note*>::iterator itr;
 	for (itr = _noteList.begin(); itr != _noteList.end(); itr++)
 	{
-		// 2개 마디씩 업데이트
-		if (_curBarNum <= (*itr)->GetBarNum() && (*itr)->GetBarNum() <= _curBarNum + 1)
+		// 3개 마디씩 업데이트
+		if (_curBarNum <= (*itr)->GetBarNum() && (*itr)->GetBarNum() <= _curBarNum + 2)
 		{
 			(*itr)->Start(_playTimeTick);
 		}
@@ -186,6 +186,10 @@ void Track::UpdateInput()
 	if (InputSystem::GetInstance()->IsKeyDown(_trackNumber))
 	{
 		_trackEffectSprite->Play();
+
+		if (_curNote == _noteList.end())
+			return;
+
 		if ((*_curNote)->IsLive())
 		{
 			//노트가 판정 시작선 위에 있는가?
@@ -212,10 +216,15 @@ void Track::UpdateInput()
 	else if (InputSystem::GetInstance()->IsKeyHold(_trackNumber))
 	{
 		_trackEffectSprite->Play();
+
+		if (_curNote == _noteList.end())
+			return;
+
 		if (_isJudging)
 		{
 			if ((*_curNote)->GetDuration() <= 0)
 			{
+				printf("HOLD MISS: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::MISS;
 				Judge(_judge);
 				_isJudging = false;
@@ -233,20 +242,27 @@ void Track::UpdateInput()
 	else if (InputSystem::GetInstance()->IsKeyUp(_trackNumber))
 	{
 		_trackEffectSprite->Stop();
+
+		if (_curNote == _noteList.end())
+			return;
+
 		if (_isJudging)
 		{
-			if (100 < (*_curNote)->GetDuration())
+			if (109 < (*_curNote)->GetDuration())
 			{
+				printf("UP MISS: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::MISS;
 				Judge(_judge);
 			}
-			else if (50 < (*_curNote)->GetDuration() && (*_curNote)->GetDuration() <= 99)
+			else if (50 < (*_curNote)->GetDuration() && (*_curNote)->GetDuration() <= 109)
 			{
+				printf("UP GREAT: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::GREAT;
 				Judge(_judge);
 			}
 			else if (1 <= (*_curNote)->GetDuration() && (*_curNote)->GetDuration() <= 50)
 			{
+				printf("UP PERFECT: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::PERFECT;
 				Judge(_judge);
 			}
@@ -257,6 +273,9 @@ void Track::UpdateInput()
 	}
 	else
 	{
+		if (_curNote == _noteList.end())
+			return;
+
 		//판정선을 지난 노트
 		if (_judgeEndTick < (*_curNote)->GetNoteTime() && false == (*_curNote)->IsPass())
 		{

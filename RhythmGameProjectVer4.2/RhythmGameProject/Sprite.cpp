@@ -64,7 +64,7 @@ Sprite::Sprite(const char* filename, bool isLoop)
 
 	_pivotY = 0.5f;
 
-	_aniSpeed = 1000 / _frameMaxCount;
+	_aniSpeed = 100 / _frameMaxCount;	//1000 / _frameMaxCount;
 
 	_isLoop = isLoop;
 	if (_isLoop)

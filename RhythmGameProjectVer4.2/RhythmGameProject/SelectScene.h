@@ -14,6 +14,9 @@ private:
 	std::vector<std::string> _musicList;
 	std::vector<Font*> _fontList;
 
+	//test
+	Sprite* _selectBox;
+
 public:
 	SelectScene();
 	~SelectScene();

@@ -33,6 +33,7 @@ public:
 	void Update(int deltaTime);
 	void Render();
 	void UpdatePosition(int deltaTime);
+	void UpdateLongnoteLength();
 
 	bool IsLive();
 	int GetNoteTime();

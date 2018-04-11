@@ -48,15 +48,12 @@ void TrackManager::Init()
 	{
 		_trackList = new std::vector<Track*>();
 
-		//int trackInterval = -204;
 		int trackInterval = -158;
 		for (int i = 0; i < 5; i++)
 		{
 			Track* track = new Track((GameSystem::GetInstance()->GetWindowWidth() / 2) + trackInterval,
 				GameSystem::GetInstance()->GetWindowHeight());
 			_trackList->push_back(track);
-
-			//trackInterval += 102;
 			trackInterval += 79;
 		}
 
@@ -65,8 +62,9 @@ void TrackManager::Init()
 
 	//BMS파싱 및 노트 생성
 	memset(_longNoteKey, 0, sizeof(_longNoteKey));
-	ParsingBMS("BMS_Sample.bme");
+	//ParsingBMS("BMS_Sample.bme");
 	//ParsingBMS("Only you_HDMix.bms");
+	ParsingBMS("Happy_Driver_5K.bms");
 
 	for (int i = 0; i < _trackList->size(); i++)
 	{

@@ -33,6 +33,10 @@ void SelectScene::Init()
 		font->SetPosition(300, i * 50);
 		_fontList.push_back(font);
 	}
+
+	_selectBox = new Sprite("SelectSprite.csv", true);
+	_selectBox->SetAlpha(100);
+	_selectBox->SetPosition(500, 0);
 }
 
 void SelectScene::Deinit()
@@ -47,11 +51,13 @@ void SelectScene::Deinit()
 void SelectScene::Update(int deltaTime)
 {
 	_backgroundSprite->Update(deltaTime);
+	_selectBox->Update(deltaTime);
 }
 
 void SelectScene::Render()
 {
 	_backgroundSprite->Render();
+	_selectBox->Render();
 
 	for (int i = 0; i < _fontList.size(); i++)
 		_fontList[i]->Render();

@@ -32,9 +32,7 @@ void Note::Init()
 
 	if (0 < _longDurTick)		// 0이면 단노트, 0이상이면 롱노트
 	{
-		float trackHeight = (float)GameSystem::GetInstance()->GetTrackHeight();
-		float playTime = (float)GameSystem::GetInstance()->GetPlayTimeTick();
-		float lengthRate = (float)_longDurTick / playTime;
+		float lengthRate = (float)_longDurTick / (float)GameSystem::GetInstance()->GetPlayTimeTick();
 		int lengthPerSec = (int)GameSystem::GetInstance()->GetTrackHeight() * lengthRate;
 		_longSprite->SetLength(lengthPerSec);
 		_longSprite->SetPivotY(1.0f);
@@ -63,7 +61,8 @@ void Note::Update(int deltaTime)
 	if (false == _isLive || false == _isStart)
 		return;
 
-	_longSprite->Update(deltaTime);
+	if (0 < _longDurTick)
+		_longSprite->Update(deltaTime);
 	_sprite->Update(deltaTime);
 	UpdatePosition(deltaTime);
 }
@@ -82,6 +81,8 @@ void Note::UpdatePosition(int deltaTime)
 {
 	_updateDuration += deltaTime;			//노트 업데이트 시간
 
+	UpdateLongnoteLength();
+
 	if (true == _isReduceDuration)
 	{
 		_longDurTick -= deltaTime;
@@ -91,12 +92,7 @@ void Note::UpdatePosition(int deltaTime)
 			_isReduceDuration = false;
 		}
 
-		float trackHeight = (float)GameSystem::GetInstance()->GetTrackHeight();
-		float playTime = (float)GameSystem::GetInstance()->GetPlayTimeTick();
-		float lengthRate = (float)_longDurTick / playTime;
-		int lengthPerSec = (int)GameSystem::GetInstance()->GetTrackHeight() * lengthRate;
-		_longSprite->SetLength(lengthPerSec);
-
+		UpdateLongnoteLength();
 		_updateDuration = GameSystem::GetInstance()->GetPlayTimeTick();
 	}
 
@@ -113,6 +109,13 @@ void Note::UpdatePosition(int deltaTime)
 	{
 		_isLive = false;
 	}
+}
+
+void Note::UpdateLongnoteLength()
+{
+	float lengthRate = (float)_longDurTick / (float)GameSystem::GetInstance()->GetPlayTimeTick();
+	int lengthPerSec = (int)GameSystem::GetInstance()->GetTrackHeight() * lengthRate;
+	_longSprite->SetLength(lengthPerSec);
 }
 
 bool Note::IsLive()
