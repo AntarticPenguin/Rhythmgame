@@ -329,16 +329,13 @@ void TrackManager::CreateGameNote()
 			noteInfo.startTick = 0;
 			noteInfo.durationTick = 0;
 			noteInfo.isLongNote = sNoteLine->isLongNote;
-
-			{
-				noteInfo.barNum = sNoteLine->BarNum;
-			}
-			
+			noteInfo.barNum = sNoteLine->BarNum;
 
 			noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
 
 			int beat = strlen(sNoteLine->line) / 2;	//박자
 			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
+			printf("SPB: %f\n", SecondPerBeat);
 
 			char* ptr = &sNoteLine->line[0];
 			for (int i = 0; i < beat; i++)

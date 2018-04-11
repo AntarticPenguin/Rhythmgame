@@ -7,7 +7,7 @@ class TrackManager;
 class GameScene : public Scene
 {
 private:
-	Sprite* _backgroundSprite;
+	//Sprite* _backgroundSprite;
 	TrackManager* _trackManager;
 	int _gameDuration;
 	bool _isPause;

@@ -14,7 +14,7 @@
 
 GameScene::GameScene()
 {
-	_backgroundSprite = NULL;
+	//_backgroundSprite = NULL;
 	_isPause = false;
 }
 
@@ -61,8 +61,8 @@ void GameScene::Init()
 	}
 	fclose(fp);
 
-	_backgroundSprite = new Sprite(backgroundSpriteName, true);
-	_backgroundSprite->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() / 2);
+	//_backgroundSprite = new Sprite(backgroundSpriteName, true);
+	//_backgroundSprite->SetPosition(GameSystem::GetInstance()->GetWindowWidth() / 2, GameSystem::GetInstance()->GetWindowHeight() / 2);
 
 	DataManager::GetInstance()->ResetScore();
 	DataManager::GetInstance()->ResetCombo();
@@ -99,11 +99,11 @@ void GameScene::Init()
 void GameScene::Deinit()
 {
 	_trackManager->Deinit();
-	if (NULL != _backgroundSprite)
+	/*if (NULL != _backgroundSprite)
 	{
 		delete _backgroundSprite;
 		_backgroundSprite = NULL;
-	}
+	}*/
 }
 
 void GameScene::Update(int deltaTime)
@@ -111,7 +111,7 @@ void GameScene::Update(int deltaTime)
 	//2초 정도 여유
 	if (_gameDuration <= GameSystem::GetInstance()->GetPlayTimeTick() + 2000)
 	{
-		_backgroundSprite->Update(deltaTime);
+		//_backgroundSprite->Update(deltaTime);
 		_trackManager->Update(deltaTime);
 
 		_gameDuration += deltaTime;
@@ -126,7 +126,7 @@ void GameScene::Update(int deltaTime)
 
 void GameScene::Render()
 {
-	_backgroundSprite->Render();
+	//_backgroundSprite->Render();
 	_trackManager->Render();
 }
 

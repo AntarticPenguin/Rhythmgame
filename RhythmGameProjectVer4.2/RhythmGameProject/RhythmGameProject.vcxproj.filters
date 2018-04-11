@@ -105,6 +105,9 @@
     <ClInclude Include="SelectScene.h">
       <Filter>소스 파일\Scene\SelectScene</Filter>
     </ClInclude>
+    <ClInclude Include="MusicInfoBox.h">
+      <Filter>소스 파일\Scene\SelectScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -162,6 +165,9 @@
       <Filter>소스 파일\GameSystem</Filter>
     </ClCompile>
     <ClCompile Include="SelectScene.cpp">
+      <Filter>소스 파일\Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicInfoBox.cpp">
       <Filter>소스 파일\Scene\SelectScene</Filter>
     </ClCompile>
   </ItemGroup>

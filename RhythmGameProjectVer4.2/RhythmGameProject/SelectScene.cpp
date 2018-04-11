@@ -6,11 +6,17 @@
 #include "GameSystem.h"
 #include "SceneManager.h"
 #include "Sprite.h"
-#include "Font.h"
+#include "MusicInfoBox.h"
 
 SelectScene::SelectScene()
 {
 	_backgroundSprite = NULL;
+	_selectPosX = 515;
+	_selectPosY = 100;
+
+	_viewIndex = 0;
+	_startViewIndex = 0;
+	_endViewIndex = 6;
 }
 
 SelectScene::~SelectScene()
@@ -26,17 +32,11 @@ void SelectScene::Init()
 	_backgroundSprite->SetAlpha(100);
 
 	InitMusicList();
-	for (int i = 0; i < _musicList.size(); i++)
-	{
-		Font* font = new Font("arialbd.ttf", 40);
-		font->SetText(_musicList[i].c_str());
-		font->SetPosition(300, i * 50);
-		_fontList.push_back(font);
-	}
+	InitViewList();		// view리스트 위치값 초기화
 
 	_selectBox = new Sprite("SelectSprite.csv", true);
 	_selectBox->SetAlpha(100);
-	_selectBox->SetPosition(500, 0);
+	_selectBox->SetPosition(_selectPosX, _selectPosY);
 }
 
 void SelectScene::Deinit()
@@ -52,15 +52,16 @@ void SelectScene::Update(int deltaTime)
 {
 	_backgroundSprite->Update(deltaTime);
 	_selectBox->Update(deltaTime);
+	_selectBox->SetPosition(_selectPosX, _selectPosY);
 }
 
 void SelectScene::Render()
 {
 	_backgroundSprite->Render();
 	_selectBox->Render();
-
-	for (int i = 0; i < _fontList.size(); i++)
-		_fontList[i]->Render();
+	
+	for (int i = _startViewIndex; i <= _endViewIndex; i++)
+		_viewList[i]->Render();
 }
 
 void SelectScene::InitMusicList()
@@ -95,10 +96,16 @@ void SelectScene::InitMusicList()
 	}
 
 	_findclose(handle);
+}
 
+void SelectScene::InitViewList()
+{
 	for (int i = 0; i < _musicList.size(); i++)
 	{
-		printf("File List: %s\n", _musicList[i].c_str());
+		MusicInfoBox* infoBox = new MusicInfoBox(_musicList[i]);
+		infoBox->Init();
+		infoBox->SetPosition(300, i * 100 + 75);
+		_viewList.push_back(infoBox);
 	}
 }
 
@@ -111,6 +118,37 @@ void SelectScene::KeyDown(int keyCode)
 		break;
 	case SDLK_ESCAPE:
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_TITLE);
+		break;
+	case SDLK_UP:
+		_viewIndex--;
+		if (_viewIndex < _startViewIndex)
+			_viewIndex = _startViewIndex;
+		printf("index: %d\n", _viewIndex);
+
+		//SelectBox 위치
+		_selectPosY -= 100;
+		if (_selectPosY <= 100)
+			_selectPosY = 100;
+		break;
+	case SDLK_DOWN:
+		_viewIndex++;
+
+		//밑에 더 리스트가 있는지 체크
+		//있으면 startIndex, endIndex 증가
+		if (NULL != _viewList[_viewIndex])
+		{
+			_startViewIndex++;
+			_endViewIndex++;
+		}
+
+		if (_endViewIndex <= _viewIndex)
+			_viewIndex = _endViewIndex;
+		printf("index: %d\n", _viewIndex);
+
+		//SelectBox 위치
+		_selectPosY += 100;
+		if (700 <= _selectPosY)
+			_selectPosY = 700;
 		break;
 	}
 }

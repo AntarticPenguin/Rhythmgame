@@ -5,17 +5,23 @@
 #include "Scene.h"
 
 class Sprite;
-class Font;
+class MusicInfoBox;
 
 class SelectScene : public Scene
 {
 private:
 	Sprite* _backgroundSprite;
 	std::vector<std::string> _musicList;
-	std::vector<Font*> _fontList;
+	std::vector<MusicInfoBox*> _viewList;
 
 	//test
 	Sprite* _selectBox;
+	int _selectPosX;
+	int _selectPosY;
+
+	int _viewIndex;
+	int _startViewIndex;
+	int _endViewIndex;
 
 public:
 	SelectScene();
@@ -29,6 +35,7 @@ public:
 
 public:
 	void InitMusicList();
+	void InitViewList();
 
 	//Input
 public:
