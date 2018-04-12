@@ -205,6 +205,7 @@ void Track::UpdateInput()
 			{
 				(*_curNote)->SetLive(true);
 				(*_curNote)->EnableReduceDuration();
+				(*_curNote)->AdjustmentLength();
 				_isJudging = true;
 				return;
 			}
@@ -222,9 +223,8 @@ void Track::UpdateInput()
 
 		if (_isJudging)
 		{
-			if ((*_curNote)->GetDuration() <= 0)
+			if ((*_curNote)->GetDuration() <= -80)
 			{
-				printf("HOLD MISS: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::MISS;
 				Judge(_judge);
 				_isJudging = false;
@@ -250,19 +250,16 @@ void Track::UpdateInput()
 		{
 			if (109 < (*_curNote)->GetDuration())
 			{
-				printf("UP MISS: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::MISS;
 				Judge(_judge);
 			}
 			else if (50 < (*_curNote)->GetDuration() && (*_curNote)->GetDuration() <= 109)
 			{
-				printf("UP GREAT: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::GREAT;
 				Judge(_judge);
 			}
 			else if (1 <= (*_curNote)->GetDuration() && (*_curNote)->GetDuration() <= 50)
 			{
-				printf("UP PERFECT: %d\n", (*_curNote)->GetDuration());
 				_judge = eJudge::PERFECT;
 				Judge(_judge);
 			}

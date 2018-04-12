@@ -5,6 +5,7 @@
 #include "SDL.h"
 #include "GameSystem.h"
 #include "SceneManager.h"
+#include "DataManager.h"
 #include "Sprite.h"
 #include "MusicInfoBox.h"
 
@@ -184,6 +185,7 @@ void SelectScene::KeyDown(int keyCode)
 	switch (keyCode)
 	{
 	case SDLK_SPACE:
+		DataManager::GetInstance()->SetMusicTitle(_musicList[_selectIndex]);
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_GAME);
 		break;
 	case SDLK_ESCAPE:

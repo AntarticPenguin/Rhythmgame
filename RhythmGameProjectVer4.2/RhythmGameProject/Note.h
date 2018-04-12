@@ -34,6 +34,7 @@ public:
 	void Render();
 	void UpdatePosition(int deltaTime);
 	void UpdateLongnoteLength();
+	void AdjustmentLength();
 
 	bool IsLive();
 	int GetNoteTime();

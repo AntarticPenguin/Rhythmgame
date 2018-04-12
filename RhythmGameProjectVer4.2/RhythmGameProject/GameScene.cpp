@@ -16,6 +16,8 @@ GameScene::GameScene()
 {
 	//_backgroundSprite = NULL;
 	_isPause = false;
+
+	printf("SelectMusic: %s\n", DataManager::GetInstance()->GetMusicTitle().c_str());
 }
 
 GameScene::~GameScene()
@@ -83,7 +85,7 @@ void GameScene::Init()
 		if (NULL != music)
 		{
 			Mix_PlayMusic(music, 0);
-			printf("Music Load Complete\n");
+			//printf("Music Load Complete\n");
 		}
 		else
 		{

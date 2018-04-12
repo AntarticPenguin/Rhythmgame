@@ -61,3 +61,13 @@ void DataManager::ResetScore()
 {
 	_score = 0;
 }
+
+void DataManager::SetMusicTitle(std::string title)
+{
+	_musicTitle = title;
+}
+
+std::string DataManager::GetMusicTitle()
+{
+	return _musicTitle;
+}

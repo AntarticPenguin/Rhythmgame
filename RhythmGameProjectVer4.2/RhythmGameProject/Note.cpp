@@ -81,12 +81,10 @@ void Note::UpdatePosition(int deltaTime)
 {
 	_updateDuration += deltaTime;			//노트 업데이트 시간
 
-	UpdateLongnoteLength();
-
 	if (true == _isReduceDuration)
 	{
 		_longDurTick -= deltaTime;
-		if (_longDurTick < 0)
+		if (_longDurTick < -90)
 		{
 			_longDurTick = 0;
 			_isReduceDuration = false;
@@ -113,7 +111,29 @@ void Note::UpdatePosition(int deltaTime)
 
 void Note::UpdateLongnoteLength()
 {
-	float lengthRate = (float)_longDurTick / (float)GameSystem::GetInstance()->GetPlayTimeTick();
+	float lengthRate = (float)(_longDurTick) / (float)GameSystem::GetInstance()->GetPlayTimeTick();
+	int lengthPerSec = (int)GameSystem::GetInstance()->GetTrackHeight() * lengthRate;
+	_longSprite->SetLength(lengthPerSec);
+}
+
+void Note::AdjustmentLength()
+{
+	/*	
+		롱노트를 눌렀을때에 따라 길이가 갑자기 길어지거나 짧아지는
+		미묘한 차이가 있는데 그것을 보정
+		1. gap을 구함
+		2. gap이 음수 : 판정선보다 밑에서 롱노트를 누름(MISS판정이 아님)
+			_longDurTick -= (gap*-1);		절대값을 빼줌
+		3. gap이 양수 : 판정선보다 위에서 롱노트를 누름(MISS판정이 아님)
+			_longDurTick += gap;
+			식을 같게 해주기 위해
+			_longDurTick -= (gap*-1);
+	*/
+
+	int gap = (float)GameSystem::GetInstance()->GetPlayTimeTick() - _updateDuration;
+	gap *= -1;
+	_longDurTick -= gap;
+	float lengthRate = (float)(_longDurTick) / (float)GameSystem::GetInstance()->GetPlayTimeTick();
 	int lengthPerSec = (int)GameSystem::GetInstance()->GetTrackHeight() * lengthRate;
 	_longSprite->SetLength(lengthPerSec);
 }

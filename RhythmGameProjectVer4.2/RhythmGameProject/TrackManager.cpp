@@ -62,9 +62,7 @@ void TrackManager::Init()
 
 	//BMS파싱 및 노트 생성
 	memset(_longNoteKey, 0, sizeof(_longNoteKey));
-	//ParsingBMS("BMS_Sample.bme");
-	//ParsingBMS("Only you_HDMix.bms");
-	ParsingBMS("Happy_Driver_5K.bms");
+	ParsingBMS(DataManager::GetInstance()->GetMusicTitle().c_str());
 
 	for (int i = 0; i < _trackList->size(); i++)
 	{
@@ -309,7 +307,8 @@ void TrackManager::AddNoteLine(int trackNum, sNoteLine* noteLine)
 void TrackManager::CreateGameNote()
 {
 	int judgeDeltaLine = 100;
-	int noteTick = 0;
+	//int noteTick = 0;
+	float noteTick = 0.0f;
 	int durationTick = 0;
 
 	//BMSE Parsing Info
@@ -331,11 +330,9 @@ void TrackManager::CreateGameNote()
 			noteInfo.isLongNote = sNoteLine->isLongNote;
 			noteInfo.barNum = sNoteLine->BarNum;
 
-			noteTick = _SecondPerBar * sNoteLine->BarNum * 1000;	//마디가 시작하는 시간(초)
-
-			int beat = strlen(sNoteLine->line) / 2;	//박자
+			noteTick = _SecondPerBar * sNoteLine->BarNum;		//마디가 시작하는 시간(Tick)
+			int beat = strlen(sNoteLine->line) / 2;				//박자
 			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
-			printf("SPB: %f\n", SecondPerBeat);
 
 			char* ptr = &sNoteLine->line[0];
 			for (int i = 0; i < beat; i++)
@@ -349,12 +346,12 @@ void TrackManager::CreateGameNote()
 				//00은 노트를 삽입하지 않고 패스
 				if (!strcmp(noteInfo.note, "00"))
 				{
-					noteTick += SecondPerBeat * 1000;
+					noteTick += SecondPerBeat;
 				}
 				else
 				{
 					noteInfo.startTick = noteTick;
-					noteTick += SecondPerBeat * 1000;
+					noteTick += SecondPerBeat;
 					noteList.push_back(noteInfo);
 				}
 			}
@@ -375,13 +372,17 @@ void TrackManager::CreateGameNote()
 			{
 				reverseItr--;
 				sNoteInfo prevNote = (*reverseItr);
-				sec = (float)(prevNote.startTick) / 1000.0f;
-				duration = (float)(curNote.startTick - prevNote.startTick) / 1000.0f;
+				int prevStartTick = prevNote.startTick * 1000;
+				int curStartTick = curNote.startTick * 1000;
+
+				sec = (float)(prevStartTick) / 1000.0f;
+				duration = (float)(curStartTick - prevStartTick) / 1000.0f;
 				barNum = prevNote.barNum;
 			}
 			else
 			{
-				sec = (float)(curNote.startTick) / 1000.0f;
+				int curStartTick = curNote.startTick * 1000;
+				sec = (float)(curStartTick) / 1000.0f;
 				duration = (float)(curNote.durationTick) / 1000.0f;
 				barNum = curNote.barNum;
 			}

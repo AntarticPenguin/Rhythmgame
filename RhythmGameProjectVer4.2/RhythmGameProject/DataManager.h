@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 enum eJudge;
 
@@ -15,6 +16,7 @@ public:
 	int _combo;
 	int _score;
 
+	//SCORE & COMBO
 public:
 	int GetCombo();
 	void SetCombo(int combo);
@@ -26,6 +28,14 @@ public:
 
 	void ResetCombo();
 	void ResetScore();
+
+	//Music Title
+private:
+	std::string _musicTitle;
+
+public:
+	void SetMusicTitle(std::string title);
+	std::string GetMusicTitle();
 
 private:
 	DataManager();

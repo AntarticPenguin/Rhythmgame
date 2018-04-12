@@ -25,7 +25,7 @@ typedef struct sNoteLine
 typedef struct sNoteInfo
 {
 	char note[3];
-	int startTick;
+	float startTick;
 	int durationTick;
 	int isLongNote;
 	int barNum;
