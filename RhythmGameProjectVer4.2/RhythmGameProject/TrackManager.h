@@ -2,6 +2,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <string>
 
 #include "GameObject.h"
 
@@ -35,6 +36,7 @@ class TrackManager : public GameObject
 {
 private:
 	std::vector<Track*>* _trackList;
+	std::map<std::string, Mix_Chunk*> _wavMap;
 
 	Sprite* _bgSprite;
 	Sprite* _judgeLineSprite;

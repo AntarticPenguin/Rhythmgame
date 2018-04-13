@@ -74,28 +74,28 @@ void GameScene::Init()
 
 	_gameDuration = 0;
 
-	int result = Mix_Init(MIX_INIT_MP3);
-	if (MIX_INIT_MP3 == result)
-	{
-		char musicPath[256];
-		sprintf(musicPath, "../../Resource/music/%s", musicName);
-		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
-		Mix_Music* music = Mix_LoadMUS(musicPath);
-		Mix_VolumeMusic(GameSystem::GetInstance()->GetMusicVolume());
-		if (NULL != music)
-		{
-			Mix_PlayMusic(music, 0);
-			//printf("Music Load Complete\n");
-		}
-		else
-		{
-			printf("Failed to load mp3 file\n");
-		}
-	}
-	else
-	{
-		printf("Init Error\n");
-	}
+	//int result = Mix_Init(MIX_INIT_MP3);
+	//if (MIX_INIT_MP3 == result)
+	//{
+	//	char musicPath[256];
+	//	sprintf(musicPath, "../../Resource/music/%s", musicName);
+	//	Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
+	//	Mix_Music* music = Mix_LoadMUS(musicPath);
+	//	Mix_VolumeMusic(GameSystem::GetInstance()->GetMusicVolume());
+	//	if (NULL != music)
+	//	{
+	//		Mix_PlayMusic(music, 0);
+	//		//printf("Music Load Complete\n");
+	//	}
+	//	else
+	//	{
+	//		printf("Failed to load mp3 file\n");
+	//	}
+	//}
+	//else
+	//{
+	//	printf("Init Error\n");
+	//}
 }
 
 void GameScene::Deinit()

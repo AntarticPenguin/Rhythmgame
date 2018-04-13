@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "SDL.h"
+#include "SDL_mixer.h"
 #include "GameSystem.h"
 #include "DataManager.h"
 #include "EffectPlayer.h"
@@ -238,6 +239,25 @@ void TrackManager::ParsingBMS(const char* fileName)
 				strncpy(_longNoteKey, "LNTYPE", strlen(_longNoteKey));
 				_eFileType = eFileType::BMS;
 			}
+			else if (NULL != strstr(token, "WAV"))
+			{
+				std::string str = token;
+				std::string code = str.substr(3, 4);
+
+				token = strtok(NULL, "\n");
+				std::string wavName = token;
+				
+				Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
+				Mix_AllocateChannels(256);
+
+				char wavPath[256];
+				std::string file = fileName;
+				std::string folderName = file.substr(0, file.length() - 4);
+				sprintf(wavPath, "../../Resource/music/%s/%s", folderName.c_str(), wavName.c_str());
+
+				Mix_Chunk* wavChunk = Mix_LoadWAV(wavPath);
+				_wavMap[code] = wavChunk;
+			}
 			else if (!strcmp(token, "MAIN"))
 			{
 				fieldFlag = 2;
@@ -275,7 +295,12 @@ void TrackManager::ParsingBMS(const char* fileName)
 			int playerPlay = barInfo[3] - '0';		//오토플레이정보
 			int trackNum = atoi(&barInfo[4]);		//노트가 들어갈 트랙 넘버
 
-			if (1 == playerPlay || 5 == playerPlay)
+			if (0 == playerPlay)
+			{
+				//오토 플레이관련
+
+			}
+			else if (1 == playerPlay || 5 == playerPlay)	//bms에서는 5일경우 롱노트
 			{
 				sNoteLine* snoteLine = new sNoteLine;
 				strncpy(snoteLine->line, noteLine, sizeof(noteLine));

@@ -3,13 +3,6 @@
 
 class Sprite;
 
-//enum eEffect
-//{
-//	eMISS,
-//	eGREAT,
-//	ePERFECT,
-//};
-
 enum eJudge
 {
 	MISS,
