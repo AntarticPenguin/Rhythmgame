@@ -5,6 +5,7 @@
 #include "GameScene.h"
 #include "TitleScene.h"
 #include "SelectScene.h"
+#include "ResultScene.h"
 
 SceneManager* SceneManager::_instance = NULL;
 
@@ -52,7 +53,7 @@ void SceneManager::ChangeScene(eScene sceneName)
 		_scene = new GameScene();
 		break;
 	case eScene::SCENE_RESULT:
-		_scene = NULL;
+		_scene = new ResultScene();
 		break;
 	}
 	if (NULL != _scene)

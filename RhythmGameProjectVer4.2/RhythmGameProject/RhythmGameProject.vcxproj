@@ -167,6 +167,7 @@
     <ClInclude Include="MusicInfoBox.h" />
     <ClInclude Include="Note.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResultScene.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SelectScene.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Track.h" />
     <ClInclude Include="TrackManager.h" />
+    <ClInclude Include="Wav.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DataManager.cpp" />
@@ -189,6 +191,7 @@
     <ClCompile Include="MusicInfoBox.cpp" />
     <ClCompile Include="Note.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SelectScene.cpp" />
@@ -197,6 +200,7 @@
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Track.cpp" />
     <ClCompile Include="TrackManager.cpp" />
+    <ClCompile Include="Wav.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

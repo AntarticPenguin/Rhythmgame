@@ -14,12 +14,17 @@ public:
 
 public:
 	int _combo;
+	int _maxCombo;
 	int _score;
 
-	//SCORE & COMBO
+	int _missCount;
+	int _greatCount;
+	int _perfectCount;
+
+	//SCORE & COMBO & JUDGE
 public:
 	int GetCombo();
-	void SetCombo(int combo);
+	int GetMaxCombo();
 	void IncreaseCombo();
 
 	int GetScore();
@@ -28,6 +33,10 @@ public:
 
 	void ResetCombo();
 	void ResetScore();
+
+	int GetMissCount();
+	int GetGreatCount();
+	int GetPerfectCount();
 
 	//Music Title
 private:

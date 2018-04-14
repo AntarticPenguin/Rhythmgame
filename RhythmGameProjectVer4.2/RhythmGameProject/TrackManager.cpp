@@ -9,6 +9,7 @@
 #include "EffectPlayer.h"
 #include "TrackManager.h"
 #include "Track.h"
+#include "Wav.h"
 #include "Note.h"
 #include "Sprite.h"
 #include "Font.h"
@@ -71,6 +72,7 @@ void TrackManager::Init()
 		_trackList->at(i)->SetTrackNumber(i);
 	}
 
+	CreateAutoPlay();
 	CreateGameNote();
 	
 	for (int i = 0; i < _trackList->size(); i++)
@@ -133,16 +135,24 @@ void TrackManager::Update(int deltaTime)
 
 	_playTimeTick += deltaTime;
 
-	for (int i = 0; i < _trackList->size(); i++)
+	//Track
 	{
-		_trackList->at(i)->SetPlayBarInfo(_curBarNum, _playTimeTick);
+		for (int i = 0; i < _trackList->size(); i++)
+		{
+			_trackList->at(i)->SetPlayBarInfo(_curBarNum, _playTimeTick);
+		}
+
+		if ((_SecondPerBar * (_curBarNum) * 1000) <= _playTimeTick)
+			_curBarNum++;
+
+		for (int i = 0; i < _trackList->size(); i++)
+			_trackList->at(i)->Update(deltaTime);
 	}
 
-	if ((_SecondPerBar * (_curBarNum) * 1000) <= _playTimeTick)
-		_curBarNum++;
+	std::list<Wav*>::iterator itr;
+	for (itr = _autoWavList.begin(); itr != _autoWavList.end(); itr++)
+		(*itr)->Update(deltaTime);
 
-	for (int i = 0; i < _trackList->size(); i++)
-		_trackList->at(i)->Update(deltaTime);
 	{
 		char text[50];
 		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
@@ -295,10 +305,13 @@ void TrackManager::ParsingBMS(const char* fileName)
 			int playerPlay = barInfo[3] - '0';		//오토플레이정보
 			int trackNum = atoi(&barInfo[4]);		//노트가 들어갈 트랙 넘버
 
-			if (0 == playerPlay)
+			if (0 == playerPlay && 1 == trackNum)
 			{
 				//오토 플레이관련
-
+				sNoteLine* snoteLine = new sNoteLine;
+				strncpy(snoteLine->line, noteLine, sizeof(noteLine));
+				snoteLine->BarNum = curBarNum;
+				_autoPlayNoteList.push_back(snoteLine);
 			}
 			else if (1 == playerPlay || 5 == playerPlay)	//bms에서는 5일경우 롱노트
 			{
@@ -322,6 +335,13 @@ void TrackManager::ParsingBMS(const char* fileName)
 	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
 }
 
+void TrackManager::AddAutoNote(float sec, int barNum, char* wavCode)
+{
+	Wav* wav = new Wav(sec, barNum, _wavMap[wavCode]);
+	wav->Init();
+	_autoWavList.push_back(wav);
+}
+
 void TrackManager::AddNoteLine(int trackNum, sNoteLine* noteLine)
 {
 	//6이상의 trackNum은 무시
@@ -329,10 +349,65 @@ void TrackManager::AddNoteLine(int trackNum, sNoteLine* noteLine)
 		_trackNoteList[trackNum-1].push_back(noteLine);
 }
 
+void TrackManager::CreateAutoPlay()
+{
+	int judgeDeltaLine = 100;
+	float noteTick = 0.0f;
+	int durationTick = 0;
+
+	//BMSE Parsing Info
+	float SecondPerBeat = 0;				// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
+
+	std::list<sNoteInfo> noteList;
+
+	//정방향으로 순회하면서 각 노트의 시작시간 배치
+	std::list<sNoteLine*>::iterator itr;
+	for(itr = _autoPlayNoteList.begin(); itr != _autoPlayNoteList.end(); itr++)
+	{
+		sNoteLine* sNoteLine = (*itr);
+
+		sNoteInfo noteInfo;
+		noteInfo.startTick = 0;
+		noteInfo.durationTick = 0;
+		//noteInfo.isLongNote = sNoteLine->isLongNote;
+		noteInfo.barNum = sNoteLine->BarNum;
+
+		noteTick = _SecondPerBar * sNoteLine->BarNum;		//마디가 시작하는 시간(Tick)
+		int beat = strlen(sNoteLine->line) / 2;				//박자
+		SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
+
+		char* ptr = &sNoteLine->line[0];
+		for (int i = 0; i < beat; i++)
+		{
+			memset(noteInfo.note, 0, sizeof(noteInfo.note));
+			strncpy(noteInfo.note, ptr, 2);
+			noteInfo.note[2] = '\0';
+			(ptr++);
+			(ptr++);
+
+			//00은 노트를 삽입하지 않고 패스
+			if (!strcmp(noteInfo.note, "00"))
+			{
+				noteTick += SecondPerBeat;
+			}
+			else
+			{
+				//printf("bar: %d // AUTO: %s\n", noteInfo.barNum, noteInfo.note);
+				noteInfo.startTick = noteTick;
+				int startTick = noteInfo.startTick * 1000;
+				float sec = startTick / 1000.0f;
+				int barNum = noteInfo.barNum;
+				AddAutoNote(sec, barNum, noteInfo.note);
+
+				noteTick += SecondPerBeat;
+			}
+		}
+	}
+}
+
 void TrackManager::CreateGameNote()
 {
 	int judgeDeltaLine = 100;
-	//int noteTick = 0;
 	float noteTick = 0.0f;
 	int durationTick = 0;
 

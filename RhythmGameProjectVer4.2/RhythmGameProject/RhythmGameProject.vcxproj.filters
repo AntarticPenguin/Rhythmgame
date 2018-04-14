@@ -108,6 +108,12 @@
     <ClInclude Include="MusicInfoBox.h">
       <Filter>소스 파일\Scene\SelectScene</Filter>
     </ClInclude>
+    <ClInclude Include="Wav.h">
+      <Filter>소스 파일\Scene\GameScene</Filter>
+    </ClInclude>
+    <ClInclude Include="ResultScene.h">
+      <Filter>소스 파일\Scene\ResultScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -169,6 +175,12 @@
     </ClCompile>
     <ClCompile Include="MusicInfoBox.cpp">
       <Filter>소스 파일\Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Wav.cpp">
+      <Filter>소스 파일\Scene\GameScene</Filter>
+    </ClCompile>
+    <ClCompile Include="ResultScene.cpp">
+      <Filter>소스 파일\Scene\ResultScene</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

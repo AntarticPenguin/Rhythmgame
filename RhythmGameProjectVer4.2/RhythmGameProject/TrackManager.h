@@ -9,6 +9,7 @@
 class Track;
 class Sprite;
 class Font;
+class Wav;
 
 enum eFileType
 {
@@ -37,6 +38,7 @@ class TrackManager : public GameObject
 private:
 	std::vector<Track*>* _trackList;
 	std::map<std::string, Mix_Chunk*> _wavMap;
+	std::list<Wav*> _autoWavList;
 
 	Sprite* _bgSprite;
 	Sprite* _judgeLineSprite;
@@ -59,6 +61,7 @@ public:
 	//BMS Parsing & Create Note
 private:
 	std::list<sNoteLine*>* _trackNoteList;
+	std::list<sNoteLine*> _autoPlayNoteList;
 
 	int _BPM;				// BMSE 스크립트를 통해 BPM을 구한다.
 	float _SecondPerBar;	// BPM에 따른 1마디당 초를 구한다.	(1/32박자 기준)
@@ -67,7 +70,9 @@ private:
 
 public:
 	void ParsingBMS(const char* fileName);
+	void AddAutoNote(float sec, int barNum, char* wavCode);
 	void AddNoteLine(int trackNum, sNoteLine* noteLine);
+	void CreateAutoPlay();
 	void CreateGameNote();
 	bool IsLongNote(eFileType _eFileType, sNoteInfo curNote);
 };
