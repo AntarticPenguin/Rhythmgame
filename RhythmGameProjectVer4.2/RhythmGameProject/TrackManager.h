@@ -61,6 +61,7 @@ public:
 	//BMS Parsing & Create Note
 private:
 	std::list<sNoteLine*>* _trackNoteList;
+	std::list<sNoteInfo> _noteList;
 	std::list<sNoteLine*> _autoPlayNoteList;
 
 	int _BPM;				// BMSE 스크립트를 통해 BPM을 구한다.
@@ -72,7 +73,7 @@ public:
 	void ParsingBMS(const char* fileName);
 	void AddAutoNote(float sec, int barNum, char* wavCode);
 	void AddNoteLine(int trackNum, sNoteLine* noteLine);
-	void CreateAutoPlay();
+	void PlaceNoteTime(std::list<sNoteLine*>& noteLine);
 	void CreateGameNote();
 	bool IsLongNote(eFileType _eFileType, sNoteInfo curNote);
 };

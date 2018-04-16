@@ -72,7 +72,6 @@ void TrackManager::Init()
 		_trackList->at(i)->SetTrackNumber(i);
 	}
 
-	CreateAutoPlay();
 	CreateGameNote();
 	
 	for (int i = 0; i < _trackList->size(); i++)
@@ -86,6 +85,9 @@ void TrackManager::Init()
 
 void TrackManager::Deinit()
 {
+	_autoWavList.clear();
+	_wavMap.clear();
+
 	if (NULL != _trackList)
 	{
 		for (int i = 0; i < _trackList->size(); i++)
@@ -199,11 +201,8 @@ void TrackManager::ParsingBMS(const char* fileName)
 	_BPM = 0;
 	_SecondPerBar = 0;
 
-	int count = 0;
-	
 	while (true)
 	{
-		count++;
 		record = fgets(buffer, sizeof(buffer), fp);
 		if (NULL == record)
 			break;
@@ -311,6 +310,7 @@ void TrackManager::ParsingBMS(const char* fileName)
 				sNoteLine* snoteLine = new sNoteLine;
 				strncpy(snoteLine->line, noteLine, sizeof(noteLine));
 				snoteLine->BarNum = curBarNum;
+				snoteLine->isLongNote = playerPlay;
 				_autoPlayNoteList.push_back(snoteLine);
 			}
 			else if (1 == playerPlay || 5 == playerPlay)	//bms에서는 5일경우 롱노트
@@ -349,7 +349,7 @@ void TrackManager::AddNoteLine(int trackNum, sNoteLine* noteLine)
 		_trackNoteList[trackNum-1].push_back(noteLine);
 }
 
-void TrackManager::CreateAutoPlay()
+void TrackManager::PlaceNoteTime(std::list<sNoteLine*>& noteLine)
 {
 	int judgeDeltaLine = 100;
 	float noteTick = 0.0f;
@@ -358,18 +358,18 @@ void TrackManager::CreateAutoPlay()
 	//BMSE Parsing Info
 	float SecondPerBeat = 0;				// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
 
-	std::list<sNoteInfo> noteList;
+	_noteList.clear();
 
 	//정방향으로 순회하면서 각 노트의 시작시간 배치
 	std::list<sNoteLine*>::iterator itr;
-	for(itr = _autoPlayNoteList.begin(); itr != _autoPlayNoteList.end(); itr++)
+	for (itr = noteLine.begin(); itr != noteLine.end(); itr++)
 	{
 		sNoteLine* sNoteLine = (*itr);
 
 		sNoteInfo noteInfo;
 		noteInfo.startTick = 0;
 		noteInfo.durationTick = 0;
-		//noteInfo.isLongNote = sNoteLine->isLongNote;
+		noteInfo.isLongNote = sNoteLine->isLongNote;
 		noteInfo.barNum = sNoteLine->BarNum;
 
 		noteTick = _SecondPerBar * sNoteLine->BarNum;		//마디가 시작하는 시간(Tick)
@@ -392,13 +392,20 @@ void TrackManager::CreateAutoPlay()
 			}
 			else
 			{
-				//printf("bar: %d // AUTO: %s\n", noteInfo.barNum, noteInfo.note);
 				noteInfo.startTick = noteTick;
-				int startTick = noteInfo.startTick * 1000;
-				float sec = startTick / 1000.0f;
-				int barNum = noteInfo.barNum;
-				AddAutoNote(sec, barNum, noteInfo.note);
 
+				if (0 == noteInfo.isLongNote)		// 오토플레이
+				{
+					int startTick = noteInfo.startTick * 1000;
+					float sec = startTick / 1000.0f;
+					int barNum = noteInfo.barNum;
+					AddAutoNote(sec, barNum, noteInfo.note);
+				}
+				else if (1 == noteInfo.isLongNote || 5 == noteInfo.isLongNote)
+				{
+					_noteList.push_back(noteInfo);
+				}
+				
 				noteTick += SecondPerBeat;
 			}
 		}
@@ -408,58 +415,20 @@ void TrackManager::CreateAutoPlay()
 void TrackManager::CreateGameNote()
 {
 	int judgeDeltaLine = 100;
-	float noteTick = 0.0f;
-	int durationTick = 0;
 
 	//BMSE Parsing Info
 	float SecondPerBeat = 0;				// BPM에 따른 1비트당 초를 구한다.	(1/4박자 기준)
 
+	//AutoPlay노트 시간 배치
+	PlaceNoteTime(_autoPlayNoteList);
+
 	for (int trackNum = 0; trackNum < _trackList->size(); trackNum++)
 	{
-		std::list<sNoteInfo> noteList;
-
-		//정방향으로 순회하면서 각 노트의 시작시간 배치
-		std::list<sNoteLine*>::iterator itr;
-		for(itr = _trackNoteList[trackNum].begin(); itr != _trackNoteList[trackNum].end(); itr++)
-		{
-			sNoteLine* sNoteLine = (*itr);
-
-			sNoteInfo noteInfo;
-			noteInfo.startTick = 0;
-			noteInfo.durationTick = 0;
-			noteInfo.isLongNote = sNoteLine->isLongNote;
-			noteInfo.barNum = sNoteLine->BarNum;
-
-			noteTick = _SecondPerBar * sNoteLine->BarNum;		//마디가 시작하는 시간(Tick)
-			int beat = strlen(sNoteLine->line) / 2;				//박자
-			SecondPerBeat = (60.0f / _BPM) / ((float)beat / 4);
-
-			char* ptr = &sNoteLine->line[0];
-			for (int i = 0; i < beat; i++)
-			{
-				memset(noteInfo.note, 0, sizeof(noteInfo.note));
-				strncpy(noteInfo.note, ptr, 2);
-				noteInfo.note[2] = '\0';
-				(ptr++);
-				(ptr++);
-
-				//00은 노트를 삽입하지 않고 패스
-				if (!strcmp(noteInfo.note, "00"))
-				{
-					noteTick += SecondPerBeat;
-				}
-				else
-				{
-					noteInfo.startTick = noteTick;
-					noteTick += SecondPerBeat;
-					noteList.push_back(noteInfo);
-				}
-			}
-		}
+		PlaceNoteTime(_trackNoteList[trackNum]);
 
 		//역방향으로 순회하면서 롱노트 계산 및 노트를 트랙에 배치
 		std::list<sNoteInfo>::iterator reverseItr;
-		for(reverseItr = noteList.end(); reverseItr != noteList.begin();)
+		for(reverseItr = _noteList.end(); reverseItr != _noteList.begin();)
 		{
 			reverseItr--;
 			sNoteInfo curNote = (*reverseItr);
@@ -467,6 +436,7 @@ void TrackManager::CreateGameNote()
 			float sec = 0;
 			float duration = 0;
 			int barNum = 0;
+			std::string code;
 
 			if(true == IsLongNote(_eFileType, curNote))
 			{
@@ -478,6 +448,7 @@ void TrackManager::CreateGameNote()
 				sec = (float)(prevStartTick) / 1000.0f;
 				duration = (float)(curStartTick - prevStartTick) / 1000.0f;
 				barNum = prevNote.barNum;
+				code = prevNote.note;
 			}
 			else
 			{
@@ -485,8 +456,9 @@ void TrackManager::CreateGameNote()
 				sec = (float)(curStartTick) / 1000.0f;
 				duration = (float)(curNote.durationTick) / 1000.0f;
 				barNum = curNote.barNum;
+				code = curNote.note;
 			}
-			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum);
+			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum, code);
 		}
 	}
 }

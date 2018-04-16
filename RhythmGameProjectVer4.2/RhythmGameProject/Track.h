@@ -55,7 +55,7 @@ public:
 	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
 	void SetTrackNumber(int trackNumber);
-	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum);
+	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, std::string code);
 	void SetPlayBarInfo(int barNum, int playTimeTick);
 
 	//Judge ฐüทร

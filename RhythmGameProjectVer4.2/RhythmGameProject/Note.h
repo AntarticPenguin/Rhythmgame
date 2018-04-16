@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "GameObject.h"
 
 class Sprite;
@@ -6,7 +8,7 @@ class Sprite;
 class Note : public GameObject
 {
 public:
-	Note(float startTime, float duration, int judgeDeltaLine, int barNum);
+	Note(float startTime, float duration, int judgeDeltaLine, int barNum, std::string code);
 	~Note();
 
 private:
@@ -18,6 +20,7 @@ private:
 	int _startTick;
 	int _longDurTick;
 	int _barNum;
+	std::string _wavCode;
 
 	bool _isStart;
 

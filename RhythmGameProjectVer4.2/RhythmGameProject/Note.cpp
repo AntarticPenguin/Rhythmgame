@@ -2,13 +2,14 @@
 #include "Note.h"
 #include "Sprite.h"
 
-Note::Note(float startTime, float duration, int judgeDeltaLine, int barNum)
+Note::Note(float startTime, float duration, int judgeDeltaLine, int barNum, std::string code)
 {
 	_sprite = NULL;
 	_longSprite = NULL;
 	_startTick = GameSystem::GetInstance()->GetPlayTimeTick() - (int)(startTime * 1000.0f);
 	_longDurTick = (int)(duration * 1000.0f);
 	_barNum = barNum;
+	_wavCode = code;
 
 	_isLive = true;
 	_judgeDeltaLine = judgeDeltaLine;

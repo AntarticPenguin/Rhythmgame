@@ -8,9 +8,9 @@ private:
 	int _startTick;
 	int _barNum;
 	Mix_Chunk* _wavFile;
+	bool _isPlayed;
 
 	int _updateDuration;
-
 
 public:
 	Wav(float startTime, int barNum, Mix_Chunk* wavFile);

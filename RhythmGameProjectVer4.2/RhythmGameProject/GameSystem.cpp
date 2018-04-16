@@ -6,7 +6,7 @@ GameSystem* GameSystem::_instance = NULL;
 
 GameSystem::GameSystem()
 {
-	_musicVolume = 50;
+	_musicVolume = 10;
 	_pauseTime = 0;
 }
 
@@ -83,6 +83,13 @@ int GameSystem::GetMusicVolume()
 void GameSystem::SetMusicVolume(int volume)
 {
 	_musicVolume = volume;
+
+	if (_musicVolume <= 0)
+		_musicVolume = 0;
+	if (SDL_MIX_MAXVOLUME <= _musicVolume)
+		_musicVolume = 120;
+
+	printf("_musicVolume: %d\n", _musicVolume);
 }
 
 int GameSystem::GetPauseTime()

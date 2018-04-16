@@ -77,20 +77,20 @@ void GameScene::Init()
 	int result = Mix_Init(MIX_INIT_MP3);
 	if (MIX_INIT_MP3 == result)
 	{
-		char musicPath[256];
-		sprintf(musicPath, "../../Resource/music/%s", musicName);
-		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
-		Mix_Music* music = Mix_LoadMUS(musicPath);
-		Mix_VolumeMusic(GameSystem::GetInstance()->GetMusicVolume());
-		if (NULL != music)
-		{
-			Mix_PlayMusic(music, 0);
-			//printf("Music Load Complete\n");
-		}
-		else
-		{
-			printf("Failed to load mp3 file\n");
-		}
+		//char musicPath[256];
+		//sprintf(musicPath, "../../Resource/music/%s", musicName);
+		//Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
+		//Mix_Music* music = Mix_LoadMUS(musicPath);
+		//Mix_VolumeMusic(GameSystem::GetInstance()->GetMusicVolume());
+		//if (NULL != music)
+		//{
+		//	Mix_PlayMusic(music, 0);
+		//	//printf("Music Load Complete\n");
+		//}
+		//else
+		//{
+		//	printf("Failed to load mp3 file\n");
+		//}
 	}
 	else
 	{
@@ -160,13 +160,11 @@ void GameScene::KeyDown(int keyCode)
 	switch (keyCode)
 	{
 	case SDLK_F1:				//CONTROL MUSIC VOLUME
-		musicVolume -= 20;
-		Mix_VolumeMusic(musicVolume);
+		musicVolume -= 10;
 		GameSystem::GetInstance()->SetMusicVolume(musicVolume);
 		break;
 	case SDLK_F2:
-		musicVolume += 20;
-		Mix_VolumeMusic(musicVolume);
+		musicVolume += 10;
 		GameSystem::GetInstance()->SetMusicVolume(musicVolume);
 		break;
 	case SDLK_F4:
@@ -174,7 +172,7 @@ void GameScene::KeyDown(int keyCode)
 		PauseGame();
 		break;
 	case SDLK_ESCAPE:
-		Mix_HaltMusic();
+		Mix_HaltChannel(-1);
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_TITLE);
 		break;
 	case SDLK_COMMA:

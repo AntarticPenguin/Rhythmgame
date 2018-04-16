@@ -167,9 +167,9 @@ void Track::SetTrackNumber(int trackNumber)
 	_trackNumber = trackNumber;
 }
 
-void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum)
+void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, std::string code)
 {
-	Note* note = new Note(sec, duration, judgeDeltaLine, barNum);
+	Note* note = new Note(sec, duration, judgeDeltaLine, barNum, code);
 	note->SetXPosition(_x);
 	note->Init();
 	_noteList.push_front(note);
