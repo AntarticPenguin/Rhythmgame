@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "SDL_mixer.h"
 #include "GameSystem.h"
 #include "DataManager.h"
 #include "EffectPlayer.h"
@@ -108,7 +109,6 @@ void Track::Deinit()
 
 void Track::Update(int deltaTime)
 {
-	_trackEffectSprite->Update(deltaTime);
 	UpdateNoteList(deltaTime);
 	_judgeEffectSprite->Update(deltaTime);
 
@@ -167,9 +167,9 @@ void Track::SetTrackNumber(int trackNumber)
 	_trackNumber = trackNumber;
 }
 
-void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, std::string code)
+void Track::AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, Mix_Chunk* wavFile)
 {
-	Note* note = new Note(sec, duration, judgeDeltaLine, barNum, code);
+	Note* note = new Note(sec, duration, judgeDeltaLine, barNum, wavFile);
 	note->SetXPosition(_x);
 	note->Init();
 	_noteList.push_front(note);
@@ -316,6 +316,7 @@ void Track::Judge(eJudge judge)
 	case eJudge::GREAT:
 		DataManager::GetInstance()->IncreaseCombo();
 		DataManager::GetInstance()->IncreaseScore(judge);
+		(*_curNote)->PlayWav();
 		break;
 	case eJudge::MISS:
 		DataManager::GetInstance()->ResetCombo();

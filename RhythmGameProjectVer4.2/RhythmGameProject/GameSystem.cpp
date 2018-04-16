@@ -6,7 +6,7 @@ GameSystem* GameSystem::_instance = NULL;
 
 GameSystem::GameSystem()
 {
-	_musicVolume = 10;
+	_musicVolume = 20;
 	_pauseTime = 0;
 }
 

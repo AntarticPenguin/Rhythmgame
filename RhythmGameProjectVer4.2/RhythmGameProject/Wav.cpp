@@ -5,11 +5,13 @@
 #include "SDL_mixer.h"
 #include "GameSystem.h"
 
-Wav::Wav(float startTime, int barNum, Mix_Chunk* wavFile)
+Wav::Wav(float startTime, Mix_Chunk* wavFile)
 {
 	_startTick = GameSystem::GetInstance()->GetPlayTimeTick() - (int)(startTime * 1000.0f);
-	_barNum = barNum;
 	_wavFile = wavFile;
+
+	_playingBarNum = 0;
+	_playTimeTick = 0;
 
 	_isPlayed = false;
 }

@@ -6,18 +6,20 @@
 #include "GameSystem.h"
 #include "DataManager.h"
 #include "SceneManager.h"
+#include "EffectPlayer.h"
 #include "GameScene.h"
-#include "Track.h"
 #include "Sprite.h"
 #include "TrackManager.h"
 #include "InputSystem.h"
+#include "Font.h"
 
 GameScene::GameScene()
 {
 	//_backgroundSprite = NULL;
 	_isPause = false;
 
-	printf("SelectMusic: %s\n", DataManager::GetInstance()->GetMusicTitle().c_str());
+	_combofont = NULL;
+	_scorefont = NULL;
 }
 
 GameScene::~GameScene()
@@ -77,25 +79,21 @@ void GameScene::Init()
 	int result = Mix_Init(MIX_INIT_MP3);
 	if (MIX_INIT_MP3 == result)
 	{
-		//char musicPath[256];
-		//sprintf(musicPath, "../../Resource/music/%s", musicName);
-		//Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 640);
-		//Mix_Music* music = Mix_LoadMUS(musicPath);
-		//Mix_VolumeMusic(GameSystem::GetInstance()->GetMusicVolume());
-		//if (NULL != music)
-		//{
-		//	Mix_PlayMusic(music, 0);
-		//	//printf("Music Load Complete\n");
-		//}
-		//else
-		//{
-		//	printf("Failed to load mp3 file\n");
-		//}
+		printf("Init Mix Ready\n");
 	}
 	else
 	{
 		printf("Init Error\n");
 	}
+
+	_combofont = new Font("arialbd.ttf", 40);
+	_combofont->SetPosition(GameSystem::GetInstance()->GetWindowWidth() - 250, 150);
+
+	_scorefont = new Font("arialbd.ttf", 32);
+	_scorefont->SetPosition(0, 0);
+	char text[50];
+	sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
+	_scorefont->SetText(text);
 }
 
 void GameScene::Deinit()
@@ -106,15 +104,27 @@ void GameScene::Deinit()
 		delete _backgroundSprite;
 		_backgroundSprite = NULL;
 	}*/
+	if (NULL != _combofont)
+	{
+		delete _combofont;
+		_combofont = NULL;
+	}
+
+	if (NULL != _scorefont)
+	{
+		delete _scorefont;
+		_scorefont = NULL;
+	}
 }
 
 void GameScene::Update(int deltaTime)
 {
-	//2초 정도 여유
-	if (_gameDuration <= GameSystem::GetInstance()->GetPlayTimeTick() + 2000)
+	//3초 정도 여유
+	if (_gameDuration <= GameSystem::GetInstance()->GetPlayTimeTick() + 3000)
 	{
 		//_backgroundSprite->Update(deltaTime);
 		_trackManager->Update(deltaTime);
+		EffectPlayer::GetInstance()->Update(deltaTime);
 
 		_gameDuration += deltaTime;
 	}
@@ -124,12 +134,26 @@ void GameScene::Update(int deltaTime)
 		Mix_HaltMusic();
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_RESULT);
 	}
+
+	{
+		char text[50];
+		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
+		_combofont->SetText(text);
+	}
+	{
+		char text[50];
+		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
+		_scorefont->SetText(text);
+	}
 }
 
 void GameScene::Render()
 {
 	//_backgroundSprite->Render();
 	_trackManager->Render();
+	EffectPlayer::GetInstance()->Render();
+	_combofont->Render();
+	_scorefont->Render();
 }
 
 void GameScene::PauseGame()

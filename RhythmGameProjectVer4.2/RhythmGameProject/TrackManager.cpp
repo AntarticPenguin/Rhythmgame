@@ -6,21 +6,17 @@
 #include "SDL_mixer.h"
 #include "GameSystem.h"
 #include "DataManager.h"
-#include "EffectPlayer.h"
 #include "TrackManager.h"
 #include "Track.h"
 #include "Wav.h"
 #include "Note.h"
 #include "Sprite.h"
-#include "Font.h"
 
 TrackManager::TrackManager()
 {
 	_trackList = NULL;
 	_trackNoteList = NULL;
 	_judgeLineSprite = NULL;
-	_combofont = NULL;
-	_scorefont = NULL;
 }
 
 TrackManager::~TrackManager()
@@ -37,15 +33,6 @@ void TrackManager::Init()
 	_judgeLineSprite = new Sprite("judgeData.csv", true);
 	_judgeLineSprite->SetPosition((GameSystem::GetInstance()->GetWindowWidth() / 2),
 		GameSystem::GetInstance()->GetWindowHeight() - 100);
-
-	_combofont = new Font("arialbd.ttf", 40);
-	_combofont->SetPosition(GameSystem::GetInstance()->GetWindowWidth() - 250, 150);
-
-	_scorefont = new Font("arialbd.ttf", 32);
-	_scorefont->SetPosition(0, 0);
-	char text[50];
-	sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
-	_scorefont->SetText(text);
 	
 	{
 		_trackList = new std::vector<Track*>();
@@ -85,7 +72,13 @@ void TrackManager::Init()
 
 void TrackManager::Deinit()
 {
-	_autoWavList.clear();
+	{
+		std::list<Wav*>::iterator itr;
+		for (itr = _autoWavList.begin(); itr != _autoWavList.end(); itr++)
+			delete (*itr);
+		_autoWavList.clear();
+	}
+
 	_wavMap.clear();
 
 	if (NULL != _trackList)
@@ -115,26 +108,10 @@ void TrackManager::Deinit()
 		delete _judgeLineSprite;
 		_judgeLineSprite = NULL;
 	}
-
-	if (NULL != _combofont)
-	{
-		delete _combofont;
-		_combofont = NULL;
-	}
-
-	if (NULL != _scorefont)
-	{
-		delete _scorefont;
-		_scorefont = NULL;
-	}
 }
 
 void TrackManager::Update(int deltaTime)
 {
-	_bgSprite->Update(deltaTime);
-	_judgeLineSprite->Update(deltaTime);
-	EffectPlayer::GetInstance()->Update(deltaTime);
-
 	_playTimeTick += deltaTime;
 
 	//Track
@@ -142,42 +119,25 @@ void TrackManager::Update(int deltaTime)
 		for (int i = 0; i < _trackList->size(); i++)
 		{
 			_trackList->at(i)->SetPlayBarInfo(_curBarNum, _playTimeTick);
+			_trackList->at(i)->Update(deltaTime);
 		}
 
 		if ((_SecondPerBar * (_curBarNum) * 1000) <= _playTimeTick)
 			_curBarNum++;
-
-		for (int i = 0; i < _trackList->size(); i++)
-			_trackList->at(i)->Update(deltaTime);
 	}
 
 	std::list<Wav*>::iterator itr;
 	for (itr = _autoWavList.begin(); itr != _autoWavList.end(); itr++)
 		(*itr)->Update(deltaTime);
-
-	{
-		char text[50];
-		sprintf(text, "COMBO %d", DataManager::GetInstance()->GetCombo());
-		_combofont->SetText(text);
-	}
-	{
-		char text[50];
-		sprintf(text, "SCORE %08d", DataManager::GetInstance()->GetScore());
-		_scorefont->SetText(text);
-	}
 }
 
 void TrackManager::Render()
 {
 	_bgSprite->Render();
 	_judgeLineSprite->Render();
-	EffectPlayer::GetInstance()->Render();
 
 	for (int i = 0; i < _trackList->size(); i++)
 		_trackList->at(i)->Render();
-
-	_combofont->Render();
-	_scorefont->Render();
 }
 
 void TrackManager::ParsingBMS(const char* fileName)
@@ -335,9 +295,9 @@ void TrackManager::ParsingBMS(const char* fileName)
 	GameSystem::GetInstance()->SetPlayTimeTick(playTimeSec);
 }
 
-void TrackManager::AddAutoNote(float sec, int barNum, char* wavCode)
+void TrackManager::AddAutoNote(float sec, char* wavCode)
 {
-	Wav* wav = new Wav(sec, barNum, _wavMap[wavCode]);
+	Wav* wav = new Wav(sec, _wavMap[wavCode]);
 	wav->Init();
 	_autoWavList.push_back(wav);
 }
@@ -398,8 +358,7 @@ void TrackManager::PlaceNoteTime(std::list<sNoteLine*>& noteLine)
 				{
 					int startTick = noteInfo.startTick * 1000;
 					float sec = startTick / 1000.0f;
-					int barNum = noteInfo.barNum;
-					AddAutoNote(sec, barNum, noteInfo.note);
+					AddAutoNote(sec, noteInfo.note);
 				}
 				else if (1 == noteInfo.isLongNote || 5 == noteInfo.isLongNote)
 				{
@@ -458,7 +417,7 @@ void TrackManager::CreateGameNote()
 				barNum = curNote.barNum;
 				code = curNote.note;
 			}
-			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum, code);
+			_trackList->at(trackNum)->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum, _wavMap[code]);
 		}
 	}
 }

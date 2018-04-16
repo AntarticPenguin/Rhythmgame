@@ -3,6 +3,7 @@
 
 class Sprite;
 class TrackManager;
+class Font;
 
 class GameScene : public Scene
 {
@@ -11,6 +12,9 @@ private:
 	TrackManager* _trackManager;
 	int _gameDuration;
 	bool _isPause;
+
+	Font* _combofont;
+	Font* _scorefont;
 
 public:
 	GameScene();

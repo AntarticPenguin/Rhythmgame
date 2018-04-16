@@ -8,7 +8,6 @@
 
 class Track;
 class Sprite;
-class Font;
 class Wav;
 
 enum eFileType
@@ -42,8 +41,6 @@ private:
 
 	Sprite* _bgSprite;
 	Sprite* _judgeLineSprite;
-	Font* _combofont;
-	Font* _scorefont;
 
 	int _playTimeTick;
 	int _curBarNum;
@@ -71,7 +68,7 @@ private:
 
 public:
 	void ParsingBMS(const char* fileName);
-	void AddAutoNote(float sec, int barNum, char* wavCode);
+	void AddAutoNote(float sec, char* wavCode);
 	void AddNoteLine(int trackNum, sNoteLine* noteLine);
 	void PlaceNoteTime(std::list<sNoteLine*>& noteLine);
 	void CreateGameNote();

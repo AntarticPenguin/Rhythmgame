@@ -1,14 +1,14 @@
 #pragma once
-#include <string>
 
 #include "GameObject.h"
 
 class Sprite;
+struct Mix_Chunk;
 
 class Note : public GameObject
 {
 public:
-	Note(float startTime, float duration, int judgeDeltaLine, int barNum, std::string code);
+	Note(float startTime, float duration, int judgeDeltaLine, int barNum, Mix_Chunk* wavFile);
 	~Note();
 
 private:
@@ -20,7 +20,7 @@ private:
 	int _startTick;
 	int _longDurTick;
 	int _barNum;
-	std::string _wavCode;
+	Mix_Chunk* _wavFile;
 
 	bool _isStart;
 
@@ -39,6 +39,7 @@ public:
 	void UpdateLongnoteLength();
 	void AdjustmentLength();
 
+public:
 	bool IsLive();
 	int GetNoteTime();
 
@@ -53,4 +54,6 @@ public:
 
 	int GetBarNum();
 	void Start(int playTimeTick);
+
+	void PlayWav();
 };

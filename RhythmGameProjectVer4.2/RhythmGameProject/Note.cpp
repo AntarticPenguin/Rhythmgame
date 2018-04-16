@@ -1,15 +1,16 @@
 #include "GameSystem.h"
+#include "SDL_mixer.h"
 #include "Note.h"
 #include "Sprite.h"
 
-Note::Note(float startTime, float duration, int judgeDeltaLine, int barNum, std::string code)
+Note::Note(float startTime, float duration, int judgeDeltaLine, int barNum, Mix_Chunk* wavFile)
 {
 	_sprite = NULL;
 	_longSprite = NULL;
 	_startTick = GameSystem::GetInstance()->GetPlayTimeTick() - (int)(startTime * 1000.0f);
 	_longDurTick = (int)(duration * 1000.0f);
 	_barNum = barNum;
-	_wavCode = code;
+	_wavFile = wavFile;
 
 	_isLive = true;
 	_judgeDeltaLine = judgeDeltaLine;
@@ -190,5 +191,14 @@ void Note::Start(int playTimeTick)
 	{
 		_updateDuration += playTimeTick;
 		_isStart = true;
+	}
+}
+
+void Note::PlayWav()
+{
+	if (NULL != _wavFile)
+	{
+		Mix_VolumeChunk(_wavFile, GameSystem::GetInstance()->GetMusicVolume());
+		Mix_PlayChannel(-1, _wavFile, 0);
 	}
 }

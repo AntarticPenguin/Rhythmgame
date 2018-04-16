@@ -5,13 +5,13 @@
 
 class Note;
 class Sprite;
+struct Mix_Chunk;
 
 class Track : public GameObject
 {
 
 private:
 	std::list<Note*> _noteList;
-	//std::list<Sprite*> _bgSpriteList;
 	Sprite* _trackEffectSprite;
 	Sprite* _judgeEffectSprite;
 
@@ -55,7 +55,7 @@ public:
 	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
 	void SetTrackNumber(int trackNumber);
-	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, std::string code);
+	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, Mix_Chunk* wavFile);
 	void SetPlayBarInfo(int barNum, int playTimeTick);
 
 	//Judge ฐüทร
