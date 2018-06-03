@@ -5,6 +5,7 @@
 #include "GameScene.h"
 #include "TitleScene.h"
 #include "SelectScene.h"
+#include "LoadScene.h"
 #include "ResultScene.h"
 
 SceneManager* SceneManager::_instance = NULL;
@@ -43,11 +44,14 @@ void SceneManager::ChangeScene(eScene sceneName)
 	//case eScene::SCENE_LOGO:
 	//	_scene = new LogoScene();
 	//	break;
+	case eScene::SCENE_TITLE:
+		_scene = new TitleScene();
+		break;
 	case eScene::SCENE_SELECT:
 		_scene = new SelectScene();
 		break;
-	case eScene::SCENE_TITLE:
-		_scene = new TitleScene();
+	case eScene::SCENE_LOAD:
+		_scene = new LoadScene();
 		break;
 	case eScene::SCENE_GAME:
 		_scene = new GameScene();

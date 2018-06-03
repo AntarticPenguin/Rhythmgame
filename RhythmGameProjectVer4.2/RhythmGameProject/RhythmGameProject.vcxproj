@@ -163,6 +163,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="GameSystem.h" />
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="LoadScene.h" />
     <ClInclude Include="LogoScene.h" />
     <ClInclude Include="MusicInfoBox.h" />
     <ClInclude Include="Note.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="GameSystem.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="LoadScene.cpp" />
     <ClCompile Include="LogoScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MusicInfoBox.cpp" />

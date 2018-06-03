@@ -186,7 +186,8 @@ void SelectScene::KeyDown(int keyCode)
 	{
 	case SDLK_SPACE:
 		DataManager::GetInstance()->SetMusicTitle(_musicList[_selectIndex]);
-		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_GAME);
+		//SceneManager::GetInstance()->ChangeScene(eScene::SCENE_GAME);
+		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_LOAD);
 		break;
 	case SDLK_ESCAPE:
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_TITLE);

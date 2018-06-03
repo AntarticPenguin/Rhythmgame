@@ -1,7 +1,13 @@
 #pragma once
 #include <string>
+#include <vector>
+#include <map>
+#include <list>
 
 enum eJudge;
+struct Mix_Chunk;
+class Track;
+class Wav;
 
 class DataManager
 {
@@ -45,6 +51,24 @@ private:
 public:
 	void SetMusicTitle(std::string title);
 	std::string GetMusicTitle();
+
+	//Play Data
+private:
+	std::vector<Track*> _trackList;
+	std::map<std::string, Mix_Chunk*> _wavMap;
+	std::list<Wav*> _autoWavList;
+	float _SecondPerBar;
+
+public:
+	void CreateTracks();
+	std::vector<Track*>& GetTrackList();
+	std::list<Wav*>& GetAutoWavList();
+	float GetSecondPerBar();
+	void SetSecondPerBar(float secondPerbar);
+
+	void AddWavToMap(const char* filePath, std::string key);
+	void AddNoteToTrack(int trackNum, float sec, float duration, int judgeDeltaLine, int barNum, std::string code);
+	void AddAutoNote(float sec, char* code);
 
 private:
 	DataManager();
