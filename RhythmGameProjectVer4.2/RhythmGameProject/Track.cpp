@@ -148,11 +148,6 @@ void Track::UpdateNoteList(int deltaTime)
 	}
 }
 
-std::list<Note*>& Track::GetNoteList()
-{
-	return _noteList;
-}
-
 void Track::TrackPosition(int x, int y)
 {
 	_x = x;

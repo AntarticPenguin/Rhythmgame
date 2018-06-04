@@ -9,13 +9,10 @@
 #include "TrackManager.h"
 #include "Track.h"
 #include "Wav.h"
-#include "Note.h"
 #include "Sprite.h"
 
 TrackManager::TrackManager()
 {
-	//_trackList = NULL;
-	//_trackNoteList = NULL;
 	_judgeLineSprite = NULL;
 }
 
@@ -39,12 +36,6 @@ void TrackManager::Init()
 	_autoWavList = DataManager::GetInstance()->GetAutoWavList();
 	_SecondPerBar = DataManager::GetInstance()->GetSecondPerBar();
 
-	//_trackNoteList = new std::list<sNoteLine*>[_trackList.size()];
-
-	//BMS파싱 및 노트 생성
-	//memset(_longNoteKey, 0, sizeof(_longNoteKey));
-	//ParsingBMS(DataManager::GetInstance()->GetMusicTitle().c_str());
-
 	for (int i = 0; i < _trackList.size(); i++)
 	{
 		_trackList[i]->Init();
@@ -64,31 +55,6 @@ void TrackManager::Init()
 
 void TrackManager::Deinit()
 {
-	//{
-	//	std::list<Wav*>::iterator itr;
-	//	for (itr = _autoWavList.begin(); itr != _autoWavList.end(); itr++)
-	//		delete (*itr);
-	//	_autoWavList.clear();
-	//}
-
-	//_wavMap.clear();
-
-	//if (NULL != _trackList)
-	//{
-	//	for (int i = 0; i < _trackList->size(); i++)
-	//	{
-	//		delete _trackList->at(i);
-	//	}
-	//	_trackList = NULL;
-	//}
-
-	//std::list<sNoteLine*>::iterator itr;
-	//for (itr = _trackNoteList->begin(); itr != _trackNoteList->end(); itr++)
-	//{
-	//	delete (*itr);
-	//}
-	//_trackNoteList->clear();
-
 	if (NULL != _bgSprite)
 	{
 		delete _bgSprite;
@@ -118,9 +84,8 @@ void TrackManager::Update(int deltaTime)
 			_curBarNum++;
 	}
 
-	std::list<Wav*>::iterator itr;
-	for (itr = _autoWavList.begin(); itr != _autoWavList.end(); itr++)
-		(*itr)->Update(deltaTime);
+	for (int i = 0; i < _autoWavList.size(); i++)
+		_autoWavList[i]->Update(deltaTime);
 }
 
 void TrackManager::Render()

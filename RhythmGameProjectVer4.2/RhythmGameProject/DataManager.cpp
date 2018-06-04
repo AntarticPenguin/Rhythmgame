@@ -22,6 +22,37 @@ DataManager::DataManager()
 	_SecondPerBar = 0.0f;
 }
 
+DataManager::~DataManager()
+{
+	if (0 < _trackList.size())
+	{
+		for (int i = 0; i < _trackList.size(); i++)
+		{
+			delete _trackList[i];
+		}
+		_trackList.clear();
+	}
+
+	if (0 < _wavMap.size())
+	{
+		auto itr = _wavMap.begin();
+		for (; itr != _wavMap.end(); itr++)
+		{
+			delete itr->second;
+		}
+		_wavMap.clear();
+	}
+
+	if (0 < _autoWavList.size())
+	{
+		for (int i = 0; i < _autoWavList.size(); i++)
+		{
+			delete _autoWavList[i];
+		}
+		_autoWavList.clear();
+	}
+}
+
 DataManager* DataManager::GetInstance()
 {
 	if (NULL == _instance)
@@ -140,7 +171,7 @@ std::vector<Track*>& DataManager::GetTrackList()
 	return _trackList;
 }
 
-std::list<Wav*>& DataManager::GetAutoWavList()
+std::vector<Wav*>& DataManager::GetAutoWavList()
 {
 	return _autoWavList;
 }

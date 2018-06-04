@@ -1,7 +1,5 @@
 #pragma once
 #include <vector>
-#include <list>
-#include <map>
 #include <string>
 
 #include "GameObject.h"
@@ -36,7 +34,7 @@ class TrackManager : public GameObject
 {
 private:
 	std::vector<Track*> _trackList;
-	std::list<Wav*> _autoWavList;
+	std::vector<Wav*> _autoWavList;
 	float _SecondPerBar;
 
 	Sprite* _bgSprite;

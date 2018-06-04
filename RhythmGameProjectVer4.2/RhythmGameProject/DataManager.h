@@ -2,7 +2,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <list>
 
 enum eJudge;
 struct Mix_Chunk;
@@ -56,13 +55,13 @@ public:
 private:
 	std::vector<Track*> _trackList;
 	std::map<std::string, Mix_Chunk*> _wavMap;
-	std::list<Wav*> _autoWavList;
+	std::vector<Wav*> _autoWavList;
 	float _SecondPerBar;
 
 public:
 	void CreateTracks();
 	std::vector<Track*>& GetTrackList();
-	std::list<Wav*>& GetAutoWavList();
+	std::vector<Wav*>& GetAutoWavList();
 	float GetSecondPerBar();
 	void SetSecondPerBar(float secondPerbar);
 
@@ -72,4 +71,5 @@ public:
 
 private:
 	DataManager();
+	~DataManager();
 };

@@ -52,7 +52,6 @@ public:
 	void LastInit();
 	void UpdateNoteList(int deltaTime);
 
-	std::list<Note*>& GetNoteList();
 	void TrackPosition(int x, int y);
 	void SetTrackNumber(int trackNumber);
 	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, Mix_Chunk* wavFile);
