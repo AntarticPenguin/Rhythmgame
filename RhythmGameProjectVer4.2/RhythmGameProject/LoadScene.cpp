@@ -159,8 +159,6 @@ void LoadScene::ParsingBMS(int deltaTime)
 				std::string folderName = file.substr(0, file.length() - 4);
 				sprintf(wavPath, "../../Resource/music/%s/%s", folderName.c_str(), wavName.c_str());
 
-				/*Mix_Chunk* wavChunk = Mix_LoadWAV(wavPath);
-				_wavMap[code] = wavChunk;*/
 				DataManager::GetInstance()->AddWavToMap(wavPath, code);
 			}
 			else if (!strcmp(token, "MAIN"))
@@ -276,7 +274,6 @@ void LoadScene::CreateGameNote()
 				barNum = curNote.barNum;
 				code = curNote.note;
 			}
-			//_trackList[trackNum]->AddNoteToTrack(sec, duration, judgeDeltaLine, barNum, _wavMap[code]);
 			DataManager::GetInstance()->AddNoteToTrack(trackNum, sec, duration, judgeDeltaLine, barNum, code);
 		}
 	}
@@ -333,7 +330,6 @@ void LoadScene::PlaceNoteTime(std::list<sNoteLine*>& noteLine)
 				{
 					int startTick = noteInfo.startTick * 1000;
 					float sec = startTick / 1000.0f;
-					//AddAutoNote(sec, noteInfo.note);
 					DataManager::GetInstance()->AddAutoNote(sec, noteInfo.note);
 				}
 				else if (1 == noteInfo.isLongNote || 5 == noteInfo.isLongNote)

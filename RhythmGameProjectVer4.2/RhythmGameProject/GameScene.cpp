@@ -133,6 +133,7 @@ void GameScene::Update(int deltaTime)
 		//STOP MUSIC
 		Mix_HaltMusic();
 		SceneManager::GetInstance()->ChangeScene(eScene::SCENE_RESULT);
+		return;
 	}
 
 	{

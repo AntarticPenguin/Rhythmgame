@@ -1,13 +1,8 @@
-﻿  DataManager.cpp
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(29): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(48): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(146): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-  Track.cpp
-  TrackManager.cpp
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(39): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(47): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(77): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(87): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-c:\users\grampark\documents\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\trackmanager.cpp(96): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+﻿  Track.cpp
+  DataManager.cpp
+d:\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(29): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+d:\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(142): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
   코드를 생성하고 있습니다...
-  RhythmGameProject.vcxproj -> C:\Users\gramPark\Documents\ProgrammingFolder\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe
+  건너뛰고 있습니다... (관련된 변경 내용 없음)
+  TrackManager.cpp
+  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe

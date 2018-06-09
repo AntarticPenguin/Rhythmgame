@@ -198,7 +198,7 @@ void Note::PlayWav()
 {
 	if (NULL != _wavFile)
 	{
-		Mix_VolumeChunk(_wavFile, GameSystem::GetInstance()->GetMusicVolume());
+		Mix_VolumeChunk(_wavFile, GameSystem::GetInstance()->GetMusicVolume() + 10);
 		Mix_PlayChannel(-1, _wavFile, 0);
 	}
 }

@@ -45,10 +45,6 @@ DataManager::~DataManager()
 
 	if (0 < _autoWavList.size())
 	{
-		for (int i = 0; i < _autoWavList.size(); i++)
-		{
-			delete _autoWavList[i];
-		}
 		_autoWavList.clear();
 	}
 }

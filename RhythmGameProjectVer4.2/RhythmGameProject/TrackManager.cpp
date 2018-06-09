@@ -41,8 +41,6 @@ void TrackManager::Init()
 		_trackList[i]->Init();
 		_trackList[i]->SetTrackNumber(i);
 	}
-
-	//CreateGameNote();
 	
 	for (int i = 0; i < _trackList.size(); i++)
 	{
