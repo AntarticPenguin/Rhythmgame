@@ -1,3 +1,11 @@
+# vs
+RhythmGameProjectVer2.1/vs/
+RhythmGameProjectVer3.0/vs/
+RhythmGameProjectVer3.1/vs/
+RhythmGameProjectVer4.0/vs/
+RhythmGameProjectVer4.1/vs/
+RhythmGameProjectVer4.2/vs/
+
 # Prerequisites
 *.d
 
@@ -31,3 +39,7 @@
 *.exe
 *.out
 *.app
+
+# Debug
+*.tlog
+*.log
