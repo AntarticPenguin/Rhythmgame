@@ -1,8 +1,0 @@
-﻿  Track.cpp
-  DataManager.cpp
-d:\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(29): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-d:\programmingfolder\리듬게임\rhythmgameprojectver4.2\rhythmgameproject\datamanager.cpp(142): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
-  코드를 생성하고 있습니다...
-  건너뛰고 있습니다... (관련된 변경 내용 없음)
-  TrackManager.cpp
-  RhythmGameProject.vcxproj -> D:\ProgrammingFolder\리듬게임\RhythmGameProjectVer4.2\Debug\RhythmGameProjectVer4.2.exe

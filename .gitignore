@@ -5,6 +5,23 @@ RhythmGameProjectVer3.1/vs/
 RhythmGameProjectVer4.0/vs/
 RhythmGameProjectVer4.1/vs/
 RhythmGameProjectVer4.2/vs/
+RhythmGameProjectVer5.0/vs/
+RhythmGameProjectVer2.1/.vs/
+RhythmGameProjectVer3.0/.vs/
+RhythmGameProjectVer3.1/.vs/
+RhythmGameProjectVer4.0/.vs/
+RhythmGameProjectVer4.1/.vs/
+RhythmGameProjectVer4.2/.vs/
+RhythmGameProjectVer5.0/.vs/
+RhythmGameProjectVer2.1/RhythmGameProject/Debug/
+RhythmGameProjectVer3.0/RhythmGameProject/Debug/
+RhythmGameProjectVer3.1/RhythmGameProject/Debug/
+RhythmGameProjectVer4.0/RhythmGameProject/Debug/
+RhythmGameProjectVer4.1/RhythmGameProject/Debug/
+RhythmGameProjectVer4.2/RhythmGameProject/Debug/
+RhythmGameProjectVer5.0/RhythmGameProject/Debug/
+Resource/
+lib/
 
 # Prerequisites
 *.d
