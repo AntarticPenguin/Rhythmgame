@@ -25,10 +25,10 @@ void Input::Init()
 	_gameKeyMap[SDL_SCANCODE_SPACE] = eGameKey::BTN_SPACE;
 	_gameKeyMap[SDL_SCANCODE_J] = eGameKey::BTN_C;
 	_gameKeyMap[SDL_SCANCODE_K] = eGameKey::BTN_D;
-	_gameKeyMap[SDL_SCANCODE_F3] = eGameKey::SPEED_UP;
-	_gameKeyMap[SDL_SCANCODE_F4] = eGameKey::SPEED_DOWN;
-	_gameKeyMap[SDL_SCANCODE_F7] = eGameKey::VOL_UP;
-	_gameKeyMap[SDL_SCANCODE_F8] = eGameKey::VOL_DOWN;
+	_gameKeyMap[SDL_SCANCODE_F3] = eGameKey::SPEED_DOWN;
+	_gameKeyMap[SDL_SCANCODE_F4] = eGameKey::SPEED_UP;
+	_gameKeyMap[SDL_SCANCODE_F7] = eGameKey::VOL_DOWN;
+	_gameKeyMap[SDL_SCANCODE_F8] = eGameKey::VOL_UP;
 	_gameKeyMap[SDL_SCANCODE_UP] = eGameKey::ARROW_UP;
 	_gameKeyMap[SDL_SCANCODE_DOWN] = eGameKey::ARROW_DOWN;
 

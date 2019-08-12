@@ -38,14 +38,14 @@ void TrackManager::Init()
 	_autoWavList = DataManager::GetInstance()->GetAutoWavList();
 	_SecondPerBar = DataManager::GetInstance()->GetSecondPerBar();
 
-	for (int i = 0; i < _trackList.size(); i++)
+	for (size_t i = 0; i < _trackList.size(); i++)
 	{
 		_trackList[i]->Init();
 		//_trackList[i]->SetTrackNumber(i);
 		_trackList[i]->SetGameKey(eGameKey(i + 1));
 	}
 	
-	for (int i = 0; i < _trackList.size(); i++)
+	for (size_t i = 0; i < _trackList.size(); i++)
 	{
 		_trackList[i]->LastInit();
 	}
@@ -75,7 +75,7 @@ void TrackManager::Update(int deltaTime)
 
 	//Track
 	{
-		for (int i = 0; i < _trackList.size(); i++)
+		for (size_t i = 0; i < _trackList.size(); i++)
 		{
 			_trackList[i]->SetPlayBarInfo(_curBarNum, _playTimeTick);
 			_trackList[i]->Update(deltaTime);
@@ -85,7 +85,7 @@ void TrackManager::Update(int deltaTime)
 			_curBarNum++;
 	}
 
-	for (int i = 0; i < _autoWavList.size(); i++)
+	for (size_t i = 0; i < _autoWavList.size(); i++)
 		_autoWavList[i]->Update(deltaTime);
 }
 
@@ -94,6 +94,6 @@ void TrackManager::Render()
 	_bgSprite->Render();
 	_judgeLineSprite->Render();
 
-	for (int i = 0; i < _trackList.size(); i++)
+	for (size_t i = 0; i < _trackList.size(); i++)
 		_trackList[i]->Render();
 }

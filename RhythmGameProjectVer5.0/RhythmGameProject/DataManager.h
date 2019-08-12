@@ -56,12 +56,15 @@ private:
 	std::vector<Track*> _trackList;
 	std::map<std::string, Mix_Chunk*> _wavMap;
 	std::vector<Wav*> _autoWavList;
+	int _tickPerBeat;		//second per beat * 1000
 	float _SecondPerBar;
 
 public:
 	void CreateTracks();
 	std::vector<Track*>& GetTrackList();
 	std::vector<Wav*>& GetAutoWavList();
+	void SetTickPerBeat(int BPM);
+	int GetTickPerBeat();
 	float GetSecondPerBar();
 	void SetSecondPerBar(float secondPerbar);
 

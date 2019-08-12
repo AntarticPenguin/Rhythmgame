@@ -63,6 +63,7 @@ int main(int argc, char* argv[])
 		
 		if (oldFrame != frame)
 		{
+			printf("frame: %d\n", frame);
 			oldFrame = frame;
 
 			if(0 != GameSystem::GetInstance()->GetPauseTime())

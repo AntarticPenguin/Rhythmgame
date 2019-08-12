@@ -101,7 +101,7 @@ void SelectScene::InitMusicList()
 
 void SelectScene::InitViewList()
 {
-	for (int i = 0; i < _musicList.size(); i++)
+	for (size_t i = 0; i < _musicList.size(); i++)
 	{
 		MusicInfoBox* infoBox = new MusicInfoBox(_musicList[i]);
 		infoBox->Init();
@@ -172,7 +172,7 @@ void SelectScene::SelectDown()
 
 		//위치 조정
 		int index = 0;
-		for (int i = _startViewIndex; i < _viewList.size(); i++)
+		for (size_t i = _startViewIndex; i < _viewList.size(); i++)
 		{
 			_viewList[i]->SetPosition(300, index * 100 + 75);
 			index++;

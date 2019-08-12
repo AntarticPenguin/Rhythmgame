@@ -26,7 +26,7 @@ DataManager::~DataManager()
 {
 	if (0 < _trackList.size())
 	{
-		for (int i = 0; i < _trackList.size(); i++)
+		for (size_t i = 0; i < _trackList.size(); i++)
 		{
 			delete _trackList[i];
 		}
@@ -139,7 +139,7 @@ void DataManager::CreateTracks()
 {
 	if (0 < _trackList.size())
 	{
-		for (int i = 0; i < _trackList.size(); i++)
+		for (size_t i = 0; i < _trackList.size(); i++)
 		{
 			delete _trackList[i];
 		}
@@ -171,6 +171,13 @@ std::vector<Wav*>& DataManager::GetAutoWavList()
 {
 	return _autoWavList;
 }
+
+void DataManager::SetTickPerBeat(int BPM)
+{
+	_tickPerBeat = (60 / BPM) * 1000;
+}
+
+int DataManager::GetTickPerBeat() { return _tickPerBeat; }
 
 float DataManager::GetSecondPerBar()
 {

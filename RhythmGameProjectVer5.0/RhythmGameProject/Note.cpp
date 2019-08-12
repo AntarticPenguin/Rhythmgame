@@ -160,6 +160,12 @@ void Note::EnableReduceDuration()
 	_isReduceDuration = true;
 }
 
+//Check longNote or tick is available
+bool Note::IsLongNote()
+{
+	return (_longDurTick > 0);
+}
+
 bool Note::IsPass()
 {
 	return _isPass;

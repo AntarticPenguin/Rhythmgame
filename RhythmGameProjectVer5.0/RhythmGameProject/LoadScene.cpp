@@ -130,6 +130,7 @@ void LoadScene::ParsingBMS(int deltaTime)
 				token = strtok(NULL, "\n");
 				_BPM = atoi(token);
 				_SecondPerBar = (60.0f * 32.0f) / (8.0f * _BPM);	// BPM에 따른 1마디당 초를 구한다.(1/32박자 기준)
+				DataManager::GetInstance()->SetTickPerBeat(_BPM);
 				DataManager::GetInstance()->SetSecondPerBar(_SecondPerBar);
 			}
 			else if (!strcmp(token, "PLAYLEVEL"))

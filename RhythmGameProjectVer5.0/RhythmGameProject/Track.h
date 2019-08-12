@@ -27,7 +27,8 @@ private:
 	//판정 관련
 private:
 	std::list<Note*>::iterator _curNote;
-	bool _isJudging;
+	bool _bJudgeLongNote;
+	int _longComboTick;
 
 	eJudge _judge;
 
@@ -56,14 +57,14 @@ public:
 	void UpdateNoteList(int deltaTime);
 
 	void TrackPosition(int x, int y);
-	//void SetTrackNumber(int trackNumber);
 	void SetGameKey(eGameKey gameKey);
 	void AddNoteToTrack(float sec, float duration, int judgeDeltaLine, int barNum, Mix_Chunk* wavFile);
 	void SetPlayBarInfo(int barNum, int playTimeTick);
 
 	//Judge 관련
 public:
-	void UpdateInput();
+	void UpdateInput(int deltaTime);
 	eJudge CheckJudge(int noteTime);
 	void Judge(eJudge judge);
+	void SetNextNote();
 };

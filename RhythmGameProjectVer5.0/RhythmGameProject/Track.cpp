@@ -19,7 +19,8 @@ Track::Track(int xPos, int yPos) : _x(xPos), _y(yPos)
 
 	_judge = eJudge::NONE;
 
-	_isJudging = false;
+	_bJudgeLongNote = false;
+	_longComboTick = 0;
 
 	_curBarNum = 0;
 	_playTimeTick = 0;
@@ -111,10 +112,9 @@ void Track::Deinit()
 
 void Track::Update(int deltaTime)
 {
-	UpdateNoteList(deltaTime);
 	_judgeEffectSprite->Update(deltaTime);
-
-	UpdateInput();
+	UpdateNoteList(deltaTime);
+	UpdateInput(deltaTime);
 }
 
 void Track::Render()
@@ -161,7 +161,6 @@ void Track::TrackPosition(int x, int y)
 
 void Track::SetGameKey(eGameKey gameKey)
 {
-	//_trackNumber = trackNumber;
 	_gameKey = gameKey;
 }
 
@@ -179,10 +178,20 @@ void Track::SetPlayBarInfo(int barNum, int playTimeTick)
 	_playTimeTick = playTimeTick;
 }
 
-void Track::UpdateInput()
+void Track::UpdateInput(int deltaTime)
 {
 	if (_curNote == _noteList.end())
 		return;
+
+	//판정선을 지난 노트
+	if (_judgeEndTick < (*_curNote)->GetNoteTime() && false == (*_curNote)->IsPass())
+	{
+		(*_curNote)->Pass();
+		_judge = eJudge::MISS;
+		Judge(eJudge::MISS);
+
+		SetNextNote();
+	}
 
 	if(false == _bHold && Input::GetInstance().IsPressed(_gameKey))
 	{
@@ -200,17 +209,16 @@ void Track::UpdateInput()
 			Judge(_judge);
 
 			//롱노트인가?
-			if (0 < (*_curNote)->GetDuration())
+			if((*_curNote)->IsLongNote())
 			{
 				(*_curNote)->SetLive(true);
 				(*_curNote)->EnableReduceDuration();
 				(*_curNote)->AdjustmentLength();
-				_isJudging = true;
+				_bJudgeLongNote = true;
 				return;
 			}
 
-			(*_curNote)->SetLive(false);
-			_curNote++;
+			SetNextNote();
 		}
 	}
 	else if (true == _bHold && Input::GetInstance().IsPressed(_gameKey))		//key hold checking
@@ -218,40 +226,46 @@ void Track::UpdateInput()
 		_trackEffectSprite->Play();
 		
 		//롱노트 판정
-		if (_isJudging)
+		if (_bJudgeLongNote)
 		{
-			/*if ((*_curNote)->GetDuration() <= -80)
-			{
-				_judge = eJudge::MISS;
-				Judge(_judge);
-				_isJudging = false;
+			/*	롱노트는 1비트당 1콤보, 즉 1비트의 시간을 구해 롱노트의 시간만큼 나눠주면 총 콤보가 나온다.
+				60 BPM에서 5초짜리 롱노트 = 5콤보
+				ex) 60 BPM	= 1분당 60비트
+							= 1초당 1비트
+							1비트는 1초
+				ex) 240 BMP = 1분당 240비트
+							= 1초당 4비트
+							1비트는 0.25초
+			*/
 
-				(*_curNote)->SetLive(false);
-				_curNote++;
+			if (false == (*_curNote)->IsLongNote())
+			{
+				_bJudgeLongNote = false;
+				SetNextNote();
 				return;
 			}
-			else
+
+			_longComboTick += deltaTime;
+			if (_longComboTick >= DataManager::GetInstance()->GetTickPerBeat())
 			{
 				Judge(eJudge::PERFECT);
-			}*/
+				_longComboTick = 0;
+			}
 		}
-	}
-
-	//판정선을 지난 노트
-	if (_judgeEndTick < (*_curNote)->GetNoteTime() && false == (*_curNote)->IsPass())
-	{
-		printf("miss note\n");
-		(*_curNote)->Pass();
-		_judge = eJudge::MISS;
-		Judge(eJudge::MISS);
-
-		(*_curNote)->SetLive(false);
-		_curNote++;
 	}
 
 	if (Input::GetInstance().IsReleased(_gameKey))
 	{
 		_trackEffectSprite->Stop();
+
+		if (_bJudgeLongNote)		//롱노트 판정중이었을 때, 키를 릴리즈
+		{
+			Judge(eJudge::MISS);
+			_bJudgeLongNote = false;
+			_longComboTick = 0;
+
+			SetNextNote();
+		}
 		_bHold = false;
 	}
 }
@@ -295,4 +309,10 @@ void Track::Judge(eJudge judge)
 		return;
 	}
 	EffectPlayer::GetInstance()->Play(judge);
+}
+
+void Track::SetNextNote()
+{
+	(*_curNote)->SetLive(false);
+	_curNote++;
 }

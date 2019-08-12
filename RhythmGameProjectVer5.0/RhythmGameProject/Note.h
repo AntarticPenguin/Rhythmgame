@@ -45,6 +45,7 @@ public:
 
 	int GetDuration();
 	void EnableReduceDuration();
+	bool IsLongNote();
 
 	bool IsPass();
 	void Pass();

@@ -50,7 +50,7 @@ void ResultScene::Init()
 		_fontList.push_back(font);
 	}
 
-	for (int i = 0; i < _fontList.size(); i++)
+	for (size_t i = 0; i < _fontList.size(); i++)
 		_fontList[i]->SetPosition(100, (i + 1) * 100);
 }
 
@@ -66,14 +66,14 @@ void ResultScene::Update(int deltaTime)
 
 void ResultScene::Render()
 {
-	for (int i = 0; i < _fontList.size(); i++)
+	for (size_t i = 0; i < _fontList.size(); i++)
 		_fontList[i]->Render();
 }
 
 void ResultScene::InputProcess()
 {
-	/*if(Input::GetInstance().GetKeyDown(SDLK_SPACE))
+	if(Input::GetInstance().IsPressed(eGameKey::BTN_SPACE))
 	{
 		SceneManager::GetInstance()->ChangeScene(SCENE_TITLE);
-	}*/
+	}
 }
