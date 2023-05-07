@@ -1,3 +1,9 @@
+[![플레이영상](http://img.youtube.com/vi/VdWRcwLooR8/0.jpg)](https://www.youtube.com/watch?v=VdWRcwLooR8)  
+<누르면 유튜브로 이동>  
+
+[![트랙속도, 롱노트 영상](http://img.youtube.com/vi/PHtiEwxRDQw/0.jpg)](https://www.youtube.com/watch?v=PHtiEwxRDQw)  
+<누르면 유튜브로 이동>
+
 
 ----버전1.0----
 
